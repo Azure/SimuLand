@@ -1,7 +1,7 @@
 # Add Domain to Microsoft 365 Tenant
 
-Azure AD tenants come with an initial domain name, <domain-name>.onmicrosoft.com. That domain name cannot be changed or deleted, but you can add new custom domain names.
-In the lab environment, we want to authenticate to Office 365 apps in the cloud with the same on-prem password. Therefore, we need to synchronize the “on-prem” AD users with the Azure Active Directory (Azure AD) tenant of the Microsoft 365 trial subscription. This requires adding the on-prem domain to Microsoft 365. The domain needs to be one you own and that is registered.
+Azure AD tenants come with an initial domain name, `<domain-name>.onmicrosoft.com`. That domain name cannot be changed or deleted, but you can add new custom domain names.
+In a lab environment, we would want to authenticate to applications in the cloud with the same credentials we use in an on-prem domain environment. In that scenario, we would need to synchronize the “on-prem” AD users with an Azure Active Directory (Azure AD) tenant. If you have a Microsoft 365 subscription, you can start this process by adding a custom domain to it through the Microsoft 365 admin center experience. One requirement is that you own the valid registered domain name.
 
 ## Pre-Requirements
 * A registered valid domain name
@@ -13,7 +13,7 @@ In the lab environment, we want to authenticate to Office 365 apps in the cloud 
 * Connect domain to MS 365 Services (Optional)
 
 ## 1. Access Microsoft 365 Admin Console
-* Go to https://admin.microsoft.com
+* Go to [https://admin.microsoft.com](https://admin.microsoft.com)
 * Go to Settings > Domains
 * Click on “Add Domain”
 
@@ -25,7 +25,7 @@ Enter the name of the domain you just purchased or you already own:
 ![](../resources/images/prepare/addDomainToM365/2021-05-05_02_add_custom_domain.png)
 
 ## 3. Verify Domain Ownership
-You will need to proof that you own the domain. I usually choose the verification option to add a TXT record to the DNS records of my domain.
+You will need to prove that you own the domain. I usually choose the verification option to add a TXT record to the DNS records of my domain.
 
 ![](../resources/images/prepare/addDomainToM365/2021-05-05_03_verify_ownership.png)
 
@@ -57,8 +57,8 @@ That’s it! You have successfully added a custom domain to your Microsoft 365 s
 
 One thing you can do is check the Azure Active Directory (Azure AD) tenant of your Microsoft 365 subscription, and you will now see the custom domain there and verified.
 
-* Go to https://aad.portal.azure.com
-* Click on Custom domain names
+* Go to [https://aad.portal.azure.com](https://aad.portal.azure.com)
+* Click on `Custom domain names`
 
 ![](../resources/images/prepare/addDomainToM365/2021-05-05_11_azuread_custom_domains.png)
 

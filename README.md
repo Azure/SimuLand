@@ -12,9 +12,9 @@
 ---
 
 ## About
-SimuLand is an open-source initiative by Microsoft to help security researchers around the world deploy lab environments that reproduce well-known techniques used in real attack scenarios, actively test and verify effectiveness of related Microsoft Defender and Azure Sentinel detections, and extend threat research using telemetry and forensic artifacts generated after each simulation exercise. 
+SimuLand is an open-source initiative by Microsoft to help security researchers around the world deploy lab environments that reproduce well-known techniques used in real attack scenarios, actively test and verify effectiveness of related Microsoft 365 Defender, Azure Defender and Azure Sentinel detections, and extend threat research using telemetry and forensic artifacts generated after each simulation exercise. 
 
-These lab environments provide use cases from a variety of data sources including telemetry from both Microsoft Defender security products and integrated data sources through [Azure Sentinel data connectors](https://docs.microsoft.com/en-us/azure/sentinel/connect-data-sources#data-connection-methods).
+These lab environments will provide use cases from a variety of data sources including telemetry from  Microsoft 365 Defender security products, Azure Defender and other integrated data sources through [Azure Sentinel data connectors](https://docs.microsoft.com/en-us/azure/sentinel/connect-data-sources#data-connection-methods).
 
 ## Purpose
 As we build out the SimuLand framework and start populating lab environments, we will be working under the following basic principles: 

@@ -8,12 +8,12 @@ This guide focuses on configuring Microsoft 365 defender products before onboard
 * Office 365 Audit Log Search enabled
 
 ## Configure Microsoft Cloud App Security
-1.	Navigate to Microsoft 365 Security Center
+1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/)
 2.	Go to “More Resources” and click on “Microsoft Cloud App Security”.
 
 ![](../resources/images/prepare/configureM365Defender/2021-05-05_01_m365_security_center_mcas.png)
 
-3.	You will be taken to the MCAS portal: https://portal.cloudappsecurity.com/  
+3.	You will be taken to the MCAS portal: [https://portal.cloudappsecurity.com/](https://portal.cloudappsecurity.com/)  
 
 ![](../resources/images/prepare/configureM365Defender/2021-05-05_02_mcas_console.png)
 
@@ -30,7 +30,7 @@ This guide focuses on configuring Microsoft 365 defender products before onboard
 
 ![](../resources/images/prepare/configureM365Defender/2021-05-05_05_mcas_connect_office_365_done.png) 
 
-8.	You can run click on the Office 365 application again and run a quick test:
+You can click on the Office 365 application again and run a quick test:
 
 ![](../resources/images/prepare/configureM365Defender/2021-05-05_06_mcas_connect_office_365_test.png)
 
@@ -41,7 +41,7 @@ If office 365 auditing propagated properly, you should see office 365 app connec
 This is very important to do before connecting other solutions such as Azure Sentinel to collect data from MCAS.
 
 ## Configure Microsoft Defender for Identity
-1.	Navigate to Microsoft 365 Security Center
+1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/)
 2.	Go to “More Resources” and click on “Azure Advanced Threat Protection”.
 
 ![](../resources/images/prepare/configureM365Defender/2021-05-05_08_m365_security_center_mdi.png)
@@ -57,12 +57,12 @@ This is very important to do before connecting other solutions such as Azure Sen
 Onboard endpoints once you deploy an environment.
 
 ## Configure Microsoft Defender for Endpoint
-1.	Navigate to Microsoft 365 Security Center
+1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/)
 2.	Go to “More Resources” and click on “Microsoft Defender Security Center”
 
 ![](../resources/images/prepare/configureM365Defender/2021-05-05_11_m365_security_center_mde.png)  
 
-3.	You will be redirected to https://securitycenter.windows.com/  where an account will be created automatically.
+3.	You will be redirected to [https://securitycenter.windows.com/](https://securitycenter.windows.com/)  where an account will be created automatically.
 
 ![](../resources/images/prepare/configureM365Defender/2021-05-05_12_mde_create_account.png)
 
