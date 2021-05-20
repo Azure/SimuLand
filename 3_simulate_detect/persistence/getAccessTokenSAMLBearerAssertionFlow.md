@@ -90,7 +90,7 @@ $body
 
 ![](../../resources/images/simulate_detect/persistence/getAccessTokenSAMLBearerAssertionFlow/2021-05-19_06_http_body_custom_app.png)
 
-## Sen Send HTTP POST to Microsoft identity platform token endpoint
+## Send HTTP POST to Microsoft identity platform token endpoint
 For this exercise, we send the access token request to the OAuth 2,0 (v2) endpoint: ` https://login.microsoftonline.com/$TenantId/oauth2/v2.0/token`
 
 ```PowerShell
