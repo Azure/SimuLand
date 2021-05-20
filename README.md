@@ -29,10 +29,10 @@ As we build out the SimuLand framework and start populating lab environments, we
 * Identify mitigations and attacker paths by documenting preconditions for each attacker action
 * Expedite the design and deployment of threat research lab environments
 * Stay up-to-date with latest techniques and tools used by real threat actors
-* Identify and document relevant data sources to model and detect adversary actions
+* Identify, document, and share relevant data sources to model and detect adversary actions
 * Validate and tune detection capabilities 
 
-## Structure 
+## Structure
 
 The structure of the project is very simple and is broken down in a modular way so that we could re-use and test a few combinations of attacker actions with different lab environment designs. In addition, step by step lab guides are provided to aggregate all the required documentation to not only execute the end-to-end simulation exercise, but also prepare and deploy the lab environment. 
 
