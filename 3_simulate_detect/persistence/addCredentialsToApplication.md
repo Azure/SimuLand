@@ -9,6 +9,14 @@ This authentication consists of two elements:
 
 [An application object is the global representation of an application for use across all tenants, and the service principal is the local representation for use in a specific tenant](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals). A service principal must be created in each tenant where the application is used, enabling it to establish an identity for sign-in and/or access to resources being secured by the tenant.
 
+## Preconditions
+* Authorization
+    * Identity solution: Azure AD
+    * Access control model: Discretionary Access Control (DAC)
+    * Service: Azure Microsoft Graph
+    * Permission Type: Delegated
+    * Permissions: Application.ReadWrite.All
+* Microsoft Graph Access Token
 ## Main Steps
 1.	Enumerate Existing applications 
 2.	Add credentials to application

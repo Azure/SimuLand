@@ -9,7 +9,7 @@ A threat actor with the right permissions and credentials can access and collect
     * Service: Azure Microsoft Graph
     * Permission Type: Delegated
     * Permissions: Mail.ReadWrite
-    * Microsoft Graph Access Token
+* Microsoft Graph Access Token
 
 ## Verify Microsoft Graph Access Token
 We need to make sure our access token has permissions to read mail.

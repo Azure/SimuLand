@@ -1,4 +1,5 @@
 # SimuLand
+> See the [announcement](https://www.microsoft.com/security/blog/2021/05/20/simuland-understand-adversary-tradecraft-and-improve-detection-strategies/) on the Microsoft Security Blog.
 
 <p align="center">
   <a href="#about">About</a> •

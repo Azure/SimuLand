@@ -25,7 +25,7 @@ The AD FS configuration settings can be stored in either a Microsoft SQL server 
 A threat actor would first get the AD FS configuration settings to obtain sensitive information such as the AD FS certificates and information about the AD FS DKM container in Active Directory (AD). One can get the AD FS configuration settings either locally or remotely.
 
 ### Simulate Local Connection
-**Conditions**
+**Preconditions**
 * Endpoint: ADFS01
     * Authorization: AD FS Service Account
     * Services Running: Active Directory Federation Services (ADFSSRV)

@@ -40,7 +40,7 @@ Follow the next steps to simulate a threat actor getting an access token for Mic
 
 Next, use the new Microsoft Graph access token to simulate a threat actor granting delegated permissions to an Azure AD application. Usually, a threat actor would prefer to use an existing application that contains the desired permissions. Grant `Mail.ReadWrite` permissions.
 
-[Grant OAuth Permissions to Application Steps](../3_simulate_detect/credential-access/signSAMLToken.md)
+[Grant OAuth Permissions to Application Steps](../3_simulate_detect/persistence/grantDelegatedPermissionsToApplication.md)
 
 **Add Credentials to OAuth Application - (Account Manipulation: Additional Cloud Credentials – T1098.001)**
 
