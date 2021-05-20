@@ -2,9 +2,9 @@
 
 <p align="center">
   <a href="#about">About</a> •
+  <a href="#labs">Labs</a> •
   <a href="#purpose">Purpose</a> •
   <a href="#structure">Structure</a> •
-  <a href="#labs">Labs</a> •
   <a href="#contributing">Contributing</a> •
   <a href="#trademarks">Trademarks</a>
 </p>
@@ -15,6 +15,12 @@
 SimuLand is an open-source initiative by Microsoft to help security researchers around the world deploy lab environments that reproduce well-known techniques used in real attack scenarios, actively test and verify effectiveness of related Microsoft 365 Defender, Azure Defender and Azure Sentinel detections, and extend threat research using telemetry and forensic artifacts generated after each simulation exercise. 
 
 These lab environments will provide use cases from a variety of data sources including telemetry from  Microsoft 365 Defender security products, Azure Defender and other integrated data sources through [Azure Sentinel data connectors](https://docs.microsoft.com/en-us/azure/sentinel/connect-data-sources#data-connection-methods).
+
+## Labs
+
+| Title | Description |
+|-------|-------------|
+| [Golden SAML AD FS Mail Access](labs/01_GoldenSAMLADFSMailAccess.md) | Simulate an adversary stealing the AD FS token signing certificate, from an “on-prem” AD FS server, in order to sign SAML token, impersonate a privileged user and eventually collect mail data in a tenant via the Microsoft Graph API. |
 
 ## Purpose
 As we build out the SimuLand framework and start populating lab environments, we will be working under the following basic principles: 
@@ -32,15 +38,9 @@ The structure of the project is very simple and is broken down in a modular way 
 
 | Folder  | Description |
 |---------|-------------|
-| Prepare | Documents to prepare before deploying a lab environment. Almost every environment contributed through this initiative requires at least a Microsoft 365 E5 license (paid or trial) and an Azure tenant. Other deployment requirements are specified in the lab guides.  
-| Deploy | Azure Resource Manager (ARM) Templates and documents to deploy lab environments. Depending on the lab guide being worked on, the design of the network environments might change a little. While some labs would replicate a hybrid cross-domain environment (on-prem -> Cloud), others would focus only on resources in the cloud. Additionally, ARM templates are provided to expedite the deployment process and help document the infrastructure as code. |
-| Simulate <br>Detect | Documents to execute attacker actions mapped to the MITRE ATT&CK framework. The goal of the Simulate and Detect component is to also summarize the main steps used by a threat actor to accomplish a specific object and allow security researchers to get familiarized with the attacker behavior at a high level. Finally, from a defensive perspective, simulation steps will be mapped to detection queries and alerts from Microsoft Defender security products and Azure Sentinel. We believe this would help guide some of the extended threat research generated from the simulation exercise. |
-
-## Labs
-
-| Title | Description |
-|-------|-------------|
-| Azure AD Hybrid Identity: Stealing the ADFS Token Signing Certificate to Forge SAML Tokens and Access Mail Data | Simulate an adversary stealing the AD FS token signing certificate, from an “on-prem” AD FS server, in order to sign SAML token, impersonate a privileged user and eventually collect mail data in a tenant via the Microsoft Graph API. |
+| [Prepare](1_prepare) | Documents to prepare before deploying a lab environment. Almost every environment contributed through this initiative requires at least a Microsoft 365 E5 license (paid or trial) and an Azure tenant. Other deployment requirements are specified in the lab guides.  
+| [Deploy](2_deploy) | Azure Resource Manager (ARM) Templates and documents to deploy lab environments. Depending on the lab guide being worked on, the design of the network environments might change a little. While some labs would replicate a hybrid cross-domain environment (on-prem -> Cloud), others would focus only on resources in the cloud. Additionally, ARM templates are provided to expedite the deployment process and help document the infrastructure as code. |
+| [Simulate](3_simulate_detect) <br>[Detect](3_simulate_detect) | Documents to execute attacker actions mapped to the MITRE ATT&CK framework. The goal of the Simulate and Detect component is to also summarize the main steps used by a threat actor to accomplish a specific object and allow security researchers to get familiarized with the attacker behavior at a high level. Finally, from a defensive perspective, simulation steps will be mapped to detection queries and alerts from Microsoft Defender security products and Azure Sentinel. We believe this would help guide some of the extended threat research generated from the simulation exercise. |
  
 ## Contributing
 
