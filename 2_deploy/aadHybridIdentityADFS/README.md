@@ -1,7 +1,7 @@
 # Azure AD Hybrid Identity: Active Directory Federation Services (AD FS) Deployment 
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FSimuLand%2Fmain%22_deploy%2FaadHybridIdentityADFS%2Fazuredeploy.json)
-[![Deploy to Azure Gov](https://aka.ms/deploytoazuregovbutton)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FSimuLand%2Fmain%22_deploy%2FaadHybridIdentityADFS%2Fazuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FSimuLand%2Fmain%2F2_deploy%2FaadHybridIdentityADFS%2Fazuredeploy.json)
+[![Deploy to Azure Gov](https://aka.ms/deploytoazuregovbutton)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FSimuLand%2Fmain%2F2_deploy%2FaadHybridIdentityADFS%2Fazuredeploy.json)
 
 ## Prepare
 1.	[Get a Microsoft 365 E5 license.](../../1_prepare/startM365E5Trial.md)
