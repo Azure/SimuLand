@@ -77,7 +77,7 @@ $secret
  
 ![](../../resources/images/simulate_detect/persistence/addCredentialsToApplication/2021-05-19_04_app_new_secret.png)
 
-Browse to [Azure Portal](https://portal.azure.com/) and go to Azure AD > App Registrations > <MY APPLICATION> > Certificates & Secrets to verify the task
+Browse to [Azure Portal](https://portal.azure.com/) and go to Azure AD > App Registrations > `MY APPLICATION` > Certificates & Secrets to verify the task
 
 ![](../../resources/images/simulate_detect/persistence/addCredentialsToApplication/2021-05-19_05_app_new_secret.png)
 

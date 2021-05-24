@@ -21,7 +21,7 @@ These lab environments will provide use cases from a variety of data sources inc
 
 | Title | Description |
 |-------|-------------|
-| [Golden SAML AD FS Mail Access](labs/01_GoldenSAMLADFSMailAccess.md) | Simulate an adversary stealing the AD FS token signing certificate, from an “on-prem” AD FS server, in order to sign SAML token, impersonate a privileged user and eventually collect mail data in a tenant via the Microsoft Graph API. |
+| [Golden SAML AD FS Mail Access](labs/01_GoldenSAMLADFSMailAccess.md) | Simulate an adversary stealing an AD FS token signing certificate, from an “on-prem” AD FS server, in order to sign a new SAML token, impersonate a privileged user and eventually collect mail data via the Microsoft Graph API. |
 
 ## Purpose
 As we build out the SimuLand framework and start populating lab environments, we will be working under the following basic principles: 
@@ -41,7 +41,7 @@ The structure of the project is very simple and is broken down in a modular way 
 |---------|-------------|
 | [Prepare](1_prepare) | Documents to prepare before deploying a lab environment. Almost every environment contributed through this initiative requires at least a Microsoft 365 E5 license (paid or trial) and an Azure tenant. Other deployment requirements are specified in the lab guides.  
 | [Deploy](2_deploy) | Azure Resource Manager (ARM) Templates and documents to deploy lab environments. Depending on the lab guide being worked on, the design of the network environments might change a little. While some labs would replicate a hybrid cross-domain environment (on-prem -> Cloud), others would focus only on resources in the cloud. Additionally, ARM templates are provided to expedite the deployment process and help document the infrastructure as code. |
-| [Simulate](3_simulate_detect) <br>[Detect](3_simulate_detect) | Documents to execute attacker actions mapped to the MITRE ATT&CK framework. The goal of the Simulate and Detect component is to also summarize the main steps used by a threat actor to accomplish a specific objective and allow security researchers to get familiarized with the attacker's behavior at a high level. Finally, from a defensive perspective, simulation steps will be mapped to detection queries and alerts from Microsoft Defender security products and Azure Sentinel. We believe this would help guide some of the extended threat research generated from the simulation exercise. |
+| [Simulate](3_simulate_detect) <br>[Detect](3_simulate_detect) | Documents to execute attacker actions mapped to the MITRE ATT&CK framework. The goal of the Simulate and Detect component is to also summarize the main steps used by a threat actor to accomplish a specific objective and allow security researchers to get familiarized with the attacker's behavior. Finally, from a defensive perspective, simulation steps will be mapped to detection queries and alerts from Microsoft 365 Defender, Azure Defender, and Azure Sentinel. We believe this would help guide some of the extended threat research generated from the simulation exercise. |
  
 ## Contributing
 
