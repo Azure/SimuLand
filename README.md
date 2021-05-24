@@ -29,19 +29,19 @@ As we build out the SimuLand framework and start populating lab environments, we
 * Understand the underlying behavior and functionality of adversary tradecraft
 * Identify mitigations and attacker paths by documenting preconditions for each attacker action
 * Expedite the design and deployment of threat research lab environments
-* Stay up-to-date with latest techniques and tools used by real threat actors
+* Stay up-to-date with the latest techniques and tools used by real threat actors
 * Identify, document, and share relevant data sources to model and detect adversary actions
 * Validate and tune detection capabilities 
 
 ## Structure
 
-The structure of the project is very simple and is broken down in a modular way so that we could re-use and test a few combinations of attacker actions with different lab environment designs. In addition, step by step lab guides are provided to aggregate all the required documentation to not only execute the end-to-end simulation exercise, but also prepare and deploy the lab environment. 
+The structure of the project is very simple and is broken down in a modular way so that we could re-use and test a few combinations of attacker actions with different lab environment designs. In addition, step-by-step lab guides are provided to aggregate all the required documentation to not only execute the end-to-end simulation exercise, but also prepare and deploy the lab environment. 
 
 | Folder  | Description |
 |---------|-------------|
 | [Prepare](1_prepare) | Documents to prepare before deploying a lab environment. Almost every environment contributed through this initiative requires at least a Microsoft 365 E5 license (paid or trial) and an Azure tenant. Other deployment requirements are specified in the lab guides.  
 | [Deploy](2_deploy) | Azure Resource Manager (ARM) Templates and documents to deploy lab environments. Depending on the lab guide being worked on, the design of the network environments might change a little. While some labs would replicate a hybrid cross-domain environment (on-prem -> Cloud), others would focus only on resources in the cloud. Additionally, ARM templates are provided to expedite the deployment process and help document the infrastructure as code. |
-| [Simulate](3_simulate_detect) <br>[Detect](3_simulate_detect) | Documents to execute attacker actions mapped to the MITRE ATT&CK framework. The goal of the Simulate and Detect component is to also summarize the main steps used by a threat actor to accomplish a specific object and allow security researchers to get familiarized with the attacker behavior at a high level. Finally, from a defensive perspective, simulation steps will be mapped to detection queries and alerts from Microsoft Defender security products and Azure Sentinel. We believe this would help guide some of the extended threat research generated from the simulation exercise. |
+| [Simulate](3_simulate_detect) <br>[Detect](3_simulate_detect) | Documents to execute attacker actions mapped to the MITRE ATT&CK framework. The goal of the Simulate and Detect component is to also summarize the main steps used by a threat actor to accomplish a specific objective and allow security researchers to get familiarized with the attacker's behavior at a high level. Finally, from a defensive perspective, simulation steps will be mapped to detection queries and alerts from Microsoft Defender security products and Azure Sentinel. We believe this would help guide some of the extended threat research generated from the simulation exercise. |
  
 ## Contributing
 
