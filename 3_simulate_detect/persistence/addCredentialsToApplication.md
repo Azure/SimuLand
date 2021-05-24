@@ -88,7 +88,7 @@ Browse to [Azure Portal](https://portal.azure.com/) and go to Azure AD > App Reg
 * [First access credential added to Application or Service Principal where no credential was present](https://github.com/Azure/Azure-Sentinel/blob/master/Detections/AuditLogs/FirstAppOrServicePrincipalCredential.yaml)
 
 ### Microsoft 365 hunting
-* [Credentials were added to an Azure AD application after 'Admin Consent' permissions granted [Solorigate]](https://github.com/microsoft/Microsoft-365-Defender-Hunting-Queries/blob/master/Persistence/CredentialsAddAfterAdminConsentedToApp%5BSolorigate%5D.md)
+* [Credentials were added to an Azure AD application after 'Admin Consent' permissions granted [Nobelium]](https://github.com/microsoft/Microsoft-365-Defender-Hunting-Queries/blob/773ebb498e0aa897678be98c34ffa56359bf29d9/Persistence/CredentialsAddAfterAdminConsentedToApp%5BNobelium%5D.md)
 
 ### Azure AD Workbook: `Sensitive Operations Report`
 1.	Browse to [Azure Portal](https://portal.azure.com/)
