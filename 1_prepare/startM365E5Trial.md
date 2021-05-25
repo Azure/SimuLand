@@ -1,6 +1,6 @@
 # Start Microsoft 365 E5 Trial
 
-A Microsoft 365 E5 license can only be added to an existing Azure tenant. Therefore, it is important to first get an Office 365 E5 subscription to create an Azure tenant. For this demonstration, trial licenses will be used in both instances.
+Sign up for Office 365 and Microsoft 365 E5 subscriptions. A Microsoft 365 E5 license can only be added to an existing Azure tenant. Therefore, it is important to first get an Office 365 E5 subscription to create an Azure tenant. For this demonstration, trial licenses will be used in both instances.
 
 ## Main Steps
 1. Sign up for an Office 365 E5 Trial License.
