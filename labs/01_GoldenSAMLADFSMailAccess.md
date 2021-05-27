@@ -17,7 +17,7 @@ This simulation starts with a compromised `on-prem` AD FS Server where a threat 
 
 **Export ADFS Token Signing Certificate - (Unsecured Credentials: Private Keys - T1552.004)**
 
-Connect to the AD FS server (ADFS01) via the [Azure Bastion service](../2_deploy/helper_docs/configureAADConnectADFS) as the AD FS service account and simulate a threat actor exporting the AD FS token signing certificate. Access the AD FS configuration database locally and read the AD FS configuration settings to get the AD FS DKM master key value from the Domain Controller (DC) and use it to decrypt the token signing certificate that is also stored in the AD FS database configuration.
+Connect to the AD FS server (ADFS01) via the [Azure Bastion service](../2_deploy/_helper_docs/configureAADConnectADFS) as the AD FS service account and simulate a threat actor exporting the AD FS token signing certificate. Access the AD FS configuration database locally and read the AD FS configuration settings to get the AD FS DKM master key value from the Domain Controller (DC) and use it to decrypt the token signing certificate that is also stored in the AD FS database configuration.
 
 [Local Export ADFS Token Signing Certificate Steps](../3_simulate_detect/credential-access/localExportADFSTokenSigningCertificate.md)
 

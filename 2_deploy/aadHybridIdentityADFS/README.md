@@ -57,7 +57,7 @@ az group create -n azhybrid -l eastus
 
 ### Deploy ARM Template
 ```
-az deployment tenant create --template-uri https://raw.githubusercontent.com/Azure/SimuLand/2_deploy/AAD_HybridIdentity_ADFS/azuredeploy.json --parameters
+az deployment tenant create --template-uri https://raw.githubusercontent.com/Azure/SimuLand/2_deploy/aadHybridIdentityADFS/azuredeploy.json --parameters
 resourceGroup=`RESOURCE GROUP NAME`
 subscriptionId=`SUBSCRIPTION ID`
 adminUsername=`NEW LOCAL ADMIN`
@@ -105,7 +105,7 @@ Once everything is deployed, I highly recommend you check the status of a few se
 ### Validate AD FS Service is Running
 1.	Browse to [Azure portal](https://portal.azure.com/)
 2.	Go to Resource Groups > `Resource Group Name`
-3.	Select the ADFS01 virtual machine resource and click on `Connect` > Bastion ([More details](../helper_docs/connectAzVmAzBastion.md)).
+3.	Select the ADFS01 virtual machine resource and click on `Connect` > Bastion ([More details](../_helper_docs/connectAzVmAzBastion.md)).
 
 ![](../../resources/images/deploy/aadHybridIdentityADFS/2021-05-19_05_adfs_connect_bastion.png)
 
@@ -126,7 +126,7 @@ Get-AdfsProperties | Select-Object HostName
 ### Validate AD FS Service via the Intranet
 1.	Browse to [Azure portal](https://portal.azure.com/)
 2.	Go to Resource Groups > `Resource Group Name`
-3.	Select the WORKSTATION6 virtual machine and click on `Connect` > Bastion ([More details](../helper_docs/connectAzVmAzBastion.md)).
+3.	Select the WORKSTATION6 virtual machine and click on `Connect` > Bastion ([More details](../_helper_docs/connectAzVmAzBastion.md)).
 
 ![](../../resources/images/deploy/aadHybridIdentityADFS/2021-05-19_06_workstation6_connect_bastion.png)
 
@@ -190,8 +190,8 @@ If you have a sensor that does not start properly or it is constantly stopping a
 ## Post-Deployment Tasks
 Not everything can be automated yet. Therefore, there are a few additional tasks to complete:
 
-1.	[Finish Azure AD Connect setup on the "on-prem” AD domain controller](../helper_docs/configureAADConnectADFS.md).
-2.	[Enable Multi-Factor authentication to domain users](../helper_docs/enableMultiFactorAuthentication.md).
-3.	[Assign “Global Administrator” role to one domain user](../helper_docs/assignAADRole.md).
-4.	[Add Microsoft 365 E5 license to domain users](../helper_docs/addM365LicenseToUser.md).
-5.	[Register an Azure AD Application](../helper_docs/registerAADAppAndSP.md).
+1.	[Finish Azure AD Connect setup on the "on-prem” AD domain controller](../_helper_docs/configureAADConnectADFS.md).
+2.	[Enable Multi-Factor authentication to domain users](../_helper_docs/enableMultiFactorAuthentication.md).
+3.	[Assign “Global Administrator” role to one domain user](../_helper_docs/assignAADRole.md).
+4.	[Add Microsoft 365 E5 license to domain users](../_helper_docs/addM365LicenseToUser.md).
+5.	[Register an Azure AD Application](../_helper_docs/registerAADAppAndSP.md).
