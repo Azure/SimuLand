@@ -34,7 +34,7 @@ Invoke-Expression $($CertSigningReq.Content)
 In this guide, we create a request for a Positive SSL Wildcard (multidomain) certificate. Therefore, when creating the .csr file, we set a * wildcard as a prefix of the custom domain (i.e. *.yourdomain.com) for the Subject Common Name property of the request.
 
 ```PowerShell
-Get-CertSigningReq -FriendlyName "*.yourdomain.com site certificate" 
+Get-CertSigningReq -FriendlyName "*.yourdomain.com site certificate" `
 -Description "ADFS yourdomain.com certificate" `
 -SubjectCommonName "*.yourdomain.com" `
 -SubjectOrganizationUnit "Research" `

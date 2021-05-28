@@ -222,7 +222,7 @@
                 },
                 "parameters": {
                     "virtualMachines": {
-                        "value": "[reference('deployWinADFS').outputs.allWinVMsDeployed.value]"
+                        "value": "[reference('deployWin10VM').outputs.allWinVMsDeployed.value]"
                     },
                     "_mdePackageBlobSasUrl": {
                         "value": "[parameters('_mdePackageBlobSasUrl')]"
