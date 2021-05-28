@@ -58,19 +58,28 @@ Once everything is deployed, I highly recommend you check the status of a few se
 2.	Go to Resource Groups > `Resource Group Name`.
 3.	Select the `Virtual Network` resource > Monitoring > Diagram.
 
+![](../../resources/images/deploy/win10CEFServer/2021-05-28_03_virtual_network.PNG)
+
 ### Azure Sentinel Instance
 1.	Browse to [Azure portal](https://portal.azure.com/)
 2.	Search for “Azure Sentinel”
 3.	Select Azure Sentinel instance created after running the ARM template.
 
+![](../../resources/images/deploy/win10CEFServer/2021-05-28_04_azure_sentinel.PNG)
+
 ### Azure Sentinel Data Connectors
 4.	Azure Sentinel Instance > Data Connectors
+
+![](../../resources/images/deploy/win10CEFServer/2021-05-28_05_data_connectors.PNG)
 
 ### Azure Sentinel Analytics – Active Fusion Alerts
 5.	Azure Sentinel Instance > Analytics
 
+![](../../resources/images/deploy/win10CEFServer/2021-05-28_05_active_fusion_alerts.PNG)
 ### Microsoft Defender for Endpoint
 1.	Browse to [Microsoft 365 Security portal](https://security.microsoft.com/)
 2.	Click on “More Resources”
 3.	Click on “Open” under the Microsoft Defender Security Center
 4.	Device Inventory
+
+![](../../resources/images/deploy/win10CEFServer/2021-05-28_07_microsoft_defender_endpoint.PNG)

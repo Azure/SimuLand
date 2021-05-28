@@ -38,7 +38,7 @@
         "_mdePackageBlobSasUrl": {
             "type": "securestring",
             "metadata": {
-                "description": "Blog SAS Url for Microsoft Defender for Endpoint onboarding package. Zip File."
+                "description": "Blob SAS Url for Microsoft Defender for Endpoint onboarding package (.zip file). Host your MDE onboarding package in an Azure Account Storage private container."
             }
         },
         "location": {
