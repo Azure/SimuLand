@@ -1,0 +1,236 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workspaceName": {
+            "type": "string",
+            "defaultValue": "AzSen2Go",
+            "metadata": {
+                "description": "Name for the Log Analytics workspace used to aggregate data. If this is a new LA workspace, the template will add a unique string to the name you choose. If you are using an existing LA workspace, the name will not change and will be passed as is to the resources in the template."
+            }
+        },
+        "workspaceId": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Your own existing log analytics workspace ID. Leave it empty if you are deploying a new LA workspace."
+            }
+        },
+        "workspaceKey": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Your own existing log analytics workspace key. Leave it empty if you are deploying a new LA workspace."
+            }
+        },
+        "adminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "Admin username for all virtual machines."
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Password for the Windows 10 and CEF Server Virtual Machines. The password must be at least 12 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter."
+            }
+        },
+        "_mdePackageBlobSasUrl": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Blog SAS Url for Microsoft Defender for Endpoint onboarding package. Zip File."
+            }
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        }
+    },
+    "variables": {
+        "artifactsBlacksmith": "https://raw.githubusercontent.com/OTRF/Blacksmith/master/",
+        "artifactsAzureSentinel2Go": "https://raw.githubusercontent.com/OTRF/Azure-Sentinel2Go/master/",
+        "dataConnectors": [
+            "MicrosoftDefenderAdvancedThreatProtection"
+        ]
+    },
+    "resources": [
+        {
+            "condition": "[and(empty(parameters('workspaceId')),empty(parameters('workspaceKey')))]",
+            "name": "deployAzureSentinel2Go",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-06-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(variables('artifactsAzureSentinel2Go'),'azure-sentinel/azuredeploy.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "workspaceName": {
+                        "value": "[parameters('workspaceName')]"
+                    },
+                    "pricingTier": {
+                        "value": "PerGB2018"
+                    },
+                    "dataRetention": {
+                        "value": 30
+                    },
+                    "immediatePurgeDataOn30Days": {
+                        "value": true
+                    }
+                }
+            }
+        },
+        {
+            "name": "enableDataConnectors",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "dependsOn": [
+                "deployAzureSentinel2Go"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(variables('artifactsAzureSentinel2Go'), 'azure-sentinel/linkedtemplates/data-connectors/allConnectors.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "workspaceName": {
+                        "value":  "[if(empty(parameters('workspaceId')), reference('deployAzureSentinel2Go').outputs.workspaceName.value, parameters('workspaceName'))]"
+                    },
+                    "workspaceId": {
+                        "value": "[if(empty(parameters('workspaceId')), reference('deployAzureSentinel2Go').outputs.workspaceIdOutput.value, parameters('workspaceId'))]"
+                    },
+                    "dataConnectors": {
+                        "value": "[variables('dataConnectors')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "deployCEFVM",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-06-01",
+            "dependsOn": [
+                "deployAzureSentinel2Go"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(variables('artifactsBlacksmith'), 'templates/azure/CEF-Log-Analytics-Agent/azuredeploy.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "authenticationType": {
+                        "value": "password"
+                    },
+                    "adminPasswordOrKey": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "ubuntuSKU": {
+                        "value": "18.04-LTS"
+                    },
+                    "vmSize": {
+                        "value": "Standard_B2s"
+                    },
+                    "remoteAccessMode": {
+                        "value": "AzureBastionHost"
+                    },
+                    "workspaceId": {
+                        "value": "[if(empty(parameters('workspaceId')), reference('deployAzureSentinel2Go').outputs.workspaceIdOutput.value, parameters('workspaceId'))]"
+                    },
+                    "workspaceKey": {
+                        "value": "[if(empty(parameters('workspaceKey')), reference('deployAzureSentinel2Go').outputs.workspaceKeyOutput.value, parameters('workspaceKey'))]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "deployWin10VM",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-06-01",
+            "dependsOn": [
+                "deployCEFVM"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(variables('artifactsBlacksmith'), 'templates/azure/Win10/azuredeploy.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "vmNameSuffix": {
+                        "value": 6
+                    },
+                    "windowsDesktopSKU": {
+                        "value": "19h2-pro"
+                    },
+                    "vmSize": {
+                        "value": "Standard_B2s"
+                    },
+                    "newVirtualNetwork": {
+                        "value": false
+                    },
+                    "virtualNetworkName": {
+                        "value": "[reference('deployCEFVM').outputs.virtualNetworkName.value]"
+                    },
+                    "existingSubnetId": {
+                        "value": "[reference('deployCEFVM').outputs.subnetId.value]"
+                    },
+                    "remoteAccessMode": {
+                        "value": "AzureBastionHost"
+                    },
+                    "workspaceId": {
+                        "value": "[if(empty(parameters('workspaceId')), reference('deployAzureSentinel2Go').outputs.workspaceIdOutput.value, parameters('workspaceId'))]"
+                    },
+                    "workspaceKey": {
+                        "value": "[if(empty(parameters('workspaceKey')), reference('deployAzureSentinel2Go').outputs.workspaceKeyOutput.value, parameters('workspaceKey'))]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "onboardToMDE",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "dependsOn": [
+                "deployWin10VM"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(variables('artifactsBlacksmith'), 'templates/azure/Onboard-Endpoints-MDE/azuredeploy.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualMachines": {
+                        "value": "[reference('deployWinADFS').outputs.allWinVMsDeployed.value]"
+                    },
+                    "_mdePackageBlobSasUrl": {
+                        "value": "[parameters('_mdePackageBlobSasUrl')]"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}
