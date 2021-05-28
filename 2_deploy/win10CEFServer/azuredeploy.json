@@ -23,6 +23,13 @@
                 "description": "Your own existing log analytics workspace key. Leave it empty if you are deploying a new LA workspace."
             }
         },
+        "enableDataConnectors": {
+            "type": "bool",
+            "defaultValue": true,
+            "metadata": {
+                "description": "Do you want to enable the Azure Sentinel data connectors defined in this template."
+            }
+        },
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -85,6 +92,7 @@
             }
         },
         {
+            "condition": "[parameters('enableDataConnectors')]",
             "name": "enableDataConnectors",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
