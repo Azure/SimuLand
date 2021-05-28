@@ -57,7 +57,7 @@ az group create -n azhybrid -l eastus
 
 ### Deploy ARM Template
 ```
-az deployment tenant create --template-uri https://raw.githubusercontent.com/Azure/SimuLand/2_deploy/aadHybridIdentityADFS/azuredeploy.json --parameters
+az deployment tenant create --template-uri https://raw.githubusercontent.com/Azure/SimuLand/main/2_deploy/aadHybridIdentityADFS/azuredeploy.json --parameters
 resourceGroup=`RESOURCE GROUP NAME`
 subscriptionId=`SUBSCRIPTION ID`
 adminUsername=`NEW LOCAL ADMIN`
