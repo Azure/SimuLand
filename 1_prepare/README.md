@@ -1,6 +1,6 @@
 # Prepare
 
-Documents to prepare before deploying a lab environment. Some environments contributed through this initiative require at least a Microsoft 365 E5 license (paid or trial) and an Azure tenant. Documents in this folder are referenced in the right order, depending on the deployment, in the [2_deploy](2_deploy) documents. 
+Documents to prepare before deploying a lab environment. Some environments contributed through this initiative require at least a Microsoft 365 E5 license (paid or trial) and an Azure tenant. Documents in this folder are referenced in the right order, depending on the deployment, in the [2_deploy](../2_deploy) documents. 
 
 | Document | Description |
 |----------|-------------|
