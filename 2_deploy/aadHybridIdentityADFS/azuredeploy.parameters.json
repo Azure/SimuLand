@@ -1,0 +1,57 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resourceGroup": {
+            "value": "YOUR-GROUP"
+        },
+        "subscriptionId": {
+            "value": "YOUR-SUBSCRIPTION-ID"
+        },
+        "adminUsername": {
+            "value": "GEN-UNIQUE"
+        },
+        "adminPassword": {
+            "value": "GEN-PASSWORD"
+        },
+        "adfsUsername": {
+            "value": "GEN-UNIQUE"
+        },
+        "adfsPassword": {
+            "value": "GEN-PASSWORD"
+        },
+        "domainUsers": {
+            "value": {
+                "array": [
+                    {"FirstName":"Norah","LastName":"Martha","SamAccountName":"nmartha","Department":"Human Resources","JobTitle":"HR Director","Password":"S@l@m3!123","Identity":"Users","UserContainer":"DomainUsers"},
+                    {"FirstName":"Pedro","LastName":"Gustavo","SamAccountName":"pgustavo","Department":"IT Support","JobTitle":"CIO","Password":"W1n1!2019","Identity":"Domain Admins","UserContainer":"DomainUsers"},
+                    {"FirstName":"Lucho","LastName":"Rodriguez","SamAccountName":"lrodriguez","Department":"Accounting","JobTitle":"VP","Password":"T0d@y!2019","Identity":"Users","UserContainer":"DomainUsers"},
+                    {"FirstName":"Stevie","LastName":"Beavers","SamAccountName":"sbeavers","Department":"Sales","JobTitle":"Agent","Password":"B1gM@c!2020","Identity":"Users","UserContainer":"DomainUsers"},
+                    {"FirstName":"Sysmon","LastName":"MS","SamAccountName":"sysmonsvc","Department":"IT Support","JobTitle":"Service Account","Password":"Buggy!1122","Identity":"Users","UserContainer":"DomainUsers"},
+                    {"FirstName":"Nxlog","LastName":"Shipper","SamAccountName":"nxlogsvc","Department":"IT Support","JobTitle":"Service Account","Password":"S3nData!1122","Identity":"Users","UserContainer":"DomainUsers"}
+                ]
+            }
+        },
+        "remoteAccessMode": {
+            "value": "AzureBastionHost"
+        },
+        "pfxCertName": {
+            "value": "YOUR-CERTIFICATE-NAME.pfx"
+        },
+        "pfxCertPassword":{
+            "value": "GEN-PASSWORD"
+        },
+        "_pfxCertBlobSasUrl": {
+            "value": "https://STORAGE-ACCOUNT-NAME.blob.core.windows.net/CONTAINER-NAME/PFX-CERTIFICATE.PFX?SAS-TOKEN"
+        },
+        "_mdePackageBlobSasUrl": {
+            "value": "Fill in parameter value"
+        },
+        "_mdiAccessKey": {
+            "value": "Fill in parameter value"
+        },
+        "_mdiPackageBlobSasUrl": {
+            "value": "Fill in parameter value"
+        }
+    }
+}
