@@ -58,17 +58,18 @@ az group create -n azhybrid -l eastus
 ### Deploy ARM Template
 ```
 az deployment tenant create --template-uri https://raw.githubusercontent.com/Azure/SimuLand/main/2_deploy/aadHybridIdentityADFS/azuredeploy.json --parameters
-resourceGroup=`RESOURCE GROUP NAME`
-subscriptionId=`SUBSCRIPTION ID`
-adminUsername=`NEW LOCAL ADMIN`
-adminPassword=`NEW LOCAL ADMIN PASSWORD`
-adfsUsername=`NEW AD FS USER ACCOUNT`
-adfsPassword=`NEW AD FS USER PASSWORD`
-pfxCertName=`CERT-NAME.pfx`
-pfxCertPassword=`CERT-PASSWORD`
-_pfxCertBlobSasUrl=`https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/CERT.PFX?SAS-TOKEN`
-_mdePackageBlobSasUrl=`https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/MDE-FILE.zip?SASTOKEN`
-_mdiPackageBlobSasUrl=`https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/MDI-FILE.zip?SASTOKEN`
+resourceGroup='RESOURCE GROUP NAME'
+subscriptionId='SUBSCRIPTION ID'
+adminUsername='NEW LOCAL ADMIN'
+adminPassword='NEW LOCAL ADMIN PASSWORD'
+adfsUsername='NEW AD FS USER ACCOUNT'
+adfsPassword='NEW AD FS USER PASSWORD'
+pfxCertName='CERT-NAME.pfx'
+pfxCertPassword='CERT-PASSWORD'
+_pfxCertBlobSasUrl='https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/CERT.PFX?SAS-TOKEN'
+_mdePackageBlobSasUrl='https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/MDE-FILE.zip?SASTOKEN'
+_mdiPackageBlobSasUrl='https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/MDI-FILE.zip?SASTOKEN'
+_mdiAccessKey='xxxxxx'
 ```
 
 **Parameter Definitions**:
@@ -81,8 +82,9 @@ _mdiPackageBlobSasUrl=`https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER N
 * pfxCertName = Name of the Trusted CA signed SSL Certificate file hosted in the Azure storage account – Private Container (Check `Deployment Requirements` section)
 * PfxCertPassword = Password used to export trusted CA signed SSl certificate
 * _pfxCertBlobSasUrl = Blob SAS Url to access a trusted CA signed SSL certificate hosted in an Azure account storage private container. A .PFX file.
-* _mdePackageBlobSasUrl = Blob SAS Url to access a MDE install package hosted in an Azure account storage private container.
-* _mdiPackageBlobSasUrl = Blob SAS Url to access a MDI install package hosted in an Azure account storage private container.
+* _mdePackageBlobSasUrl = Blob SAS Url to access an Microsoft Defender for Endpoint (MDE) install package hosted in an Azure account storage private container.
+* _mdiPackageBlobSasUrl = Blob SAS Url to access an Microsoft Defender for Identity (MDI) install package hosted in an Azure account storage private container.
+* _mdiAccessKey = Microsoft Defender for Identity (MDI) Access Key used to install an MDI sensor. This value is in your MDI portal under the sensors section.
 
 You can track your deployment by going to resource groups > RG NAME > Deployments.
 
