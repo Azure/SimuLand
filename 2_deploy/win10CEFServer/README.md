@@ -31,7 +31,7 @@ az group create -n azhybrid -l eastus
 
 ### Deploy ARM Template
 ```
-az deployment tenant create --template-uri https://raw.githubusercontent.com/Azure/SimuLand/2_deploy/win10CEFServer/azuredeploy.json --parameters
+az deployment group create --template-uri https://raw.githubusercontent.com/Azure/SimuLand/AnomalyFusionSimulator/2_deploy/win10CEFServer/azuredeploy.json --parameters
 adminUsername=`NEW LOCAL ADMIN`
 adminPassword=`NEW LOCAL ADMIN PASSWORD`
 _mdePackageBlobSasUrl=`https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/MDE-FILE.zip?SASTOKEN`

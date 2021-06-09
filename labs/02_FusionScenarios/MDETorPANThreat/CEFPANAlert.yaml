@@ -1,0 +1,17 @@
+name: CEF PAN Alert
+platform: Palo Alto Networks
+priority:
+  facility: local4
+  level: warn
+event: |
+  0|Palo Alto Networks|PAN-OS|9.1.0-h3|virus|THREAT|2|rt=DATETIME deviceExternalId=RANDOMID src=SRCTESTIP dst=DSTTESTIP
+  sourceTranslatedAddress=DSTTESTIP destinationTranslatedAddress=SRCTESTIP cs1Label=Rule cs1=RDP Inbound suser= duser= app=ms
+  -rdp cs3Label=Virtual System cs3=vsys1 cs4Label=Source Zone cs4=Untrust cs5Label=Destination Zone cs5=Trust deviceInboundInt
+  erface=ethernet1/1 deviceOutboundInterface=ethernet1/2 cs6Label=LogProfile cs6=default cn1Label=SessionID cn1=86053 cnt=1 sp
+  t=2687 dpt=3389 sourceTranslatedPort=51475 fileHash=ForceFusion destinationTranslatedPort=3389 flexString1Label=Flags flexSt
+  ring1=0x402000 proto=tcp act=alert request="" cs2Label=URL Category cs2=any flexString2Label=Direction flexString2=client-to
+  -server PanOSActionFlags=0x2000000000000000 externalId=2316 cat=Morto RDP Request Traffic(13274) fileId=0 PanOSDGl1=0 PanOSD
+  Gl2=0 PanOSDGl3=0 PanOSDGl4=0 PanOSVsysName= PanOSSrcUUID= PanOSDstUUID= PanOSTunnelID=0 PanOSMonitorTag= PanOSParent Sessio
+  nID=0 PanOSParentStartTime= PanOSTunnelType=N/A PanOSThreatCategory=net-worm PanOSContentVer=AppThreat-8224-5855 PanOSAssocI
+  D=0 PanOSPPID=4294967295 PanOSHTTPHeader="personal-sites-and-blogs,high-risk" PanOSURLCatList="personal-sites-and-blogs,high
+  -risk" PanOSRuleUUID=c60266c3-fcfd-4f99-b921-54d5aaae7a54 PanOSHTTP2Con=0

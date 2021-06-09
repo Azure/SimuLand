@@ -48,6 +48,13 @@
                 "description": "Blob SAS Url for Microsoft Defender for Endpoint onboarding package (.zip file). Host your MDE onboarding package in an Azure Account Storage private container."
             }
         },
+        "cefFiles": {
+            "type": "array",
+            "metadata": {
+                "description": "Additional CEF files to download at deployment time."
+            },
+            "defaultValue": []
+        },
         "location": {
             "type": "string",
             "defaultValue": "[resourceGroup().location]",
@@ -155,6 +162,9 @@
                     },
                     "workspaceKey": {
                         "value": "[if(empty(parameters('workspaceKey')), reference('deployAzureSentinel2Go').outputs.workspaceKeyOutput.value, parameters('workspaceKey'))]"
+                    },
+                    "cefFiles": {
+                        "value": "[parameters('cefFiles')]"
                     },
                     "location": {
                         "value": "[parameters('location')]"
