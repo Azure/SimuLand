@@ -21,7 +21,7 @@ This guide focuses on configuring Microsoft 365 defender products before onboard
 
 ![](../resources/images/prepare/configureM365Defender/2021-05-05_03_mcas_connected_apps.png)
 
-5.	click on the three dots to the right of the `Office 365` application to edit its settings. Make sure your settings look like the image below. They should be set by default.
+5.	Click on the three dots to the right of the `Office 365` application to edit its settings. Make sure your settings look like the image below. They should be set by default.
 
 ![](../resources/images/prepare/configureM365Defender/2021-05-05_04_mcas_connect_office_365.png)
 
@@ -49,7 +49,7 @@ This is very important to do before connecting other solutions such as Azure Sen
 
 ![](../resources/images/prepare/configureM365Defender/2021-05-05_09_mdi_console.png)
 
-4.	You should be able to add a username and password to connect to your Active Directory Forest. These credentials are used by the MDI sensor when it is installed on an endpoint. If you have not deployed your Active Directory yet, you can still set this up.
+4.	You should be able to add a username and password to connect to your Active Directory Forest. These credentials are used by the MDI sensor when it is installed on an endpoint. If you have not deployed your Active Directory yet, you can still set this up. SimuLand creates a few users while deploying the lab environment. If you are using the default users, here is [the information for every user](https://github.com/Azure/SimuLand/blob/main/2_deploy/aadHybridIdentityADFS/azuredeploy.json): 
 
 ![](../resources/images/prepare/configureM365Defender/2021-05-05_10_mdi_onboard_wait.png)
 
@@ -61,7 +61,7 @@ This is very important to do before connecting other solutions such as Azure Sen
 
 ## Configure Microsoft Defender for Endpoint
 1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/)
-2.	Go to “More Resources” and click on “[Microsoft Defender Security Center](https://securitycenter.windows.com/)”
+2.	Go to “More Resources” and click on “[Microsoft Defender Security Center](https://securitycenter.windows.com/onboarding2/start)”
 
 ![](../resources/images/prepare/configureM365Defender/2021-05-05_13_m365_security_center_mde.png)  
 
@@ -69,7 +69,7 @@ This is very important to do before connecting other solutions such as Azure Sen
 
 ![](../resources/images/prepare/configureM365Defender/2021-05-05_14_mde_create_account.png)
 
-4.	Once your account is created, it will automatically take care of step number 3 (Set up prefereces). Click on `Start using Microsoft Defender for Endpoint` to continue.
+4.	Once your account is created, it will automatically take care of step number 3 (`Set up preferences`). If not, it will ask you where you want to store the data ('US','UK', etc). You will also be able to set data retention (default 180 days). Next, click on `Start using Microsoft Defender for Endpoint` to continue. You will get a message that says `To experience Microsoft Defender for Endpoint, you need to onboard and test at least one device. You can also onboard devices later.`. Click `Proceed anyway`.
 
 ![](../resources/images/prepare/configureM365Defender/2021-05-05_15_mde_start_using_mde.png)
 
