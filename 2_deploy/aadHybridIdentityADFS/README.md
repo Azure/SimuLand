@@ -46,7 +46,7 @@ az login
 I recommend logging out and logging back in after running the following command in your terminal:
 
 ```
-az role assignment create --assignee "[x@domain]" --scope "/" --role "Owner"
+az role assignment create --assignee "<user-objectid>" --scope "/" --role "Owner"
 ```
 
 ### Create Resource Group
@@ -57,18 +57,19 @@ az group create -n azhybrid -l eastus
 
 ### Deploy ARM Template
 ```
-az deployment tenant create --template-uri https://raw.githubusercontent.com/Azure/SimuLand/main/2_deploy/aadHybridIdentityADFS/azuredeploy.json --parameters
+az deployment tenant create --template-uri https://raw.githubusercontent.com/Azure/SimuLand/main/2_deploy/aadHybridIdentityADFS/azuredeploy.json --location YOURLOCATION --parameters
 resourceGroup='RESOURCE GROUP NAME'
 subscriptionId='SUBSCRIPTION ID'
 adminUsername='NEW LOCAL ADMIN'
 adminPassword='NEW LOCAL ADMIN PASSWORD'
 adfsUsername='NEW AD FS USER ACCOUNT'
 adfsPassword='NEW AD FS USER PASSWORD'
+domainFQDN='DOMAIN.COM'
 pfxCertName='CERT-NAME.pfx'
 pfxCertPassword='CERT-PASSWORD'
-_pfxCertBlobSasUrl='https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/CERT.PFX?SAS-TOKEN'
-_mdePackageBlobSasUrl='https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/MDE-FILE.zip?SASTOKEN'
-_mdiPackageBlobSasUrl='https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/MDI-FILE.zip?SASTOKEN'
+_pfxCertBlobSasUrl='"https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/CERT.PFX?SAS-TOKEN"'
+_mdePackageBlobSasUrl='"https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/MDE-FILE.zip?SASTOKEN"'
+_mdiPackageBlobSasUrl='"https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/MDI-FILE.zip?SASTOKEN"'
 _mdiAccessKey='xxxxxx'
 ```
 
@@ -79,6 +80,7 @@ _mdiAccessKey='xxxxxx'
 * adminPassword = Password for new local administrator account
 * adfsUsername = New AD FS service account
 * adfsPassword = Password for new AD FS service account
+* domainFQDN = The FQDN of the Active Directory Domain to be created
 * pfxCertName = Name of the Trusted CA signed SSL Certificate file hosted in the Azure storage account – Private Container (Check `Deployment Requirements` section)
 * PfxCertPassword = Password used to export trusted CA signed SSl certificate
 * _pfxCertBlobSasUrl = Blob SAS Url to access a trusted CA signed SSL certificate hosted in an Azure account storage private container. A .PFX file.
