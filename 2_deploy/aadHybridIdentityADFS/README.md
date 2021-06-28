@@ -3,6 +3,34 @@
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FSimuLand%2Fmain%2F2_deploy%2FaadHybridIdentityADFS%2Fazuredeploy.json)
 [![Deploy to Azure Gov](https://aka.ms/deploytoazuregovbutton)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FSimuLand%2Fmain%2F2_deploy%2FaadHybridIdentityADFS%2Fazuredeploy.json)
 
+This environment was designed to replicate an on-prem Active Directory (AD) network synced with Azure AD to authenticate to the cloud with the same identity used on-prem. The authentication method used in this environment is federation with Active Directory Services (AD FS).
+
+## Network Design
+
+![](../../resources/images/deploy/aadHybridIdentityADFS/2021-05-19_01_network_design.png)
+
+### Domain Users Information
+
+You can change the default domain users through the `domainUsers` parameter in the main ARM template.
+
+| FirstName | LastName | SamAccountName | Department | JobTitle | Password | Identity | UserContainer | 
+|:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |
+| Norah | Martha | nmartha | Human Resources | HR Director | S@l@m3!123 | Users | DomainUsers | 
+| Pedro | Gustavo | pgustavo | IT Support | CIO | W1n1!2019 | Domain Admins | DomainUsers |
+| Clem | Jones | cjones | Research | Lead | Tr3@sur3Hunt! | Domain Admins | DomainUsers |
+| Lucho | Rodriguez | lrodriguez | Accounting | VP | T0d@y!2019 | Users | DomainUsers |
+| Stevie | Beavers | sbeavers | Sales | Agent | B1gM@c!2020 | Users | DomainUsers |
+| Sysmon | MS | sysmonsvc | IT Support | Service Account | Buggy!1122 | Users | DomainUsers |
+| Nxlog | Shipper | nxlogsvc | IT Support | Service Account | S3nData!1122 | Users | DomainUsers |
+
+### Domain Endpoints Information
+
+| Device Name | Platform | IP Address | Description |
+|:--- |:--- |:--- |:--- |
+| DC01 | Windows Server 2019 | 192.168.2.4 | Active Directory Domain Services (AD DS) server | 
+| ADFS01 | Windows Server 2019 | 192.168.2.5 | Active Directory Federation Services (AD FS) server |
+| WORKSTATION6 | Windows 10 | 192.168.2.6 | Domain-joined workstation |
+
 ## Prepare
 1.	[Get a Microsoft 365 E5 license.](../../1_prepare/startM365E5Trial.md)
 2.	[Get an Azure subscription.](../../1_prepare/m365TenantGetAzSubscription.md)
@@ -17,15 +45,10 @@
 8.	[Install Azure CLI locally](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
 ## Deploy Lab Infrastructure
-Once you finish all the steps from the `Prepare` section, you should be ready to deploy most of the infrastructure needed for this environment.
-
-### Network Design
-
-![](../../resources/images/deploy/aadHybridIdentityADFS/2021-05-19_01_network_design.png)
-
+Once you finish all the steps from the `Prepare` section, you should be ready to deploy the lab infrastructure..
+### Elevate account access
 The ARM template for this environment is of [tenant scope](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-to-tenant?tabs=azure-cli). Therefore, [you will need to elevate access to manage all Azure resources and assign “owner” or “contributor” roles to the account running the ARM template](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-to-tenant?tabs=azure-cli#required-access).
 
-### Elevate account access so that you can assign roles
 1.	Browse to [Azure portal](https://portal.azure.com/).
 2.	Log in with a `Global Administrator` account.
 3.	Go to Azure Active Directory > Manage > Properties.
@@ -33,62 +56,68 @@ The ARM template for this environment is of [tenant scope](https://docs.microsof
 
 ![](../../resources/images/deploy/aadHybridIdentityADFS/2021-05-19_02_elevate_account.png)
 
-5.	Save your setting. `This setting is not a global property and applies only to the currently signed in user`. You can't elevate access for all members of the Global Admin role.
-
-### Sign Into Azure
-With Azure CLI installed locally on your computer, open a terminal to run the following command to log on as the `Global Administrator` account you used in the previous step.
+5.  Save your setting. `This setting is not a global property and applies only to the currently signed in user`. You can't elevate access for all members of the Global Admin role.
+6.  Locally on your computer, open PowerShell.
+7.  With Azure CLI installed, run the following command to log on as the `Global Administrator` account you used in the previous steps and that you want to use to deploy the environment with.
 
 ```
 az login
 ```
 
-#### Assign Owner Role for Root Scope to your own Account
-I recommend logging out and logging back in after running the following command in your terminal:
+8.  Assign `Owner Role` for `Root Scope` to your own account.
+9.  Log out and log back in after running the following command:
 
 ```
 az role assignment create --assignee "<user-objectid>" --scope "/" --role "Owner"
 ```
 
 ### Create Resource Group
+You can use an existing `Resource Group`. However, I recommend creating a new one to avoid any issues with existing resources in the resource group.
 
 ```
 az group create -n azhybrid -l eastus
 ```
 
 ### Deploy ARM Template
+1. Copy the multi-line command below to your favorite `text editor` and update the default values (If you are not using PowerShell to run the commands below, make sure you update the format and the `backquote character` at the end of each line to whatever you use to run multi-line commands in your terminal).
+2. Make sure you run the updated commands in the same PowerShell session you used to elevate your account access.
+
 ```
-az deployment tenant create --template-uri https://raw.githubusercontent.com/Azure/SimuLand/main/2_deploy/aadHybridIdentityADFS/azuredeploy.json --location YOURLOCATION --parameters
-resourceGroup='RESOURCE GROUP NAME'
-subscriptionId='SUBSCRIPTION ID'
-adminUsername='NEW LOCAL ADMIN'
-adminPassword='NEW LOCAL ADMIN PASSWORD'
-adfsUsername='NEW AD FS USER ACCOUNT'
-adfsPassword='NEW AD FS USER PASSWORD'
-domainFQDN='DOMAIN.COM'
-pfxCertName='CERT-NAME.pfx'
-pfxCertPassword='CERT-PASSWORD'
-_pfxCertBlobSasUrl='"https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/CERT.PFX?SAS-TOKEN"'
-_mdePackageBlobSasUrl='"https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/MDE-FILE.zip?SASTOKEN"'
-_mdiPackageBlobSasUrl='"https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/MDI-FILE.zip?SASTOKEN"'
-_mdiAccessKey='xxxxxx'
+az deployment tenant create `
+    --template-uri https://raw.githubusercontent.com/Azure/SimuLand/main/2_deploy/aadHybridIdentityADFS/azuredeploy.json `
+    --location YOURLOCATION `
+    --parameters `
+    resourceGroup='RESOURCE GROUP NAME' `
+    subscriptionId='SUBSCRIPTION ID' `
+    adminUsername='NEW LOCAL ADMIN' `
+    adminPassword='NEW LOCAL ADMIN PASSWORD' `
+    adfsUsername='NEW AD FS USER ACCOUNT' `
+    adfsPassword='NEW AD FS USER PASSWORD' `
+    domainFQDN='DOMAIN.COM' `
+    pfxCertName='CERT-NAME.pfx' `
+    pfxCertPassword='CERT-PASSWORD' `
+    _pfxCertBlobSasUrl='"https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/CERT.PFX?SAS-TOKEN"' `
+    _mdePackageBlobSasUrl='"https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/MDE-FILE.zip?SASTOKEN"' `
+    _mdiPackageBlobSasUrl='"https://STORAGE ACCOUNT.blob.core.windows.net/CONTAINER NAME/MDI-FILE.zip?SASTOKEN"' `
+    _mdiAccessKey='xxxxxx'
 ```
 
 **Parameter Definitions**:
-* resourceGroup = Azure resource group to deploy resources to
-* subscriptionId= Azure subscription ID to deploy resources to
-* adminUsername = New local administrator account
-* adminPassword = Password for new local administrator account
-* adfsUsername = New AD FS service account
-* adfsPassword = Password for new AD FS service account
-* domainFQDN = The FQDN of the Active Directory Domain to be created
-* pfxCertName = Name of the Trusted CA signed SSL Certificate file hosted in the Azure storage account – Private Container (Check `Deployment Requirements` section)
-* PfxCertPassword = Password used to export trusted CA signed SSl certificate
-* _pfxCertBlobSasUrl = Blob SAS Url to access a trusted CA signed SSL certificate hosted in an Azure account storage private container. A .PFX file.
-* _mdePackageBlobSasUrl = Blob SAS Url to access an Microsoft Defender for Endpoint (MDE) install package hosted in an Azure account storage private container.
-* _mdiPackageBlobSasUrl = Blob SAS Url to access an Microsoft Defender for Identity (MDI) install package hosted in an Azure account storage private container.
+* resourceGroup = Azure resource group to deploy resources to.
+* subscriptionId= Azure subscription ID to deploy resources to.
+* adminUsername = New local administrator account.
+* adminPassword = Password for new local administrator account.
+* adfsUsername = New AD FS service account.
+* adfsPassword = Password for new AD FS service account.
+* domainFQDN = The FQDN of the Active Directory domain to be created. Make sure it matches the verified domain you are using for the lab environment and SSL certificate.
+* pfxCertName = Name of the trusted CA signed SSL certificate hosted in the Azure storage account private container (Example: `ADFS.pfx`). Check the [getTrustedCASignedSSLCertificate docs](../../1_prepare/getTrustedCASignedSSLCertificate.md) for additional context.
+* PfxCertPassword = [Password used to export](https://github.com/Azure/SimuLand/blob/main/1_prepare/getTrustedCASignedSSLCertificate.md#5-export-certificate-and-private-key-pfx-format) trusted CA signed SSl certificate.
+* _pfxCertBlobSasUrl = Blob SAS Url to access a trusted CA signed SSL certificate hosted in an Azure storage account private container.
+* _mdePackageBlobSasUrl = Blob SAS Url to access an Microsoft Defender for Endpoint (MDE) install package hosted in an Azure storage account private container. Keep the default name of the file `WindowsDefenderATPOnboardingPackage.zip`.
+* _mdiPackageBlobSasUrl = Blob SAS Url to access an Microsoft Defender for Identity (MDI) install package hosted in an Azure account storage private container. Keep the default name of the file `Azure ATP Sensor Setup.zip`.
 * _mdiAccessKey = Microsoft Defender for Identity (MDI) Access Key used to install an MDI sensor. This value is in your MDI portal under the sensors section.
 
-You can track your deployment by going to resource groups > RG NAME > Deployments.
+You can track your deployment by going to resource groups > `Resource Group NAME` > Deployments.
 
 ![](../../resources/images/deploy/aadHybridIdentityADFS/2021-05-19_03_track_deployment.png)
 
@@ -136,7 +165,7 @@ Get-AdfsProperties | Select-Object HostName
 
 4.	Enter domain user credentials
 5.	Browse to `https://<AD FS HostName>/adfs/ls/idpinitiatedsignon.aspx`
-* The AD FS HostName is what we got previously on step 5.
+* The AD FS HostName is what we got previously on `step 6` in the previous section.
 * If you get a login page like the one below and you can authenticate with a domain user’s credentials, then the AD FS service is running properly via the Intranet.
 * You still need to link this service with Azure AD. More information about that is provided later in the `post-deployment tasks` section.
 
@@ -189,7 +218,7 @@ Get-AdfsProperties | Select-Object HostName
 4.	Go to Configuration > Sensors.
 If you have a sensor that does not start properly or it is constantly stopping and restarting itself, check if the `Domain Controllers` value is set. I have seen AD FS servers not picking up the domain controller name. Simply click on the sensor name and add the FQDN of the domain controller to the `Domain Controllers` property of the sensor.
 
-![](../../resources/images/deploy/aadHybridIdentityADFS/2021-05-19_14_m365_defender_identity.png)
+![](../../resources/images/deploy/aadHybridIdentityADFS/2021-05-19_15_m365_defender_identity.png)
 
 ## Post-Deployment Tasks
 Not everything can be automated yet. Therefore, there are a few additional tasks to complete:
