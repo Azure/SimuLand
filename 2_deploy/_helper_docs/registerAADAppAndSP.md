@@ -15,7 +15,8 @@ az login
 2.	Open a PowerShell console and register a new Azure AD application with the following command.
 
 ```PowerShell
-$app= az ad app create –display-name MyApplication –homepage ‘https://localhost/MyApplication’ --reply-urls ‘https://localhost/MyApplication’ --identifier-uris ‘https://localhost/MyApplication’
+$app= az ad app create --display-name MyApplication --homepage 'https://localhost/MyApplication' --reply-urls 'https://localhost/MyApplication' --identifier-uris 'https://localhost/MyApplication'
+$app = $app | ConvertFrom-Json
 ```
 
 3.	Browse to [Azure Portal](https://portal.azure.com/)
@@ -28,7 +29,7 @@ $app= az ad app create –display-name MyApplication –homepage ‘https://loca
 1.	Run the following command to create a service principal for the Azure AD application
 
 ```PowerShell
-az ad sp create –id $app.appId
+az ad sp create --id $app.appId
 ```
 
 1.	Browse to [Azure Portal](https://portal.azure.com/)
