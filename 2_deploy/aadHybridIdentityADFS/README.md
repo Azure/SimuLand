@@ -228,3 +228,7 @@ Not everything can be automated yet. Therefore, there are a few additional tasks
 3.	[Assign “Global Administrator” role to one domain user](../_helper_docs/assignAADRole.md).
 4.	[Add Microsoft 365 E5 license to domain users](../_helper_docs/addM365LicenseToUser.md).
 5.	[Register an Azure AD Application](../_helper_docs/registerAADAppAndSP.md).
+
+## Cleanup
+If you want to remove some of the configurations, take a look at some of the documents below:
+* [Disable Azure AD Federation](../_helper_docs/disableAzureADFederation.md)
