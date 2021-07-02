@@ -10,7 +10,7 @@ The first step is to deploy the lab environment. Use the following document to p
 
 [Deploy Environment Steps](../2_deploy/aadHybridIdentityADFS/README.md)
 
-## Simulate and Detect Adversary
+## Simulate and Detect
 This simulation starts with a compromised `on-prem` AD FS Server where a threat actor managed to obtain the credentials of the AD FS service account. Connect to the AD FS server (ADFS01) via the [Azure Bastion service](../2_deploy/_helper_docs/configureAADConnectADFS) as the AD FS service account.
 
 ### Credential Access

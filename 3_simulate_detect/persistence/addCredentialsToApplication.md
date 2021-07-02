@@ -10,19 +10,10 @@ This authentication consists of two elements:
 
 [An application object is the global representation of an application for use across all tenants, and the service principal is the local representation for use in a specific tenant](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals). A service principal must be created in each tenant where the application is used, enabling it to establish an identity for sign-in and/or access to resources being secured by the tenant.
 
-## Preconditions
-* Authorization
-    * Identity solution: Azure AD
-    * Access control model: Discretionary Access Control (DAC)
-    * Service: Azure Microsoft Graph
-    * Permission Type: Delegated
-    * Permissions: Application.ReadWrite.All
-* Microsoft Graph Access Token
-## Main Steps
-1.	Enumerate existing applications 
-2.	Add credentials to application
-
 ## Current Status of Application (Credentials & Secrets)
+
+We can check if our custom Azure AD application has any credentials added to it. 
+
 1.	Browse to [Azure Portal](https://portal.azure.com/)
 2.	Go to Azure AD > App Registrations > `MyApplication` > `Certificates & secrets`
 
@@ -31,6 +22,23 @@ This authentication consists of two elements:
 Before simulating a threat actor adding credentials to an application, we need to have a Microsoft Graph access token with permissions to add credentials to applications:
 
 ![](../../resources/images/simulate_detect/persistence/addCredentialsToApplication/2021-05-19_02_mgraph_access_token.png)
+
+## Simulate & Detect
+1.	[Enumerate existing applications](#enumerate-existing-azure-ad-applications) 
+2.	[Add credentials to application](#add-credentials-to-application)
+    * [Detect credentials added to an application](#detect-credentials-added-to-an-application)
+
+## Preconditions
+* Authorization
+    * Identity solution: Azure AD
+    * Access control model: Discretionary Access Control (DAC)
+    * Service: Azure Microsoft Graph
+    * Permission Type: Delegated
+    * Permissions: Application.ReadWrite.All
+* Endpoint: ADFS01
+    * Even when this step would happen outside of the organization, we can use the same PowerShell session where we [got a Microsoft Graph access token](getAccessTokenSAMLBearerAssertionFlow.md) to go through the simulation steps.
+    * Microsoft Graph Access Token
+        * Use the output from the previous step as the variable `$MSGraphAccessToken` for the simulation steps. Make sure the access token is from the `Azure Active Directory PowerShell Application`. That application has the right permissions to execute all the simulation steps.
 
 ## Enumerate Existing Azure AD Applications
 
@@ -50,7 +58,7 @@ $appObjectId
 
 ![](../../resources/images/simulate_detect/persistence/addCredentialsToApplication/2021-05-19_03_app_object_id.png)
 
-## Adding Credentials to an Application
+## Add Credentials to Application
 
 ### Adding Credentials (Password) to an Application
 
@@ -83,11 +91,13 @@ Browse to [Azure Portal](https://portal.azure.com/) and go to Azure AD > App Reg
 
 ## Detect Credentials Added to an Application
 
-### Azure Sentinel
+### Azure Sentinel Detection Rules
+
 * [New access credential added to Application or Service Principal](https://github.com/Azure/Azure-Sentinel/blob/master/Detections/AuditLogs/NewAppOrServicePrincipalCredential.yaml)
 * [First access credential added to Application or Service Principal where no credential was present](https://github.com/Azure/Azure-Sentinel/blob/master/Detections/AuditLogs/FirstAppOrServicePrincipalCredential.yaml)
 
-### Microsoft 365 Hunting
+### Microsoft 365 Hunting Queries
+
 * [Credentials were added to an Azure AD application after 'Admin Consent' permissions granted [Nobelium]](https://github.com/microsoft/Microsoft-365-Defender-Hunting-Queries/blob/773ebb498e0aa897678be98c34ffa56359bf29d9/Persistence/CredentialsAddAfterAdminConsentedToApp%5BNobelium%5D.md)
 
 ### Azure AD Workbook: `Sensitive Operations Report`
@@ -104,6 +114,12 @@ Browse to [Azure Portal](https://portal.azure.com/) and go to Azure AD > App Reg
 ![](../../resources/images/simulate_detect/persistence/addCredentialsToApplication/2021-05-19_07_mcas_alert.png)
 
 ![](../../resources/images/simulate_detect/persistence/addCredentialsToApplication/2021-05-19_08_mcas_alert.png)
+
+## Output
+
+Use the variable `$secret` that contains the credentials object to authenticate to the compromised application. For example, if the application has permissions to read mail, you can authenticate to the application and use it to do so.
+
+* [Mail access with delegated permissions](../collection/mailAccessDelegatedPermissions.md)
 
 # References
 * [OAuth 2.0 client credentials flow on the Microsoft identity platform | Microsoft Docs](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow)

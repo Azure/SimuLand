@@ -1,19 +1,25 @@
 # Grant Delegated Permissions to Applications
 
-After a threat actor gets access to a cloud environment, usually the next step would be to look for additional access to other resources of interest. One way to accomplish this is via OAuth applications; especially those with privileged permissions. However, in a few cases, a threat actor would simply grant desired permission to existing applications.
+After a threat actor gets access to a cloud environment, usually the next step would be to look for additional access to other resources of interest. One way to access resources in Azure is via OAuth applications; especially those with privileged permissions. However, in a few cases, a threat actor would simply grant desired permissions to existing applications.
 
-[The Microsoft identity platform supports two types of permissions: delegated permissions and application permissions](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent).
+[The Microsoft identity platform supports two types of permissions: delegated permissions and application permissions](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent):
+
 * **Delegated permissions** are used by apps that have a signed-in user present. These permissions are of type “Scope” and delegate privileges of the signed-in user, allowing the app to act as the user. For example, if an application contains the “Mail.Read” delegated permissions and a user requests it; the app would only be able to access the signed-in user mailbox.
-* **Application permissions** are used by apps that run without a signed-in user present. These permissions are of type “Role” and grant the app the full set of privileges offered by the scope. For example, if an application contains the “Mail.Read” role permissions, the application would have access to every user’s mailbox.
+* **Application permissions** are used by apps that run without a signed-in user present. These permissions are of type “Role” and grant the app the full set of privileges offered by the scope. For example, if an application contains the `Mail.Read` role permissions, the application would have access to every user’s mailbox.
 
-In this document, we are going to simulate an adversary granting delegated “Mail.ReadWrite” permissions to an existing OAuth application.
+In this document, we are going to simulate an adversary granting delegated `Mail.ReadWrite` permissions to an existing OAuth application.
 
-## Main Steps
-1.	Enumerate existing applications and service principals
-2.	Add and grant app role permissions to application
-3.	Add and grant delegated permissions to application
+## Simulate & Detect
+1.	[Enumerate Existing Applications and Service Principals](#enumerate-existing-applications-and-service-principals)
+2.	[Grant Delegated Permissions to Application](#grant-delegated-permissions-oauth2permissions)
+    * [Detect Permissions Granted to Applications](#detect-permissions-granted-to-applications)
 
-Before simulating a threat actor granting delegated permissions to an application, we need to have a Microsoft Graph access token with permissions to do so. If you followed the previous step [Getting an Access Token via SAML bearer Assertion Flow](getAccessTokenSAMLBearerAssertionFlow), make sure you use the `Azure Active Directory PowerShell Application` as a client to request a Microsoft Graph access token.
+## Preconditiona
+
+* Endpoint: ADFS01
+    * Even when this step would happen outside of the organization, we can use the same PowerShell session where we [got a Microsoft Graph access token](getAccessTokenSAMLBearerAssertionFlow.md) to go through the simulation steps.
+    * Microsoft Graph Access Token
+        * Use the output from the previous step as the variable `$MSGraphAccessToken` for the simulation steps. Make sure the access token is from the `Azure Active Directory PowerShell Application`. That application has the right permissions to execute all the simulation steps.
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_01_msgraph_token.png)
 
@@ -33,7 +39,7 @@ Before simulating a threat actor granting delegated permissions to an applicatio
         * Directory.Read.All
 * A Microsoft Graph access token
 
-Open PowerShell as administrator and use an existing Microsoft Graph access token to list the Azure AD applications in a tenant. In this lab, we only have one application named `MyApplication` by default. If you changed the name while deploying the environment, use that name.
+Open PowerShell as administrator and use the existing Microsoft Graph access token to list the Azure AD applications in a tenant. In this lab, we only have one application named `MyApplication` by default. If you changed the name while deploying the lab environment, use that name.
 
 ```PowerShell
 $headers = @{“Authorization” = “Bearer $MSGraphAccessToken”}
@@ -48,7 +54,8 @@ $AzADApps = Invoke-RestMethod @params
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_02_aad_application.png)
 
 ## Grant Delegated Permissions (OAuth2Permissions)
-Once again, “Application/Role” permissions allow an application to act as its own entity in Azure AD. However, “Delegated” permissions allow an application to perform actions on behalf of the signed-in user using the application. The process to grant delegated permissions to an application is very similar to the one to grant “Application/Role” permissions.
+
+Once again, `Application/Role` permissions allow an application to act as its own entity in Azure AD. However, `Delegated` permissions allow an application to perform actions on behalf of the signed-in user using the application. The process to grant delegated permissions to an application is very similar to the one to grant “Application/Role” permissions.
 
 ### Update Azure AD Application Required Permissions (OAuth2Permissions)
 
@@ -76,7 +83,7 @@ $PropertyType = 'oauth2PermissionScopes'
 $ResourceAccessType = 'Scope'
 $permissions = @(‘Mail.ReadWrite’)
 
-Get Microsoft Graph Service Principal object to retrieve permissions from it.
+#Get Microsoft Graph Service Principal object to retrieve permissions from it.
 
 $headers = @{“Authorization” = “Bearer $MSGraphAccessToken”}
 $params = @{
@@ -163,6 +170,7 @@ If you go to the [Azure Portal](https://portal.azure.com/) > Azure AD > App Regi
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_07_azure_portal.png)
 
 ### Get AD Service Principals of Applications
+
 **Preconditions**
 * Authorization:
     * Identity solution: Azure AD
@@ -193,6 +201,7 @@ $AzADAppSp = Invoke-RestMethod @params
 Now that we have the service principal of the application, we can start granting permissions to the Azure AD Application.
 
 ### Grant Delegated Permissions (oauth2PermissionScopes)
+
 **Preconditions**
 * Authorization:
     * Identity solution: Azure AD
@@ -257,15 +266,15 @@ $params = @{
 Invoke-RestMethod @params
 ```
 
-## Detect A Threat Actor Granting Permissions to Applications
+## Detect Permissions Granted to Applications
 
-### Azure Sentinel
+### Azure Sentinel Detection Rules
 
-[Mail.Read Permissions Granted to Application (AuditLogs)](https://github.com/Azure/Azure-Sentinel/blob/master/Detections/AuditLogs/MailPermissionsAddedToApplication.yaml)
+* [Mail.Read Permissions Granted to Application (AuditLogs)](https://github.com/Azure/Azure-Sentinel/blob/master/Detections/AuditLogs/MailPermissionsAddedToApplication.yaml)
 
-### Microsoft 365 Hunting
+### Microsoft 365 Hunting Queries
 
-[Mail.Read or Mail.ReadWrite permissions added to OAuth application CloudAppEvents](https://github.com/microsoft/Microsoft-365-Defender-Hunting-Queries/blob/master/Defense%20evasion/MailPermissionsAddedToApplication%5BNobelium%5D.md)
+* [Mail.Read or Mail.ReadWrite permissions added to OAuth application CloudAppEvents](https://github.com/microsoft/Microsoft-365-Defender-Hunting-Queries/blob/master/Defense%20evasion/MailPermissionsAddedToApplication%5BNobelium%5D.md)
 
 ### Azure AD Workbook: Sensitive Operations Report
 1.	Browse to [Azure portal](https://portal.azure.com/)
@@ -273,7 +282,7 @@ Invoke-RestMethod @params
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_10_workbook.png)
 
-## Microsoft Cloud App Security
+### Microsoft Cloud App Security
 1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/)
 2.	Go to “More Resources” and click on “Microsoft Cloud App Security”
 3.	Connected Apps > Office 365 > Activity Logs
@@ -281,7 +290,4 @@ Invoke-RestMethod @params
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_11_mcas_alert.png)
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_12_mcas_alert.png)
-
- 
-
 
