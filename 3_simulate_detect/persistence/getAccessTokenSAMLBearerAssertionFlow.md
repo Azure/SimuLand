@@ -6,22 +6,26 @@ The Microsoft identity platform supports the [OAuth 2.0 SAML bearer assertion fl
 
 In this document, we are going to use an existing SAML token to exchange it for an access token from Azure AD.
 
-## Preconditions
-* A trust relationship between the authorization server/environment (Microsoft 365) and the identity provider, or issuer of the SAML 2.0 bearer assertion (AD FS)
-* A valid SAML bearer token
+## Simulate & Detect
+1.	[Encode SAML token](#encode-saml-token)
+2.	[Create HTTP header](#create-http-header)
+3.	[Create HTTP body](#create-http-body)
+4.	[Send HTTP POST to Microsoft identity platform token endpoint](#)
 
-## Main Steps
-1.	Encode SAML token
-2.	Create HTTP header
-3.	Create HTTP body
-4.	Send HTTP POST to Microsoft identity platform token endpoint
+## Preconditions
+* A trust relationship between the authorization server/environment (Microsoft 365) and the identity provider, or issuer of the SAML 2.0 bearer assertion (AD FS server)
+* Endpoint: ADFS01
+    * Even when this step would happen outside of the organization, we can use the same PowerShell session where we [signed a new SAML token](signSAMLToken.md) to go through the simulation steps.
+    * A valid SAML bearer token
+        * Use the output from that previous step as the variable `$SamlToken`.
 
 ## Encode SAML token
-Take a SAML token and base64 encode it to use it in an HTTP request.
+
+1.  Take a SAML token and base64 encode it to use it in an HTTP request.
 
 ![](../../resources/images/simulate_detect/persistence/getAccessTokenSAMLBearerAssertionFlow/2021-05-19_01_saml_token.png)
  
-Open a PowerShell console and run the following command to base64 encode it:
+2.  Open a PowerShell console and run the following command to base64 encode it:
 
 ```PowerShell
 $encodedSamlToken = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($SamlToken))
@@ -30,7 +34,8 @@ $encodedSamlToken = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBy
 ![](../../resources/images/simulate_detect/persistence/getAccessTokenSAMLBearerAssertionFlow/2021-05-19_02_token_encoded.png)
 
 ## Create HTTP Request Headers
-Create an HTTP header. You can, for example, set the user Agent to look like Microsoft Outlook or other known applications.
+
+3.  Create an HTTP header. You can, for example, set the user Agent to look like `Microsoft Outlook` or other known applications.
 
 ```PowerShell
 $headers = @{
@@ -42,10 +47,13 @@ $headers = @{
 ![](../../resources/images/simulate_detect/persistence/getAccessTokenSAMLBearerAssertionFlow/2021-05-19_03_http_header.png)
 
 ## Create HTTPRequest Body
-Create an HTTP request body and set the specific resource you want to get an access token for.
+
+4.  Create an HTTP request body and set the specific resource you want to get an access token for.
 
 ### Azure Active Directory PowerShell Application (Client)
-We can request an access token for the Microsoft Graph leveraging the public Azure Active Directory PowerShell application (`1b730954-1685-4b74-9bfd-dac224a7b894`). 
+
+We can request an access token for the Microsoft Graph leveraging the public Azure Active Directory PowerShell application (`1b730954-1685-4b74-9bfd-dac224a7b894`).
+
 * client_id (Required):  Application (Client) ID for the app we would use to access other resources
 * grant_type (Required): The type of token request.
 * assertion (Required): The base64 encoded SAML token.
@@ -65,7 +73,9 @@ $body = @{
 ![](../../resources/images/simulate_detect/persistence/getAccessTokenSAMLBearerAssertionFlow/2021-05-19_04_http_body_aad_ps_app.png)
 
 ### Custom Application (Client ID & Credentials Needed)
-We can request an access token for the Microsoft Graph leveraging an application we registered ourselves. For this example, we need to use the application credentials along with the `client_id`. 
+
+We can also request an access token for the Microsoft Graph leveraging an application we registered ourselves. For this example, we need to use the application credentials along with the `client_id`.
+
 * client_id (Required):  Application (Client) ID for the app we would use to access other resources
 * grant_type (Required): The type of token request.
 * assertion (Required): The base64 encoded SAML token.
@@ -74,8 +84,6 @@ We can request an access token for the Microsoft Graph leveraging an application
 We can verify that we have information about the application (client) and its credentials. 
  
 ![](../../resources/images/simulate_detect/persistence/getAccessTokenSAMLBearerAssertionFlow/2021-05-19_05_veriy_requirements.png)
-
-We can are not ready to get a Microsoft Graph access token through the custom application.
 
 ```PowerShell
 $body = @{
@@ -91,7 +99,8 @@ $body
 ![](../../resources/images/simulate_detect/persistence/getAccessTokenSAMLBearerAssertionFlow/2021-05-19_06_http_body_custom_app.png)
 
 ## Send HTTP POST to Microsoft identity platform token endpoint
-For this exercise, we send the access token request to the OAuth 2,0 (v2) endpoint: ` https://login.microsoftonline.com/$TenantId/oauth2/v2.0/token`
+
+5.  For this exercise, we send the access token request to the OAuth 2.0 (v2) endpoint: ` https://login.microsoftonline.com/$TenantId/oauth2/v2.0/token`
 
 ```PowerShell
 $TenantId = '14daf1e6-d424-4b0b-843c-8202e580f814'
@@ -113,7 +122,7 @@ $results = $(Invoke-RestMethod @params)
  
 ![](../../resources/images/simulate_detect/persistence/getAccessTokenSAMLBearerAssertionFlow/2021-05-19_08_http_post_custom_app.png)
 
-Finally, you can get the access token from the results.
+6. Finally, you can get the access token from the results.
 
 ```PowerShell
 $MSGraphAccessToken = $results.access_token
@@ -122,3 +131,17 @@ $MSGraphAccessToken = $results.access_token
 ![](../../resources/images/simulate_detect/persistence/getAccessTokenSAMLBearerAssertionFlow/2021-05-19_09_mgraph_token.png)
 
 You can inspect your access token here: [jwt.ms: Welcome!](https://jwt.ms/)
+
+## Output
+
+Use the variable `$MSGraphAccessToken` that contains the access token for the `Azure Directory PowerShell application` for the following steps:
+
+* [Add credentials to Azure AD application](addCredentialsToApplication.md).
+* [Grant delegated permissions to Azure AD application](grantDelegatedPermissionsToApplication.md).
+
+Use the variable `$MSGraphAccessToken` that contains the access token for an application where we used the application's credentials to get a token for the following steps:
+
+* [Mail access via an application with delegated permissions](../mailAccessDelegatedPermissions.md)
+
+## References
+* [Exporting ADFS certificates revisited: Tactics, Techniques and Procedures (o365blog.com)](https://o365blog.com/post/adfs/)
