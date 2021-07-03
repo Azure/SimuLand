@@ -1,4 +1,4 @@
-## Export Active Directory Federation Services (AD FS) DKM Master Key from Domain Controller
+# Export Active Directory Federation Services (AD FS) DKM Master Key from Domain Controller
 
 AD FS certificates are encrypted using Distributed Key Manager (DKM) APIs and the DKM master key used to derive the symmetric key to decrypt them is stored in the domain controller. As mentioned before, when the primary AD FS farm is configured, an AD container (AD FS DKM container) is created in the domain controller and the DKM master key is stored as an attribute of an AD contact object located inside of the container.
 
@@ -24,7 +24,7 @@ The path of the AD FS DKM container in the domain controller might vary, but it 
 
 **Preconditions**
 * Endpoint: ADFS01 or WORKSTATION
-    * We can use the same PowerShell session on one of the endpoints where we [got the path of the AD FS DKM container path](getADFSDKMContainerADPath.md) from to go through the simulation steps.
+    * We can use the same PowerShell session on one of the endpoints where we [got the path of the AD FS DKM container](getADFSDKMContainerADPath.md) from to go through the simulation steps.
     * Authorization: AD FS service account
     * AD FS DKM container path:
         * Use the output from the step where we [got the path of the AD FS DKM container](getADFSDKMContainerADPath.md) and pass it to the PowerShell snippet below as the variable `$base`.

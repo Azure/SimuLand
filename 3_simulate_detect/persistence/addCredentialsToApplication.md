@@ -10,19 +10,6 @@ This authentication consists of two elements:
 
 [An application object is the global representation of an application for use across all tenants, and the service principal is the local representation for use in a specific tenant](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals). A service principal must be created in each tenant where the application is used, enabling it to establish an identity for sign-in and/or access to resources being secured by the tenant.
 
-## Current Status of Application (Credentials & Secrets)
-
-We can check if our custom Azure AD application has any credentials added to it. 
-
-1.	Browse to [Azure Portal](https://portal.azure.com/)
-2.	Go to Azure AD > App Registrations > `MyApplication` > `Certificates & secrets`
-
-![](../../resources/images/simulate_detect/persistence/addCredentialsToApplication/2021-05-19_01_app_secrets.png)
-
-Before simulating a threat actor adding credentials to an application, we need to have a Microsoft Graph access token with permissions to add credentials to applications:
-
-![](../../resources/images/simulate_detect/persistence/addCredentialsToApplication/2021-05-19_02_mgraph_access_token.png)
-
 ## Simulate & Detect
 1.	[Enumerate existing applications](#enumerate-existing-azure-ad-applications) 
 2.	[Add credentials to application](#add-credentials-to-application)

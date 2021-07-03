@@ -5,9 +5,9 @@ After [exporting AD FS certificates](exportADFSCertificatesEncryptedFormat.md) a
 ## Preconditions
 * Endpoint: ADFS01 or WORKSTATION6
     * Even when this step would happen outside of the organization, we can use the same PowerShell session on one of the endpoints where we [exported AD FS certificates](exportADFSCertificatesEncryptedFormat.md) and [obtained the AD FS DKM master key](exportADFSDKMMasterKeyFromDC.md) from to go through the simulation steps.
-    * [AD FS DKM Master Key](exportADFSDKMEncryptionKeyFromDC)
+    * [AD FS DKM Master Key](exportADFSDKMMasterKeyFromDC.md)
         * Use the output from this step and pass it to the PowerShell snippet below as the variable `$key`.
-    * [AD FS Certificate (Encrypted format)](exportADFSCertificatesEncryptedPfx.md)
+    * [AD FS Certificate (Encrypted format)](exportADFSCertificatesEncryptedFormat.md)
         * Use the output from this step and pass it to the PowerShell snippet below as the variable `$encPfx`.
 
 ## Decrypt Certificate
@@ -60,7 +60,7 @@ $ms.Dispose()
 
 ## Output
 
-Use the variable `$pfx` (cipher text) for the next step where we [export the AD FS certificate as a PFX file](exportADFSCertificateAsPfxFile.md).
+Use the variable `$pfx` (cipher text) for the next step where we [export the AD FS certificate as a PFX file](exportADFSCertificatesAsPfxFiles.md).
 
 ## References
 * [Exporting ADFS certificates revisited: Tactics, Techniques and Procedures (o365blog.com)](https://o365blog.com/post/adfs/)
