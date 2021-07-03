@@ -24,7 +24,7 @@ $base = "LDAP://CN=$group,$container,$parent"
 
 ## Output
 
-Use the variable `$base` for the next steps where we [export the AD FS DKM master key from the domain controller](exportADFSDKMMasterKeyFromDC).
+Use the variable `$base` for the next steps where we [export the AD FS DKM master key from the domain controller](exportADFSDKMMasterKeyFromDC.md).
 
 ## References
 * [Exporting ADFS certificates revisited: Tactics, Techniques and Procedures (o365blog.com)](https://o365blog.com/post/adfs/)

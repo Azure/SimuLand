@@ -4,7 +4,7 @@ If a threat actor gets to steal the AD FS token signing certificate from an AD F
 
 ## Sumulate & Detect
 1.	[Enumerate privileged accounts](#enumerate-privileged-accounts).
-2.	[Forge SAML tokens](#forge-saml-tokens).
+2.	[Forge SAML token](#forge-saml-token).
 
 ## Enumerate Privileged Accounts
 
@@ -19,7 +19,7 @@ Let's start by identifying privileged accounts that we could impersonate and tha
     * Service running: Active directory domain services
     * Port open: 389
 
-1.  Connect to the AD FS server (ADFS01) via the [Azure Bastion service](../../2_deploy/_helper_docs/configureAADConnectADFS) as the AD FS service account.
+1.  Connect to the AD FS server (ADFS01) via the [Azure Bastion service](../../2_deploy/_helper_docs/connectAzVmAzBastion.md) as the AD FS service account.
 2.  Open PowerShell and run the following commands:
 
 ```PowerShell
@@ -100,7 +100,7 @@ $SamlToken = New-AADIntSAMLToken -ImmutableID $ImmutableId -PfxFileName $Cert -P
 
 ## Output
 
-Use the variable `$SamlToken` in the next step where we [get an access token via SAML bearer Assertion Flow](decryptADFSCertificates.md) for resources such as the Microsoft Graph API.
+Use the variable `$SamlToken` in the next step where we [get an access token via SAML bearer Assertion Flow](../persistence/getAccessTokenSAMLBearerAssertionFlow.md) for resources such as the Microsoft Graph API.
 
 ## References
 * [Exporting ADFS certificates revisited: Tactics, Techniques and Procedures (o365blog.com)](https://o365blog.com/post/adfs/)

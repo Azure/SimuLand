@@ -229,6 +229,8 @@ The Microsoft Defender for Identity (MDI) sensor, installed on the domain contro
 
 ![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_10_m365_mdi_alert_dcsync.png)
 
+### Microsoft Cloud Application Security Alerts
+
 **Suspected DCSync attack (replication of directory services)**
 
 You can also see the same alert in the Microsoft Cloud Application Security (MCAS) portal. The MCAS portal is considered the new investigation experience for MDI.
@@ -242,7 +244,7 @@ You can also see the same alert in the Microsoft Cloud Application Security (MCA
 
 Whether you export the AD FS configuration settings locally or remotey, you can use the variable `$settings` for the following steps:
 * [Export AD FS Certificates in Encrypted Format](exportADFSCertificatesEncryptedFormat.md)
-* [Get the Path of the AD FS DKM Container](getADFSDKMCOntainerADPath.md).
+* [Get the Path of the AD FS DKM Container](getADFSDKMContainerADPath.md).
 
 ## References
 * [Exporting ADFS certificates revisited: Tactics, Techniques and Procedures (o365blog.com)](https://o365blog.com/post/adfs/)

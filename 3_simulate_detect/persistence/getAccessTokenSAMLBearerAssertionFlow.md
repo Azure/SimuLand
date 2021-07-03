@@ -8,14 +8,14 @@ In this document, we are going to use an existing SAML token to exchange it for 
 
 ## Simulate & Detect
 1.	[Encode SAML token](#encode-saml-token)
-2.	[Create HTTP header](#create-http-header)
-3.	[Create HTTP body](#create-http-body)
-4.	[Send HTTP POST to Microsoft identity platform token endpoint](#)
+2.	[Create HTTP request headers](#create-http-request-headers)
+3.	[Create HTTP request body](#create-http-request-body)
+4.	[Send HTTP POST to Microsoft identity platform token endpoint](#send-http-post-to-microsoft-identity-platform-token-endpoint)
 
 ## Preconditions
 * A trust relationship between the authorization server/environment (Microsoft 365) and the identity provider, or issuer of the SAML 2.0 bearer assertion (AD FS server)
 * Endpoint: ADFS01
-    * Even when this step would happen outside of the organization, we can use the same PowerShell session where we [signed a new SAML token](signSAMLToken.md) to go through the simulation steps.
+    * Even when this step would happen outside of the organization, we can use the same PowerShell session where we [signed a new SAML token](../credential-access/signSAMLToken.md) to go through the simulation steps.
     * A valid SAML bearer token
         * Use the output from that previous step as the variable `$SamlToken`.
 
@@ -46,7 +46,7 @@ $headers = @{
 
 ![](../../resources/images/simulate_detect/persistence/getAccessTokenSAMLBearerAssertionFlow/2021-05-19_03_http_header.png)
 
-## Create HTTPRequest Body
+## Create HTTP Request Body
 
 4.  Create an HTTP request body and set the specific resource you want to get an access token for.
 
@@ -141,7 +141,7 @@ Use the variable `$MSGraphAccessToken` that contains the access token for the `A
 
 Use the variable `$MSGraphAccessToken` that contains the access token for an application where we used the application's credentials to get a token for the following steps:
 
-* [Mail access via an application with delegated permissions](../mailAccessDelegatedPermissions.md)
+* [Mail access via an application with delegated permissions](../collection/mailAccessDelegatedPermissions.md)
 
 ## References
 * [Exporting ADFS certificates revisited: Tactics, Techniques and Procedures (o365blog.com)](https://o365blog.com/post/adfs/)
