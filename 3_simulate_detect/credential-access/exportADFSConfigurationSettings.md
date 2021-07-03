@@ -30,7 +30,7 @@ The AD FS configuration settings contains properties of the Federation Service a
 ### Get Database Connection String via WMI Class
 Locally, the AD FS WID does not have its own management user interface (UI), but one could connect to it via a specific `named pipe`. This information can be obtained directly from the `ConfigurationDatabaseConnectionString` property of the `SecurityTokenService` class from the WMI `ADFS namespace`.
 
-1.  Connect to the AD FS server (ADFS01) via the [Azure Bastion service](../../2_deploy/_helper_docs/configureAADConnectADFS) as the AD FS service account.
+1.  Connect to the AD FS server (ADFS01) via the [Azure Bastion service](../../2_deploy/_helper_docs/connectAzVmAzBastion.md) as the AD FS service account.
 2.  Open PowerShell and run the following commands:
 
 ```PowerShell
@@ -142,7 +142,7 @@ For this remote variation, we can use use [AADInternals](https://github.com/Gere
 
 ### Log onto a domain joined workstation
 
-1.  Connect to one of the domain joined workstations (e.g. WORKSTATION6) via the [Azure Bastion service](../../2_deploy/_helper_docs/configureAADConnectADFS) as a domain admin account (e.g. pgustavo).
+1.  Connect to one of the domain joined workstations (e.g. WORKSTATION6) via the [Azure Bastion service](../../2_deploy/_helper_docs/connectAzVmAzBastion.md) as a domain admin account (e.g. pgustavo).
 
 ### Get Object GUID and SID of the AD FS Service Account
 
