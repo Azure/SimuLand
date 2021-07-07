@@ -14,7 +14,7 @@ In this document, we are going to use an existing SAML token to exchange it for 
 
 ## Preconditions
 * A trust relationship between the authorization server/environment (Microsoft 365) and the identity provider, or issuer of the SAML 2.0 bearer assertion (AD FS server)
-* Endpoint: ADFS01
+* Endpoint: AD FS Server (ADFS01)
     * Even when this step would happen outside of the organization, we can use the same PowerShell session where we [signed a new SAML token](../credential-access/signSAMLToken.md) to go through the simulation steps.
     * A valid SAML bearer token
         * Use the output from that previous step as the variable `$SamlToken`.
@@ -54,13 +54,13 @@ $headers = @{
 
 We can request an access token for the Microsoft Graph leveraging the public Azure Active Directory PowerShell application (`1b730954-1685-4b74-9bfd-dac224a7b894`).
 
-* client_id (Required):  Application (Client) ID for the app we would use to access other resources
-* grant_type (Required): The type of token request.
-* assertion (Required): The base64 encoded SAML token.
-* scope (Required): List of scopes for the token request
+* client_id: Application (Client) ID for the app we would use to access other resources
+* grant_type: The type of token request.
+* assertion: The base64 encoded SAML token.
+* scope: List of scopes for the token request
 
 ```PowerShell
-$ClientID = “1b730954-1685-4b74-9bfd-dac224a7b894”
+$ClientID = "1b730954-1685-4b74-9bfd-dac224a7b894"
 
 $body = @{
     "client_id"=$ClientId
@@ -76,10 +76,10 @@ $body = @{
 
 We can also request an access token for the Microsoft Graph leveraging an application we registered ourselves. For this example, we need to use the application credentials along with the `client_id`.
 
-* client_id (Required):  Application (Client) ID for the app we would use to access other resources
-* grant_type (Required): The type of token request.
-* assertion (Required): The base64 encoded SAML token.
-* scope (Required): List of scopes for the token request
+* client_id: Application (Client) ID for the app we would use to access other resources
+* grant_type: The type of token request.
+* assertion: The base64 encoded SAML token.
+* scope: List of scopes for the token request
 
 We can verify that we have information about the application (client) and its credentials. 
  
@@ -100,13 +100,13 @@ $body
 
 ## Send HTTP POST to Microsoft identity platform token endpoint
 
-5.  For this exercise, we send the access token request to the OAuth 2.0 (v2) endpoint: ` https://login.microsoftonline.com/$TenantId/oauth2/v2.0/token`
+5.  For this exercise, we send the access token request to the OAuth 2.0 (v2) endpoint: `https://login.microsoftonline.com/$TenantId/oauth2/v2.0/token`
 
 ```PowerShell
 $TenantId = '14daf1e6-d424-4b0b-843c-8202e580f814'
-$TokenUrl = “https://login.microsoftonline.com/$TenantId/oauth2/v2.0/token”
+$TokenUrl = "https://login.microsoftonline.com/$TenantId/oauth2/v2.0/token"
 $params = @{
-    "Method"=“Post”
+    "Method"="Post"
     "Uri"=$TokenUrl
     "Body"=$body
     "Headers"=$headers

@@ -1,6 +1,6 @@
 # Decrypt Active Directory Federation Services (AD FS) Certificates
 
-After [exporting AD FS certificates](exportADFSCertificatesEncryptedFormat.md) and [obtaining the AD FS DKM master key](exportADFSDKMMasterKeyFromDC.md), we can use the key value to derive a symmetric key and decrypt the AD FS certificates.
+After [exporting AD FS certificates](exportADFSCertificatesEncryptedFormat.md) and [obtaining the AD FS DKM master key](exportADFSDKMMasterKeyFromDC.md), we can use the master key value to derive a symmetric key and decrypt the AD FS certificates.
 
 ## Preconditions
 * Endpoint: ADFS01 or WORKSTATION6

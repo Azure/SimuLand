@@ -47,7 +47,7 @@ You can change the default domain users through the `domainUsers` parameter in t
 ## Deploy Lab Infrastructure
 Once you finish all the steps from the `Prepare` section, you should be ready to deploy the lab infrastructure..
 ### Elevate account access
-The ARM template for this environment is of [tenant scope](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-to-tenant?tabs=azure-cli). Therefore, [you will need to elevate access to manage all Azure resources and assign “owner” or “contributor” roles to the account running the ARM template](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-to-tenant?tabs=azure-cli#required-access).
+The ARM template for this environment is of [tenant scope](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-to-tenant?tabs=azure-cli). Therefore, [you will need to elevate access to manage all Azure resources and assign "owner" or "contributor" roles to the account running the ARM template](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-to-tenant?tabs=azure-cli#required-access).
 
 1.	Browse to [Azure portal](https://portal.azure.com/).
 2.	Log in with a `Global Administrator` account.

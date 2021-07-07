@@ -8,13 +8,13 @@ If a threat actor gets to steal the AD FS token signing certificate from an AD F
 
 ## Enumerate Privileged Accounts
 
-Let's start by identifying privileged accounts that we could impersonate and that could also have privileged access to resources in the cloud. In this lab guide, the default domain admin account named `pgustavo` was also the account that was assigned the Azure AD built-in Global Administrator role. Therefore, we can start by enumerating the members of the `Domain Admins` group.
+Let's start by identifying privileged accounts that we could impersonate and that could also have privileged access to resources in the cloud. In this lab guide, the default domain admin account named `pgustavo` was also the account that was assigned the Azure AD built-in  Global Administrator   role. Therefore, we can start by enumerating the members of the `Domain Admins` group.
 
 ### Enumerate Members of the Domain Admins Group via Lightweight Directory Access Protocol (LDAP)
 
 **Preconditions**
-* Endpoint: ADFS01
-    * Authorization: AD FS service account or local admin
+* Endpoint: AD FS Server (ADFS01)
+    * Authorization: AD FS service account or domain user
 * Endpoint: DC01
     * Service running: Active directory domain services
     * Port open: 389
@@ -56,8 +56,9 @@ $Results | Format-Table Samaccountname,ObjectGuid
 A threat actor would most likely do this outside of the organization. Therefore, there are no detections for this step.
 
 **Preconditions**
-* Endpoint: ADFS01
+* Endpoint: AD FS Server (ADFS01)
   * Even when this step would happen outside of the organization, we can use the same PowerShell session we used in the previous section.
+  * Authorization: Local Administrator
   * Libraries Installed: [AADInternals](https://github.com/Gerenios/AADInternals)
   * AD FS token signing certificate:
     * In a previous simulation step, we [exported the AD FS token signing certificate as a PFX file](exportADFSCertificatesAsPfxFiles.md) to the `C:\ProgramData` directory with the name `ADFSTokenSigningCertificate.pfx` (default).

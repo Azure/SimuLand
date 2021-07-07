@@ -1,8 +1,8 @@
 # Get the Path of the AD FS DKM Container
 
-Even though a threat actor might have been able to extract AD FS certificates (encrypted form), they still need to be decrypted. AD FS certificates are encrypted using Distributed Key Manager (DKM) APIs and can be decryptes with a symmetric key derived from the AD FS DKM master key stored in the domain controller.
+Even though a threat actor might have been able to extract AD FS certificates (encrypted), they still need to be decrypted. AD FS certificates are encrypted using Distributed Key Manager (DKM) APIs and can be decrypted with a symmetric key derived from the AD FS DKM master key stored in the domain controller.
 
-The AD FS DKM key value is stored in the `ThumbnailPhoto` attribute of a contact AD object in the AD FS DKM container. Therefore, we first need to get the path of the AD FS DKM container in the AD domain controller. That information can be retrieved from the `AD FS configuration settings`.
+The AD FS DKM key value is stored in the `ThumbnailPhoto` attribute of an AD contact object in the AD FS DKM container. Therefore, we first need to get the path of the AD FS DKM container in the AD domain controller. That information can be retrieved from the `AD FS configuration settings`.
 
 ## Preconditions
 * Endpoint: ADFS01 or WORKSTATION6

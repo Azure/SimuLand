@@ -21,14 +21,14 @@ The AD FS configuration settings contains properties of the Federation Service a
 ## Named Pipe Connection and AD FS SQL Statement
 
 ### Preconditions
-* Endpoint: ADFS01
+* Endpoint: AD FS Server (ADFS01)
     * Authorization:
         * AD FS Service Account
         * Local Administrator
     * Services Running: Active Directory Federation Services (ADFSSRV)
 
 ### Get Database Connection String via WMI Class
-Locally, the AD FS WID does not have its own management user interface (UI), but one could connect to it via a specific `named pipe`. This information can be obtained directly from the `ConfigurationDatabaseConnectionString` property of the `SecurityTokenService` class from the WMI `ADFS namespace`.
+Locally, the AD FS WID does not have its own management user interface (UI), but one could connect to it via a specific `named pipe`. The named pipe information can be obtained directly from the `ConfigurationDatabaseConnectionString` property of the `SecurityTokenService` class from the WMI `ADFS namespace`.
 
 1.  Connect to the AD FS server (ADFS01) via the [Azure Bastion service](../../2_deploy/_helper_docs/connectAzVmAzBastion.md) as the AD FS service account.
 2.  Open PowerShell and run the following commands:
@@ -41,9 +41,9 @@ $conn
 
 ![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_02_get_database_string_wmi_class.png)
 
-### Connect to database and run SQL statement to read configuration
+### Connect to the database and run a SQL statement to read configuration
 
-3. Use the connection string to connect to the AD FS database and run a SQL `SELECT` statement to export its configuration settings.
+3. Use the connection string to connect to the AD FS database (WID) and run a SQL `SELECT` statement to export its configuration settings from the `IdentityServerPolicy.ServiceSettings` table.
 
 ```PowerShell
 $SQLclient = new-object System.Data.SqlClient.SqlConnection -ArgumentList $conn
@@ -75,8 +75,8 @@ If we want to monitor for anyone interacting with the WID database via SQL state
 
 ### Create SQL Audit Rules
 
-1.  On the AD FS server (e.g ADFS01), open PowerShell as Administrator.
-2.  Install SqlServer PowerShell Module.
+1.  On the AD FS server (ADFS01), open PowerShell as Administrator.
+2.  Install the SqlServer PowerShell Module.
 
 ```PowerShell
 Install-Module -Name SqlServer
@@ -119,10 +119,10 @@ Re-run the following two steps either as the AD FS service account or local admi
 ## AD FS Synchronization
 
 ### Preconditions
-* Endpoint: WORKSTATION6 
+* Endpoint: Workstation (WORKSTATION6)
     * Authorization: Domain Administrator
     * Libraries Installed: [AADInternals](https://github.com/Gerenios/AADInternals)
-* Endpoint: ADFS01
+* Endpoint: AD FS Server (ADFS01)
     * Authorization: AD FS Service Account
     * Services Running: Active Directory Federation Services (ADFSSRV)
     * Network Ports Open: 80
@@ -142,12 +142,12 @@ For this remote variation, we can use use [AADInternals](https://github.com/Gere
 
 ### Log onto a domain joined workstation
 
-1.  Connect to one of the domain joined workstations (e.g. WORKSTATION6) via the [Azure Bastion service](../../2_deploy/_helper_docs/connectAzVmAzBastion.md) as a domain admin account (e.g. pgustavo).
+1.  Connect to one of the domain joined workstations in the network (WORKSTATION6) via the [Azure Bastion service](../../2_deploy/_helper_docs/connectAzVmAzBastion.md) as a [domain admin account](https://github.com/Azure/SimuLand/tree/main/2_deploy/aadHybridIdentityADFS#domain-users-information) (e.g. pgustavo).
 
 ### Get Object GUID and SID of the AD FS Service Account
 
 2.  Open PowerShell as Administrator
-3.  Use the [Active Directory Service Interfaces (ADSI)](https://docs.microsoft.com/en-us/windows/win32/adsi/active-directory-service-interfaces-adsi) to search for the AD FS service account object in the domain controller. Make sure you use the name of the `AD FS service account` you created for the lab environment.
+3.  Use the [Active Directory Service Interfaces (ADSI)](https://docs.microsoft.com/en-us/windows/win32/adsi/active-directory-service-interfaces-adsi) to search for the AD FS service account object in the domain controller. Make sure you use the name of the `AD FS service account` you created for the lab environment (e.g. adfsadmin).
 
 ```PowerShell
 $AdfsServiceAccount = 'adfsadmin'
@@ -205,13 +205,13 @@ The replication channel used to connect to the AD FS server is over `port 80`. T
 
 ![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_08_adfs_remote_connection_sysmon.png)
 
-Another behavior that we could monitor is the authorization check enforced by the AD FS replication service on the main federation server. We can use security events `412` and `501` from the `AD FS auditing` event provider to capture this behavior. These two events can be joined on the `Instance ID` value for additional context and to filter out other authentication events.
+Another behavior that we could monitor is the `authorization check` enforced by the AD FS replication service on the main federation server. We can use security events `412` and `501` from the `AD FS auditing` event provider to capture this behavior. These two events can be joined on the `Instance ID` value for additional context and to filter out other authentication events.
 
 ![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_09_adfs_remote_connection_adfsauditing.png)
 
 ### Azure Sentinel Detection Rules
 
-* [AD FS Remote HTTP Network COnnection](https://github.com/Azure/Azure-Sentinel/blob/e11b723be7d494990bccd1e07e5d52d849580314/Detections/SecurityEvent/ADFSRemoteHTTPNetworkConnection.yaml)
+* [AD FS Remote HTTP Network Connection](https://github.com/Azure/Azure-Sentinel/blob/e11b723be7d494990bccd1e07e5d52d849580314/Detections/SecurityEvent/ADFSRemoteHTTPNetworkConnection.yaml)
 * [AD FS Remote Auth Sync Connection](https://github.com/Azure/Azure-Sentinel/blob/e11b723be7d494990bccd1e07e5d52d849580314/Detections/SecurityEvent/ADFSRemoteAuthSyncConnection.yaml)
 
 ## Detect Active Directory Replication Services
