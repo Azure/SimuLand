@@ -1,6 +1,6 @@
 # Add Credentials to Application
 
-Once a threat actor identifies an application of interest to authenticate with, credentials can be added to it. This allows the adversary to use custom credentials and maintain persistence.
+Once a threat actor identifies an application of interest to authenticate to, credentials can be added to it. This allows the adversary to use custom credentials and maintain persistence.
 
 Based on [Microsoft documentation](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow), like a user, during the authentication flows we're focused on, an application must present credentials. 
 

@@ -1,8 +1,8 @@
 # Export Active Directory Federation Services (AD FS) DKM Master Key from Domain Controller
 
-AD FS certificates are encrypted using Distributed Key Manager (DKM) APIs and the DKM master key used to derive the symmetric key to decrypt them is stored in the domain controller. As mentioned before, when the primary AD FS farm is configured, an AD container (AD FS DKM container) is created in the domain controller and the DKM master key is stored as an attribute of an AD contact object located inside of the container.
+AD FS certificates are encrypted using Distributed Key Manager (DKM) APIs and the DKM master key used to decrypt them is stored in the domain controller. When the primary AD FS farm is configured, the AD FS DKM container is created in the domain controller and the DKM master key is stored as an attribute of an AD contact object located inside of the container.
 
-The path of the AD FS DKM container in the domain controller might vary, but it can be obtained from the `AD FS configuration settings`. After getting the AD path of the container, a threat actor can read the AD FS DKM master key value using the AD FS service account or another authorized account to do so. Also, with the right permissions, one could use Active directory replication services (DRS) to retrieve/sync the AD contact object that holds the master key.
+The path of the AD FS DKM container in the domain controller might vary, but it can be obtained from the `AD FS configuration settings`. After getting the AD path to the container, a threat actor can directly access the AD contact object and read the AD FS DKM master key value. In addition, one could use Active directory replication services (DRS) to indirectly access and retrieve/sync the AD contact object that holds the master key.
 
 ## Simulate & Detect
 
@@ -23,12 +23,12 @@ The path of the AD FS DKM container in the domain controller might vary, but it 
 ## Access AD Contact Object via LDAP
 
 **Preconditions**
-* Endpoint: ADFS01 or WORKSTATION
+* Endpoint: ADFS01 or WORKSTATION6
     * We can use the same PowerShell session on one of the endpoints where we [got the path of the AD FS DKM container](getADFSDKMContainerADPath.md) from to go through the simulation steps.
     * Authorization: AD FS service account
     * AD FS DKM container path:
-        * Use the output from the step where we [got the path of the AD FS DKM container](getADFSDKMContainerADPath.md) and pass it to the PowerShell snippet below as the variable `$base`.
-* Endpoint: DC01
+        * Use the output from the step where we [got the path of the AD FS DKM container](getADFSDKMContainerADPath.md) and pass it to the PowerShell snippets below as the variable `$base`.
+* Endpoint: Domain Controller (DC01_
     * Authorization: AD FS service account
     * Services Running: Lightweight Directory Access Protocol (LDAP)
     * Ports Open: 389
@@ -72,9 +72,14 @@ When a threat actor sets the property `ThumbnailPhoto` as a filter in the LDAP s
 1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/).
 2.	Go to `More Resources` and click on [Azure Advanced Threat Protection](https://simuland.atp.azure.com/).
 
+
 ![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_16_m365_mdi_alert_local_ldap.png)
 
-As mentioned before, you can also see the same alert in the Microsoft Cloud Application Security (MCAS) portal:
+### Microsoft Cloud App Security Alerts
+
+**Active Directory attributes Reconnaissance using LDAP**
+
+You can also see the same alert in the Microsoft Cloud Application Security (MCAS) portal. The MCAS portal is considered the new investigation experience for MDI.
 1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/)
 2.	Go to “More Resources” and click on “[Microsoft Cloud App Security](https://portal.cloudappsecurity.com/)”.
 
@@ -97,7 +102,7 @@ Microsoft Defender for Endpoint sensors also trigger an alert named `ADFS privat
 
 **ADFS private key extraction attempt**
 
-Microsoft Defender for Endpoint sensors also trigger an alert named `ADFS private key extraction attempt` when a threat actor still access the contact AD object holding the DKM key, but without specifying the `ThumbnailPhoto` attribute as part of the filter in the LDAP search query.
+Microsoft Defender for Endpoint sensors also trigger an alert named `ADFS private key extraction attempt` when a threat actor accesses the contact AD object holding the DKM key, but without specifying the `ThumbnailPhoto` attribute as part of the filter in the LDAP search query.
 
 ![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_19_m365_mde_alert_local_ldap_no_cryptopolicy.png)
 
@@ -107,11 +112,11 @@ Microsoft Defender for Endpoint sensors also trigger an alert named `ADFS privat
 
 **AD FS DKM Master Key Export**
 
-We can also audit the access request to the AD FS DKM contact AD object that holds the DKM master key in the AD DS server. This audit rule can be enabled by adding an Access Control Entry (ACE) to the System Access Control List (SACL) of the AD FS DKM contact object in the domain controller. [A SACL is a type of access control list to log attempts to access a secured object](https://docs.microsoft.com/en-us/windows/win32/secauthz/access-control-lists).
+We can also audit the access request to the AD FS DKM contact object in the domain controller. This audit rule can be enabled by adding an Access Control Entry (ACE) to the System Access Control List (SACL) of the AD FS DKM contact object in the domain controller. [A SACL is a type of access control list to log attempts to access a secured object](https://docs.microsoft.com/en-us/windows/win32/secauthz/access-control-lists).
 
 **Create Audit Rule**
 
-1.	Connect to the Domain Controller (DC01) via Azure Bastion services as an Administrator.
+1.	Connect to the Domain Controller (DC01) via the [Azure Bastion service](../../2_deploy/_helper_docs/connectAzVmAzBastion.md) as an Administrator.
 2.	Open PowerShell console as an Administrator.
 4.	Get the path of the AD FS DKM container and use it to obtain the `GUID` of the AD FS DKM contact object holding the AD FS DKM master key (Encryption key).
 
@@ -149,7 +154,7 @@ Set-AuditRule -AdObjectPath "AD:\$ADObjectPath" -WellKnownSidType WorldSid -Righ
 
 ![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_21_create_sacl.png)
 
-Once the audit rule is enabled, run any of the previous LDAP search queries from the previous section to access the AD FS DKM master key and trigger the audit rule. Run the queries from the `ADFS01` server. You will see `Windows Security Event ID 4662` in the Domain Controller:
+Once the audit rule is enabled, run any of the previous LDAP search queries from the previous section to trigger the audit rule. You can run the queries from the `ADFS01` server. You will see `Windows Security Event ID 4662` in the Domain Controller:
 
 ![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_22_dc_event_4662.png)
 
@@ -166,12 +171,12 @@ Use the following detection rule to explore this activity:
 ### Retrieve AD Contact Object via Directory Replication Services
 
 **Preconditions**
-* Endpoint: WORKSTATION6
+* Endpoint: Workstation (WORKSTATION6)
     * Authorization: Domain Administrator
     * Libraries Installed: [AADInternals](https://github.com/Gerenios/AADInternals)
     * AD FS DKM container path:
         * Use the output from the step where we [got the path of the AD FS DKM container](getADFSDKMContainerADPath.md) and pass it to the PowerShell snippet below as the variable `$base`.
-* Endpoint: DC01
+* Endpoint: Domain Controller (DC01)
     * Authorization: Domain Administrator
     * Services Running: Active Directory Replication
 
@@ -181,7 +186,7 @@ Rather than requesting direct access to the contact AD object containing the DKM
 
 1. Go back to the domain-joined endpoint (`WORKSTATION6`) where you authenticated previously as a domain administrator (`pgustavo`) to perform a DCSync technique.
 2. Open PowerShell as Administrator
-3. Get the path of the AD FS DKM container and use it to obtain the `GUID` of the AD FS DKM contact object holding the AD FS DKM master key (Encryption key).
+3. Get the path of the AD FS DKM container and use it to obtain the `GUID` of the AD FS DKM contact object.
 
 ```PowerShell
 $AdfsDKMPath = "LDAP://CN=596f0e13-7a4b-49a1-a106-0cbcba66b065,CN=ADFS,CN=Microsoft,CN=Program Data,DC=simulandlabs,DC=com"

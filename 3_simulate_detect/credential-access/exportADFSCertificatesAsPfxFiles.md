@@ -21,7 +21,7 @@ Get-item $CertificatePath
 
 ## Output
 
-You can use the PFX file of the AD FS token signing certificate for the next step where we [sign our own SAML token](signSAMLToken.md) to impersonate a privileged user.
+You can use the PFX file of the AD FS token signing certificate for the next step where we [sign our own SAML token](signSAMLToken.md) to impersonate a privileged user in a federated environment.
 
 ## References
 * [Exporting ADFS certificates revisited: Tactics, Techniques and Procedures (o365blog.com)](https://o365blog.com/post/adfs/)

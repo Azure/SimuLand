@@ -1,13 +1,13 @@
 # Grant Delegated Permissions to Applications
 
-After a threat actor gets access to a cloud environment, usually the next step would be to look for additional access to other resources of interest. One way to access resources in Azure is via OAuth applications; especially those with privileged permissions. However, in a few cases, a threat actor would simply grant desired permissions to existing applications.
+After a threat actor gets access to a cloud environment, usually the next step would be to look for additional access to other resources of interest. One way to access resources in Azure is via OAuth applications; especially those with privileged permissions. In a few cases, a threat actor would also grant desired permissions to existing applications.
 
 [The Microsoft identity platform supports two types of permissions: delegated permissions and application permissions](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent):
 
 * **Delegated permissions** are used by apps that have a signed-in user present. These permissions are of type “Scope” and delegate privileges of the signed-in user, allowing the app to act as the user. For example, if an application contains the “Mail.Read” delegated permissions and a user requests it; the app would only be able to access the signed-in user mailbox.
 * **Application permissions** are used by apps that run without a signed-in user present. These permissions are of type “Role” and grant the app the full set of privileges offered by the scope. For example, if an application contains the `Mail.Read` role permissions, the application would have access to every user’s mailbox.
 
-In this document, we are going to simulate an adversary granting delegated `Mail.ReadWrite` permissions to an existing OAuth application.
+In this document, we are going to simulate an adversary granting delegated `Mail.ReadWrite` permissions to an existing OAuth application. You can use this document to grant other permissions to an application.
 
 ## Simulate & Detect
 1.	[Enumerate Existing Applications and Service Principals](#enumerate-existing-applications-and-service-principals)
@@ -16,10 +16,10 @@ In this document, we are going to simulate an adversary granting delegated `Mail
 
 ## Preconditiona
 
-* Endpoint: ADFS01
-    * Even when this step would happen outside of the organization, we can use the same PowerShell session where we [got a Microsoft Graph access token](getAccessTokenSAMLBearerAssertionFlow.md) to go through the simulation steps.
+* Endpoint: AD FS Server (ADFS01)
+    * Even when this step would happen outside of the organization, we can use the same PowerShell session where we [got a Microsoft Graph access token](getAccessTokenSAMLBearerAssertionFlow.md).
     * Microsoft Graph Access Token
-        * Use the output from the previous step as the variable `$MSGraphAccessToken` for the simulation steps. Make sure the access token is from the `Azure Active Directory PowerShell Application`. That application has the right permissions to execute all the simulation steps.
+        * Use the output from the previous step as the variable `$MSGraphAccessToken`. Make sure the access token is from the `Azure Active Directory PowerShell Application`. That application has the right permissions to execute all the simulation steps.
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_01_msgraph_token.png)
 
@@ -72,7 +72,7 @@ Once again, `Application/Role` permissions allow an application to act as its ow
     * Directory.ReadWrite.All
 * A Microsoft Graph access token
 
-In the same PowerShell session, use the application metadata from the previous steps to update its required permissions. Also, define the specific permissions to add to the application before granting them. For this document, we are adding the `Mail.ReadWrite` permission from Microsoft Graph. You can update this depending on the use case being worked on.
+In the same PowerShell session, use the application metadata from the previous steps to update its required permissions. Also, define the specific permissions to add to the application before granting them. For our main example, we are adding the `Mail.ReadWrite` permission from Microsoft Graph. You can update this depending on the use case being worked on.
 
 In addition, in this section, we use the PropertyType `oauth2PermissionScopes` and ResourceAccessType `Scope` while looking for the desired permission in the properties of the Microsoft Graph application service principal.
 
