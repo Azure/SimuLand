@@ -235,7 +235,7 @@ We can also join the Windows Security event 4662 with 4624 on the LogonId value 
 
 Use the following detection rule to explore this activity:
 
-* [ADFS DKM Master Key Export](https://github.com/Azure/Azure-Sentinel/blob/8c53ceaf7473378380e907b1aaa24604efae3651/Detections/SecurityEvent/NonDCActiveDirectoryReplication.yaml)
+* [Non Domain Controller Active Directory Replication](https://github.com/Azure/Azure-Sentinel/blob/master/Detections/SecurityEvent/NonDCActiveDirectoryReplication.yaml)
 
 ### Microsoft Defender for Identity
 
