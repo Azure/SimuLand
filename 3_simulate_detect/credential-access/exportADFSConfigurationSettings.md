@@ -67,7 +67,7 @@ The connection to the AD FS database occurs via the `\\.\pipe\microsoft##wid\tsq
 
 ### Azure Sentinel Detection Rules
 
-* [AD FS Database Named Pipe Connection Rule](https://github.com/Azure/Azure-Sentinel/blob/e11b723be7d494990bccd1e07e5d52d849580314/Detections/SecurityEvent/ADFSDBNamedPipeConnection.yaml)
+* [AD FS Database Named Pipe Connection Rule](https://github.com/Azure/Azure-Sentinel/blob/master/Detections/SecurityEvent/ADFSDBNamedPipeConnection.yaml)
 
 ## Detect AD FS SQL Statement to Export Service Settings
 
@@ -102,17 +102,15 @@ GO
 "
 ```
 
-4.  Validate SQL Audit: `Export AD FS Configuration Settings`.
-
-Re-run the following two steps either as the AD FS service account or local administrator:
+4.  Validate SQL Audit rule by running previous simulation steps either as the AD FS service account or local administrator:
 * [Get Database Connection String via WMI Class](#get-database-connection-string-via-wmi-class)
 * [Connect to database and run SQL statement to read configuration](#connect-to-database-and-run-sql-statement-to-read-configuration)
 
 ![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_04_adfs_sql_event_sample.png)
 
-### Azure Sentinel Detection Rules
+### Azure Sentinel Hunting Queries
 
-* [AD FS Database Local SQL Statements Rule](https://github.com/Azure/Azure-Sentinel/blob/e11b723be7d494990bccd1e07e5d52d849580314/Detections/SecurityEvent/ADFSDBLocalSqlStatements.yaml)
+* [AD FS Database Local SQL Statements Rule](https://github.com/Azure/Azure-Sentinel/blob/master/Hunting%20Queries/SecurityEvent/ADFSDBLocalSqlStatements.yaml)
 
 ## Remote Variations
 
@@ -211,8 +209,8 @@ Another behavior that we could monitor is the `authorization check` enforced by 
 
 ### Azure Sentinel Detection Rules
 
-* [AD FS Remote HTTP Network Connection](https://github.com/Azure/Azure-Sentinel/blob/e11b723be7d494990bccd1e07e5d52d849580314/Detections/SecurityEvent/ADFSRemoteHTTPNetworkConnection.yaml)
-* [AD FS Remote Auth Sync Connection](https://github.com/Azure/Azure-Sentinel/blob/e11b723be7d494990bccd1e07e5d52d849580314/Detections/SecurityEvent/ADFSRemoteAuthSyncConnection.yaml)
+* [AD FS Remote HTTP Network Connection](https://github.com/Azure/Azure-Sentinel/blob/master/Detections/SecurityEvent/ADFSRemoteHTTPNetworkConnection.yaml)
+* [AD FS Remote Auth Sync Connection](https://github.com/Azure/Azure-Sentinel/blob/master/Detections/SecurityEvent/ADFSRemoteAuthSyncConnection.yaml)
 
 ## Detect Active Directory Replication Services
 
