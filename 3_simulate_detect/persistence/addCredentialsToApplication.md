@@ -33,7 +33,7 @@ This authentication consists of two elements:
 $headers = @{"Authorization" = "Bearer $MSGraphAccessToken"}
 $params = @{
     "Method"  = "Get"
-    "Uri"     = https://graph.microsoft.com/v1.0/applications
+    "Uri"     = "https://graph.microsoft.com/v1.0/applications"
     "Headers" = $headers
 }
 $applications = Invoke-RestMethod @params
@@ -60,7 +60,7 @@ $body = @{
 }
 $params = @{
     "Method"  = "Post"
-    "Uri"     = https://graph.microsoft.com/v1.0/applications/$appObjectId/addPassword
+    "Uri"     = "https://graph.microsoft.com/v1.0/applications/$appObjectId/addPassword"
     "Body"    = $body | ConvertTo-Json –Compress
     "Headers" = $headers
 }

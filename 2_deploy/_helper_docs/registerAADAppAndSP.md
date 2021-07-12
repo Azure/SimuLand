@@ -52,13 +52,11 @@ az ad sp create --id $app.appId
 
 ![](../../resources/images/deploy/helper_docs/registerAADAppAndSP/2021-05-19_05_graph_user_read.png)
 
-5.	Grant admin consent to the application
+5.	Do NOT Grant admin consent to the application
 
 ![](../../resources/images/deploy/helper_docs/registerAADAppAndSP/2021-05-19_06_grant_admin_consent.png)
 
 That’s it.
-
-![](../../resources/images/deploy/helper_docs/registerAADAppAndSP/2021-05-19_07_grant_admin_consent.png)
  
 Applications sometimes take a few hours to show in the Microsoft Cloud App Security (MCAS) portal.
 1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/)
