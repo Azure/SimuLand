@@ -39,53 +39,53 @@ In this document, we are going to simulate an adversary granting delegated `Mail
         * Directory.Read.All
 * A Microsoft Graph access token
 
-Open PowerShell as administrator and use the existing Microsoft Graph access token to list the Azure AD applications in a tenant. In this lab, we only have one application named `MyApplication` by default. If you changed the name while deploying the lab environment, use that name.
+Open PowerShell as administrator and use the existing Microsoft Graph access token to list the current Azure AD applications in a tenant.
 
 ```PowerShell
-$headers = @{“Authorization” = “Bearer $MSGraphAccessToken”}
+$headers = @{"Authorization" = "Bearer $MSGraphAccessToken"}
 $params = @{
-  “Method”  = “Get”
-  “Uri”     = “https://graph.microsoft.com/v1.0/applications”
-  “Headers” = $headers
+  "Method"  = "Get"
+  "Uri"     = "https://graph.microsoft.com/v1.0/applications”
+  "Headers" = $headers
 }
 $AzADApps = Invoke-RestMethod @params
 ```
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_02_aad_application.png)
 
+Next, filter the results and select the Azure AD application that was created for this lab environment. If you followed the instructions to [register one Azure AD application](../../2_deploy/_helper_docs/registerAADAppAndSP.md) after deploying the lab environment, your app should be named `MyApplication`. If you used a different name, make sure you look for it with the right name in t he following PowerShell command:
+
+```PowerShell
+$Application = $AzADApps.value | Where-Object {$_.displayName -eq "MyApplication"}
+```
+
+Use the `$Application` variable for the next steps.
+
 ## Grant Delegated Permissions (OAuth2Permissions)
 
-Once again, `Application/Role` permissions allow an application to act as its own entity in Azure AD. However, `Delegated` permissions allow an application to perform actions on behalf of the signed-in user using the application. The process to grant delegated permissions to an application is very similar to the one to grant “Application/Role” permissions.
+Once again, `Application/Role` permissions allow an application to act as its own entity in Azure AD. However, `Delegated` permissions allow an application to perform actions on behalf of the signed-in user using the application. The process to grant delegated permissions to an application is very similar to the one to grant `Application/Role` permissions.
 
 ### Update Azure AD Application Required Permissions (OAuth2Permissions)
 
 **Preconditions**
 * Authorization:
-* Identity solution: Azure AD
-* Access control model: Discretionary Access Control (DAC)
-* Service: Azure Microsoft Graph
-* Permission Type: Delegated
-* Permissions (One of the following):
-    * Application.Read.All
-    * Application.ReadWrite.All
-    * Directory.Read.All
-    * Directory.ReadWrite.All
+    * Identity solution: Azure AD
+    * Access control model: Discretionary Access Control (DAC)
+    * Service: Azure Microsoft Graph
+    * Permission Type: Delegated
+    * Permissions (One of the following):
+        * Application.Read.All
+        * Application.ReadWrite.All
+        * Directory.Read.All
+        * Directory.ReadWrite.All
 * A Microsoft Graph access token
 
-In the same PowerShell session, use the application metadata from the previous steps to update its required permissions. Also, define the specific permissions to add to the application before granting them. For our main example, we are adding the `Mail.ReadWrite` permission from Microsoft Graph. You can update this depending on the use case being worked on.
-
-In addition, in this section, we use the PropertyType `oauth2PermissionScopes` and ResourceAccessType `Scope` while looking for the desired permission in the properties of the Microsoft Graph application service principal.
+In the same PowerShell session, get the `Microsoft Graph` service principal object to retrieve the specific IDs of the permissions we want to add to an application. We also need to filter on the right permission type (`Delegated` or `AppRole`).
 
 ```PowerShell
-$Application = $AzADApps.value[0]
 $resourceSpDisplayName = ‘Microsoft Graph’
-$PropertyType = 'oauth2PermissionScopes'
-$ResourceAccessType = 'Scope'
-$permissions = @(‘Mail.ReadWrite’)
 
-#Get Microsoft Graph Service Principal object to retrieve permissions from it.
-
-$headers = @{“Authorization” = “Bearer $MSGraphAccessToken”}
+$headers = @{"Authorization" = "Bearer $MSGraphAccessToken"}
 $params = @{
     "Method" = "Get"
     "Uri" = "https://graph.microsoft.com/v1.0/servicePrincipals?`$filter=displayName eq '$resourceSpDisplayName'"
@@ -100,9 +100,15 @@ if ($ResourceResults.value.Count -ne 1) {
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_03_get_svc_principal.png)
 
-Retrieve Role Assignments from Microsoft Graph object and create `Resource Access Items` to then generate a `Required Resources Access` object. The 'Required Resource Access object' contains the required permissions that will be assigned to the Azure AD application
+Retrieve Role Assignments from Microsoft Graph object and create `Resource Access Items` to then generate a `Required Resources Access` object. The `Required Resource Access object` contains the required permissions that will be assigned to the Azure AD application.
+
+For this example, if we want to add the `delegated` Microsoft Graph `Mail.ReadWrite` permission to an application, we would use the PropertyType `oauth2PermissionScopes` and ResourceAccessType `Scope` from the Microsoft Graph service principal object.
 
 ```PowerShell
+$PropertyType = 'oauth2PermissionScopes'
+$ResourceAccessType = 'Scope'
+$permissions = @(‘Mail.ReadWrite’)
+
 $ResourceAccessItems = @()
 Foreach ($AppPermission in $permissions) {
     $RoleAssignment = $ResourceSvcPrincipal.$PropertyType | Where-Object { $_.Value -eq $AppPermission }
@@ -112,13 +118,15 @@ Foreach ($AppPermission in $permissions) {
     }
     $ResourceAccessItems += $ResourceAccessItem
 }
+$ResourceAccessItems
 ```
 
 As you can see in the image below, the type of resource access item is `Scope`. That is an indicator that we are working with delegated permissions.
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_04_resource_access_items.png)
 
-Verify if permissions have been assigned to the application yet. 
+Before we update the permissions of an application, we need to verify if permissions have been assigned to the application yet.
+
 * Reference: [https://github.com/TheCloudScout/devops-auto-key-rotation/blob/main/scripts/Set-addApplicationOwner.ps1](https://github.com/TheCloudScout/devops-auto-key-rotation/blob/main/scripts/Set-addApplicationOwner.ps1)
 
 ```PowerShell
@@ -148,7 +156,7 @@ Retrieve a few attributes from the local Azure AD application object including t
 ```powerShell
 $AppBody = $Application | Select-Object -Property "id", "appId", "displayName", "identifierUris", "requiredResourceAccess"
 $headers = @{
-  “Authorization” = “Bearer $MSGraphAccessToken”
+  "Authorization" = "Bearer $MSGraphAccessToken"
   "Content-Type" = "application/json"
 }
 $params = @{
@@ -187,10 +195,10 @@ If you go to the [Azure Portal](https://portal.azure.com/) > Azure AD > App Regi
 Next, in order to grant permissions to the application, we need to do it at the service principal level. We can take the application Id value from our previous steps and get its service principal.
 
 ```PowerShell
-$headers = @{“Authorization” = “Bearer $MSGraphAccessToken”}
+$headers = @{"Authorization" = "Bearer $MSGraphAccessToken"}
 $params = @{
     "Method"  = "Get"
-    "Uri"     = "https://graph.microsoft.com/v1.0/servicePrincipals?`$filter=appId eq '$($AzADApps.value[0].appId)'"
+    "Uri"     = "https://graph.microsoft.com/v1.0/servicePrincipals?`$filter=appId eq '$($Application.appId)'"
     "Headers" = $headers
 }
 $AzADAppSp = Invoke-RestMethod @params
@@ -254,17 +262,19 @@ $body = @{
 }
 
 $headers = @{
-  “Authorization” = “Bearer $MSGraphAccessToken”
+  "Authorization" = "Bearer $MSGraphAccessToken"
   "Content-Type" = "application/json"
 }
 $params = @{
   "Method" = "Post"
-  "Uri" = “https://graph.microsoft.com/v1.0/oauth2PermissionGrants”
+  "Uri" = "https://graph.microsoft.com/v1.0/oauth2PermissionGrants"
   "Body" = $body | ConvertTo-Json –Compress
   "Headers" = $headers
 }
 Invoke-RestMethod @params
 ```
+
+If you get an `(409) Conflict` error message, it could be because you already granted consent to other permissions already assigned to the application. 
 
 ## Detect Permissions Granted to Applications
 
