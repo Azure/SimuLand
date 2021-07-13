@@ -2,7 +2,7 @@
 
 Once a threat actor identifies an application of interest to authenticate to, credentials can be added to it. This allows the adversary to use custom credentials and maintain persistence.
 
-Based on [Microsoft documentation](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow), like a user, during the authentication flows we're focused on, an application must present credentials. 
+Based on [Microsoft documentation](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow), during the authentication flow an application must present credentials. 
 
 This authentication consists of two elements:
 * An Application ID, sometimes referred to as a Client ID. A GUID that uniquely identifies the app's registration in your Active Directory tenant.
@@ -23,7 +23,7 @@ This authentication consists of two elements:
     * Permission Type: Delegated
     * Permissions: Application.ReadWrite.All
 * Endpoint: ADFS01
-    * Even when this step would happen outside of the organization, we can use the same PowerShell session where we [got a Microsoft Graph access token](getAccessTokenSAMLBearerAssertionFlow.md) to go through the simulation steps.
+    * Even when this step would happen outside of the organization, we can use the same PowerShell session where we [got a Microsoft Graph access token](getAccessTokenSAMLBearerAssertionFlow.md) for the Azure AD PowerShell application to go through the simulation steps.
     * Microsoft Graph Access Token
         * Use the output from the previous step as the variable `$MSGraphAccessToken` for the simulation steps. Make sure the access token is from the `Azure Active Directory PowerShell Application`. That application has the right permissions to execute all the simulation steps.
 
@@ -38,12 +38,20 @@ $params = @{
 }
 $applications = Invoke-RestMethod @params
 $applications
-
-$appObjectId = $applications.value[0].id
-$appObjectId
 ```
 
-![](../../resources/images/simulate_detect/persistence/addCredentialsToApplication/2021-05-19_03_app_object_id.png)
+Next, filter the results and select the Azure AD application that was created for this lab environment. If you followed the instructions to [register one Azure AD application](../../2_deploy/_helper_docs/registerAADAppAndSP.md) after deploying the lab environment, your app should be named `SimuLandApp`. If you used a different name, make sure you look for it with the right name in t he following PowerShell command:
+
+```PowerShell
+$application = $applications.value | Where-Object {$_.displayName -eq "SimuLandApp"}
+```
+
+Use the `$application` variable to get the application object id.
+
+```PowerShell
+$appObjectId = $application.id
+$appObjectId
+```
 
 ## Add Credentials to Application
 
@@ -72,7 +80,7 @@ $secret
  
 ![](../../resources/images/simulate_detect/persistence/addCredentialsToApplication/2021-05-19_04_app_new_secret.png)
 
-Browse to [Azure Portal](https://portal.azure.com/) and go to Azure AD > App Registrations > `MyApplication` > `Certificates & secrets` to verify the task.
+Browse to [Azure Portal](https://portal.azure.com/) and go to Azure AD > App Registrations > `SimuLandApp` > `Certificates & secrets` to verify the task.
 
 ![](../../resources/images/simulate_detect/persistence/addCredentialsToApplication/2021-05-19_05_app_new_secret.png)
 

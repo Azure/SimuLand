@@ -49,14 +49,16 @@ $params = @{
   "Headers" = $headers
 }
 $AzADApps = Invoke-RestMethod @params
+$AzADApps
+$AzADApps.value
 ```
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_02_aad_application.png)
 
-Next, filter the results and select the Azure AD application that was created for this lab environment. If you followed the instructions to [register one Azure AD application](../../2_deploy/_helper_docs/registerAADAppAndSP.md) after deploying the lab environment, your app should be named `MyApplication`. If you used a different name, make sure you look for it with the right name in t he following PowerShell command:
+Next, filter the results and select the Azure AD application that was created for this lab environment. If you followed the instructions to [register one Azure AD application](../../2_deploy/_helper_docs/registerAADAppAndSP.md) after deploying the lab environment, your app should be named `SimuLandApp`. If you used a different name, make sure you look for it with the right name in t he following PowerShell command:
 
 ```PowerShell
-$Application = $AzADApps.value | Where-Object {$_.displayName -eq "MyApplication"}
+$Application = $AzADApps.value | Where-Object {$_.displayName -eq "SimuLandApp"}
 ```
 
 Use the `$Application` variable for the next steps.
@@ -83,7 +85,7 @@ Once again, `Application/Role` permissions allow an application to act as its ow
 In the same PowerShell session, get the `Microsoft Graph` service principal object to retrieve the specific IDs of the permissions we want to add to an application. We also need to filter on the right permission type (`Delegated` or `AppRole`).
 
 ```PowerShell
-$resourceSpDisplayName = ‘Microsoft Graph’
+$resourceSpDisplayName = 'Microsoft Graph'
 
 $headers = @{"Authorization" = "Bearer $MSGraphAccessToken"}
 $params = @{
@@ -96,6 +98,7 @@ $ResourceSvcPrincipal = $ResourceResults.value[0]
 if ($ResourceResults.value.Count -ne 1) {
     Write-Error "Found $($ResourceResults.value.Count) service principals with displayName '$($resourceSpDisplayName)'"
 }
+$ResourceSvcPrincipal
 ```
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_03_get_svc_principal.png)
@@ -145,6 +148,7 @@ else {
     # Update/Assign application permissions
     $Application.requiredResourceAccess += $RequiredResourceAccess
 }
+$Application.requiredResourceAccess
 ```
 
 As you can see in the image below, the new permission has been added to the local Azure AD Application object required permissions attribute. We can pass the required permissions attribute values to another API and update the required permissions of the Azure AD application.
@@ -173,9 +177,7 @@ if ($updatedApplication.StatusCode -eq 204) {
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_06_required_permissions.png)
 
-If you go to the [Azure Portal](https://portal.azure.com/) > Azure AD > App Registrations > MyApplication > API Permissions, you will see the additional permission added to the application. As you can see in the image below, admin consent is not required. However, we can still grant permission to cover other permissions that might require it for other use cases.
-
-![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_07_azure_portal.png)
+If you go to the [Azure Portal](https://portal.azure.com/) > Azure AD > App Registrations > `SimuLandApp` > API Permissions, you will see the additional permission added to the application.
 
 ### Get AD Service Principals of Applications
 
@@ -202,6 +204,7 @@ $params = @{
     "Headers" = $headers
 }
 $AzADAppSp = Invoke-RestMethod @params
+$AzADAppSp.value | Format-List
 ```
  
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_08_aad_application_sp.png)
@@ -225,15 +228,15 @@ Define initial variables as shown below.
 
 ```PowerShell
 $ServicePrincipalId = $AzADAppSp.value[0].id
-$resourceSpDisplayName = ‘Microsoft Graph’
+$resourceSpDisplayName = 'Microsoft Graph'
 $PropertyType =  'oauth2PermissionScopes'
-$permissions = @(‘Mail.ReadWrite’)
+$permissions = @('Mail.ReadWrite')
 ```
 
 Get Microsoft Graph Service Principal object to retrieve permissions references from it.
 
 ```PowerShell
-$headers = @{“Authorization” = “Bearer $MSGraphAccessToken”}
+$headers = @{"Authorization" = "Bearer $MSGraphAccessToken"}
 $params = @{
   "Method" = "Get"
   "Uri" = "https://graph.microsoft.com/v1.0/servicePrincipals?`$filter=displayName eq '$resourceSpDisplayName'"
@@ -243,6 +246,7 @@ $ResourceSvcPrincipal = Invoke-RestMethod @params
 if ($ResourceSvcPrincipal.value.Count -ne 1) {
   Write-Error "Found $($ResourceSvcPrincipal.value.Count) service principals with displayName '$($resourceSpDisplayName)'"
 }
+$ResourceSvcPrincipal.value | Format-List
 ```
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_09_mgraph_retrieve_permissions.png)
