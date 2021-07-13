@@ -225,7 +225,7 @@ Not everything can be automated yet. Therefore, there are a few additional tasks
 
 1.	[Finish Azure AD Connect setup on the "on-prem” AD domain controller](../_helper_docs/configureAADConnectADFS.md).
 2.	[Enable Multi-Factor authentication to domain users](../_helper_docs/enableMultiFactorAuthentication.md).
-3.	[Assign “Global Administrator” role to one domain user](../_helper_docs/assignAADRole.md).
+3.	[Assign "Application Administrator" role to one domain user](../_helper_docs/assignAADRole.md).
 4.	[Add Microsoft 365 E5 license to domain users](../_helper_docs/addM365LicenseToUser.md).
 5.	[Register an Azure AD Application](../_helper_docs/registerAADAppAndSP.md).
 
