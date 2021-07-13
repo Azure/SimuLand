@@ -6,17 +6,20 @@
 * [Azure CLI installed](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
 ## Register Azure AD Application
-1.	Locally on your computer, log on as a global admin account or user that can register Azure AD applications.
+
+1.	Locally on your computer, open a PowerShell console and log on with an account that can register Azure AD applications.
 
 ```PowerShell
 az login
 ```
 
-2.	Open a PowerShell console and register a new Azure AD application with the following command.
+2.	Register a new Azure AD application. By default, let's name it `SimuLandApp`. If you decide to give it another name, make sure you take a note of that since you will need it while going through lab instructions.
 
 ```PowerShell
-$app= az ad app create --display-name MyApplication --homepage 'https://localhost/MyApplication' --reply-urls 'https://localhost/MyApplication' --identifier-uris 'https://localhost/MyApplication'
-$app = $app | ConvertFrom-Json
+$appName = "SimuLandApp"
+$results= az ad app create --display-name $appname --homepage "https://localhost/$appname" --reply-urls "https://localhost/$appname" --identifier-uris "https://localhost/$appname"
+$app = $results | ConvertFrom-Json
+$app
 ```
 
 3.	Browse to [Azure Portal](https://portal.azure.com/)
@@ -26,21 +29,25 @@ $app = $app | ConvertFrom-Json
 ![](../../resources/images/deploy/helper_docs/registerAADAppAndSP/2021-05-19_01_aad_app_registrations.png)
 
 ## Create Service Principal for Azure AD Application
-1.	Run the following command to create a service principal for the Azure AD application
+
+1.  Use the variable `$app` from the previous section and run the following command to create a service principal for the Azure AD application:
 
 ```PowerShell
 az ad sp create --id $app.appId
 ```
 
-1.	Browse to [Azure Portal](https://portal.azure.com/)
-2.	Go to Azure AD > Enterprise Applications
-3.	Look for your Azure AD App service principal
+2.	Browse to [Azure Portal](https://portal.azure.com/)
+3.	Go to Azure AD > Enterprise Applications
+4.	Look for your Azure AD App service principal
 
 ![](../../resources/images/deploy/helper_docs/registerAADAppAndSP/2021-05-19_02_aad_enterprise_apps.png)
 
 ## Grant Delegated Permissions
+
+Let's make it an OAuth application by adding a delegated permissions to it.
+
 1.	Browse to [Azure Portal](https://portal.azure.com/)
-2.	Go to Azure AD > App Registrations > MyApplication
+2.	Go to Azure AD > App Registrations > `SimuLandApp`
 
 ![](../../resources/images/deploy/helper_docs/registerAADAppAndSP/2021-05-19_03_aad_app_registrations.png)
 
@@ -61,6 +68,4 @@ That’s it.
 Applications sometimes take a few hours to show in the Microsoft Cloud App Security (MCAS) portal.
 1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/)
 2.	Go to  `More Resources` and click on `Microsoft Cloud App Security`.
-3.	Investigate > Connected Apps > Office 365 > OAuth Apps
-
-![](../../resources/images/deploy/helper_docs/registerAADAppAndSP/2021-05-19_08_m365_macs_oauth_apps.png)
+3.	Investigate > OAuth Apps
