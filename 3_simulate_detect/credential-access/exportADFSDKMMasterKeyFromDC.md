@@ -250,7 +250,7 @@ The Microsoft Defender for Identity sensor installed on the domain controller tr
 
 ## Output
 
-Use the variable `$key` in the next step where we [decrypt AD FS certificates](decryptADFSCertificates.md).
+Use the variable `$key` in the next step to decrypt AD FS certificates.
 
 ## References
 * [Exporting ADFS certificates revisited: Tactics, Techniques and Procedures (o365blog.com)](https://o365blog.com/post/adfs/)

