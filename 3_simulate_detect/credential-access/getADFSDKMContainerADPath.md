@@ -18,6 +18,7 @@ $group = $xml.ServiceSettingsData.PolicyStore.DkmSettings.Group
 $container = $xml.ServiceSettingsData.PolicyStore.DkmSettings.ContainerName
 $parent = $xml.ServiceSettingsData.PolicyStore.DkmSettings.ParentContainerDn
 $base = "LDAP://CN=$group,$container,$parent"
+$base
 ```
 
 ![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_13_get_ad_dkm_path.png)

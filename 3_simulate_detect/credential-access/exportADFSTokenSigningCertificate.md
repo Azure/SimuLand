@@ -6,21 +6,19 @@ when the primary AD FS farm is configured, an AD container (AD FS DKM container)
 
 A threat actor could use the `AD FS configuration settings` to extract sensitive information such as AD FS certificates (encrypted) and get the path to the AD FS DKM container in the domain controller. The `AD FS DKM master key` can then be retrieved from the AD container and used to decrypt the token signing certificate. Finally, the AD FS token signing certificate can be used to sign SAML tokens and impersonate users in a federated environment.
 
-![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_01_adfs_design2.png)
+![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_01_adfs_design.png)
 
 ## Simulate and Detect
- 
+
 1.	[Export AD FS configuration settings](exportADFSConfigurationSettings.md).
     * There are two variations to this technique, locally on the AD FS server and remotely from any domain-joined workstation.
-2.	[Export AD FS certificates in encrypted format](exportADFSCertificatesEncryptedFormat.md).
-    * Export the AD FS token signing certificate.
+2.	[Extract AD FS token signing certificate](extractADFSTokenSigningCertificate.md).
+    * Certificate is extracted as an encrypted blob.
 3.	[Get the path of the AD FS DKM Container](getADFSDKMContainerADPath.md).
 4.	[Export AD FS DKM master key from Domain Controller](exportADFSDKMMasterKeyFromDC.md).
-    * There are two variations to this technique. the AD contact object holding the AD FS DKM master key can be accessed directly or retrieved/synced via directory replication services (DSR).
-5.	[Decrypt AD FS certificates](decryptADFSCertificates.md).
-    * Decrypt the AD FS token signing certificate.
-6.	[Export AD FS certificate as PFX file](exportADFSCertificatesAsPfxFiles.md).
-    * Export the AD FS token signing certificate as a PFX file.
+    * There are two variations to this technique. the AD contact object holding the AD FS DKM master key can be accessed directly or retrieved/synced via [directory replication services (DRS)](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-drsr/f977faaa-673e-4f66-b9bf-48c640241d47).
+5.	[Decrypt AD FS token signing certificate](decryptADFSTokenSigningCertificate.md).
+6.	[Export AD FS token signing certificate as PFX file](exportADFSTokenSigningCertAsPfxFile.md).
 
 # References
 * [Token-Signing Certificates | Microsoft Docs](https://docs.microsoft.com/en-us/windows-server/identity/ad-fs/design/token-signing-certificates#:~:text=%20A%20token-signing%20certificate%20must%20meet%20the%20following,in%20the%20personal%20store%20of%20the...%20More%20)
