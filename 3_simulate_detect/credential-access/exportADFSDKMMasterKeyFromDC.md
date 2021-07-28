@@ -27,7 +27,7 @@ The path of the AD FS DKM container in the domain controller might vary, but it 
     * We can use the same PowerShell session on one of the endpoints where we [got the path of the AD FS DKM container](getADFSDKMContainerADPath.md) from to go through the simulation steps.
     * Authorization: AD FS service account
     * AD FS DKM container path:
-        * Use the output from the step where we [got the path of the AD FS DKM container](getADFSDKMContainerADPath.md) and pass it to the PowerShell snippets below as the variable `$base`.
+        * Use the output from the step where we [got the path of the AD FS DKM container](getADFSDKMContainerADPath.md) and pass it to the PowerShell commands below as the variable `$base`.
 * Endpoint: Domain Controller (DC01_
     * Authorization: AD FS service account
     * Services Running: Lightweight Directory Access Protocol (LDAP)
@@ -175,7 +175,7 @@ Use the following detection rule to explore this activity:
     * Authorization: Domain Administrator
     * Libraries Installed: [AADInternals](https://github.com/Gerenios/AADInternals)
     * AD FS DKM container path:
-        * Use the output from the step where we [got the path of the AD FS DKM container](getADFSDKMContainerADPath.md) and pass it to the PowerShell snippet below as the variable `$base`.
+        * Use the output from the step where we [got the path of the AD FS DKM container](getADFSDKMContainerADPath.md) and pass it to the PowerShell commands below as the variable `$base`.
 * Endpoint: Domain Controller (DC01)
     * Authorization: Domain Administrator
     * Services Running: Active Directory Replication

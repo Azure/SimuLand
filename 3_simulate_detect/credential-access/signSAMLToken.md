@@ -109,7 +109,7 @@ $SamlToken
 
 ## Output
 
-Use the variable `$SamlToken` in the next step to [get an access token via SAML bearer assertion flow](../persistence/getAccessTokenSAMLBearerAssertionFlow.md) for resources such as the Microsoft Graph API.
+Use the variable `$SamlToken` in the next step to [get an OAuth access token via the SAML bearer assertion flow](../persistence/getOAuthTokenWithSAMLAssertion.md) for OAuth protected resources such as the Microsoft Graph API.
 
 ## References
 * [Exporting ADFS certificates revisited: Tactics, Techniques and Procedures (o365blog.com)](https://o365blog.com/post/adfs/)

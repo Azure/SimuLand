@@ -32,37 +32,46 @@ Next, use the stolen AD FS token signing certificate and sign a new SAML token t
 
 ### Persistence
 
-Furthermore, with the new SAML token, request an access token to the Microsoft Graph API and grant delegated permissions and add credentials (password) to an Azure AD application.
+Furthermore, with the new SAML token, request an OAuth access token to use the Microsoft Graph API in order to grant delegated permissions and add credentials (password) to an OAuth application.
 
-### 3. Request Access Token with SAML Token - (Valid Accounts: Cloud Accounts – T1078.004)
+### 3. Request OAuth Access Token with SAML Assertion - (Valid Accounts: Cloud Accounts – T1078.004)
 
-Follow the next steps to simulate a threat actor getting an access token for the Microsoft Graph API using the Azure Active Directory PowerShell application as a client app. That application has the right permissions to perform the next two steps.
+Follow the next steps to simulate a threat actor getting an OAuth access token for the Microsoft Graph API using the public `Azure Active Directory PowerShell application` as a client. Use the following information while running this step:
 
-[Request Access Token with SAML Token Steps](../../3_simulate_detect/persistence/getAccessTokenSAMLBearerAssertionFlow.md)
+* Client ID: `1b730954-1685-4b74-9bfd-dac224a7b894` (Azure AD PowerShell Application ID)
+* Scope: `https://graph.microsoft.com/.default`
+
+[Request OAuth Access Token with SAML Assertion Steps](../../3_simulate_detect/credential-access/getOAuthTokenWithSAMLAssertion.md)
 
 ### 4. Grant OAuth permissions to Application - (Account Manipulation: Exchange Email Delegate Permissions - T1098.002)
 
-Next, use the new access token to simulate a threat actor granting delegated `Mail.ReadWrite` permissions to an Azure AD application. This allows the threat actor to use the application to access mail data on behalf of the impersonated user. Usually, a threat actor would prefer to use an existing application that contains the desired permissions.
+Next, use the OAuth token to call the Microsoft Graph API and simulate an adversary granting delegated `Mail.ReadWrite` permissions to an Azure AD application. Usually, a threat actor would prefer to use an existing application that already has the desired permissions granted. However, in this step, we simulate a threat actor updating the `Required Resource Access` property of an application and updating the `OAuthPermissionGrant` of an OAuth application to grant new delegated permissions.
 
-[Grant OAuth Permissions to Application Steps](../../3_simulate_detect/persistence/grantDelegatedPermissionsToApplication.md)
+[Update Application OAuth Permissions Scopes Steps](../../3_simulate_detect/persistence/updateAppOAuthPermissionScopes.md)
+
+[Grant OAuth Permissions to Application Steps](../../3_simulate_detect/persistence/updateAppDelegatedPermissionGrant.md)
 
 ### 5. Add Credentials to OAuth Application - (Account Manipulation: Additional Cloud Credentials – T1098.001)
 
-Once permissions have been granted, we can add credentials to the registered application. We can then use those credentials to sign in to the application on behalf of the impersonated user.
+Once permissions have been granted, we can add new credentials to the compromised OAuth application using the same OAuth access token and via the Microsoft Graph API. We can then use those credentials to sign in to the application on behalf of the impersonated user.
 
 [Add credentials to OAuth Application Steps](../../3_simulate_detect/persistence/addCredentialsToApplication.md)
 
-### 6. Request Access Token with SAML Token - (Valid Accounts: Cloud Accounts – T1078.004)
+### 6. Request OAuth Access Token with SAML Assertion - (Valid Accounts: Cloud Accounts – T1078.004)
 
-Simulate a threat actor using the new credentials to get an access token for the Azure AD app on behalf of the impersonated user.
+Simulate a threat actor, once again, using the forged SAML assertion to get an OAuth access token for the Microsoft Graph API, but this time using the compromised application as a client. You must use the new credentials (`secret text`) added to it in the previous step. Use the following information while running this step:
 
-[Request Access Token with SAML Token Steps](../../3_simulate_detect/persistence/getAccessTokenSAMLBearerAssertionFlow.md)
+* Client ID: `id-of-compromised-application`
+* Scope: `https://graph.microsoft.com/.default`
+* Client Secret: `xxxx`
+
+[Request OAuth Access Token with SAML Assertion Steps](../../3_simulate_detect/credential-access/getOAuthTokenWithSAMLAssertion.md)
 
 ### Collection
 
 ### 7. Access account mailbox via Graph API
 
-Finally, use the new access token to read mail from the mailbox of the account impersonated.
+Finally, use the new OAuth access token to call the Microsoft Graph API and read mail from the mailbox of the signed-in user.
 
 [Access account mailbox via Graph API steps](../../3_simulate_detect/collection/mailAccessDelegatedPermissions.md)
 
