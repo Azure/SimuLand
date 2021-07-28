@@ -59,13 +59,15 @@ Let's make it an OAuth application by adding a delegated permissions to it.
 
 ![](../../resources/images/deploy/helper_docs/registerAADAppAndSP/2021-05-19_05_graph_user_read.png)
 
-5.	Do NOT Grant admin consent to the application
+5.	Grant admin consent to the application by clicking on "`Grant admin consent for <DOMAIN-NAME>`"
 
 ![](../../resources/images/deploy/helper_docs/registerAADAppAndSP/2021-05-19_06_grant_admin_consent.png)
 
 That’s it.
- 
+
 Applications sometimes take a few hours to show in the Microsoft Cloud App Security (MCAS) portal.
 1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/)
 2.	Go to  `More Resources` and click on `Microsoft Cloud App Security`.
 3.	Investigate > OAuth Apps
+
+![](../../resources/images/deploy/helper_docs/registerAADAppAndSP/2021-05-19_08_m365_macs_oauth_apps.png)

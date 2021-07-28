@@ -8,7 +8,7 @@ The AD FS DKM key value is stored in the `ThumbnailPhoto` attribute of an AD con
 * Endpoint: ADFS01 or WORKSTATION6
     * We can use the same PowerShell session on one of the endpoints where we [exported the AD FS configuration settings](exportADFSConfigurationSettings.md) from to go through the simulation steps.
     * AD FS Configuration Settings
-        * The output from the previous step (`XML strings` object or `Microsoft.IdentityServer.PolicyModel.Configuration.ContractObject` object) is saved in the variable `$settings`. Use it in the PowerShell snippets below.
+        * The output from the previous step (`XML strings` object or `Microsoft.IdentityServer.PolicyModel.Configuration.ContractObject` object) is saved in the variable `$settings`. Use it in the PowerShell commands below.
 
 ## Get path of AD FS DKM container
 

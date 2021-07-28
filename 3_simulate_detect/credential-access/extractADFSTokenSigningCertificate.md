@@ -1,12 +1,12 @@
 # Extract Active Directory Federation Services (AD FS) Token Signing Certificate
 
-After exporting the configuration settings of the AD FS database, a threat actor would use it to extract sensitive information such as certificates (Token signing and encryption) in an encrypted format which can later be decrypted and used for further actions (e.g. [Forge SAML tokens](signSAMLToken.md)).
+After [exporting the configuration settings of the AD FS database](exportADFSConfigurationSettings.md), a threat actor would use it to extract sensitive information such as certificates (Token signing and encryption) in an encrypted format which can later be decrypted and used for further actions (e.g. [Forge SAML tokens](signSAMLToken.md)).
 
 ## Preconditions
 * Endpoint: ADFS01 or WORKSTATION6
     * Even when this step would happen outside of the organization, we can use the same PowerShell session on one of the endpoints where we [exported the AD FS configuration settings](exportADFSConfigurationSettings.md) from to go through the simulation steps.
     * AD FS Configuration Settings
-        * The output from the previous step (`XML strings` object or `Microsoft.IdentityServer.PolicyModel.Configuration.ContractObject` object) is saved in the variable `$settings`. Use it in the PowerShell snippets below.
+        * The output from the previous step (`XML strings` object or `Microsoft.IdentityServer.PolicyModel.Configuration.ContractObject` object) is saved in the variable `$settings`. Use it in the PowerShell commands below.
 
 ## Extract AD FS Token Signing Certificate
 

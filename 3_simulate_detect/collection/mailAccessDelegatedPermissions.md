@@ -4,15 +4,13 @@ A threat actor with the right permissions and credentials can access and collect
 
 ## Preconditions
 * Authorization
-    * Identity solution: Azure AD
-    * Access control model: Discretionary Access Control (DAC)
     * Service: Azure Microsoft Graph
     * Permission Type: Delegated
     * Permissions: Mail.ReadWrite
 * Endpoint: ADFS01
-    * Even when this step would happen outside of the organization, we can use the same PowerShell session where we [granted delegated permissions to an application](../persistence/grantDelegatedPermissionsToApplication.md) to go through the simulation steps.
-    * Microsoft Graph Access Token
-        * Use the output from the previous step where we [got an access token from an application that has the right permissions](../persistence/getAccessTokenSAMLBearerAssertionFlow.md) to read mail. Use the output of that step as the variable `$MSGraphAccessToken` for the simulation steps. 
+    * Even when this step would happen outside of the organization, we can use the same PowerShell session where we [got a Microsoft Graph oauth access token](../credential-access/getOAuthTokenWithSAMLAssertion.md) to read mail.
+* Microsoft Graph OAuth access token
+  * Use the output from the [previous step](../credential-access/getOAuthTokenWithSAMLAssertion.md) as the variable `$OAuthAccessToken`. Make sure you request the access token with an application that has the right permissions to read mail.
 
 ## Simulate & Detect
 * [Verify Microsoft Graph Access Token](#verify-microsoft-graph-access-token)
@@ -20,7 +18,7 @@ A threat actor with the right permissions and credentials can access and collect
     * [Detect Mail Items being Accessed](#detect-mail-items-being-accessed)
 
 ## Verify Microsoft Graph Access Token
-We need to make sure our access token has permissions to read mail.
+We need to make sure our access token has permissions to read mail. You can get that information while getting the OAuth access token with a SAML assertion in the [previous step](getOAuthTokenWithSAMLAssertion.md)
  
 ![](../../resources/images/simulate_detect/collection/mailAccessDelegatedPermissions/2021-05-19_01_msgraph_access_token.png)
 
@@ -28,14 +26,18 @@ We need to make sure our access token has permissions to read mail.
 
 ```PowerShell
 $uri = "https://graph.microsoft.com/v1.0/me/messages"
-$header = @{Authorization = "Bearer $MSGraphAccessToken"}
+$header = @{Authorization = "Bearer $OAuthAccessToken"}
 $mailbox = Invoke-RestMethod –Uri $uri –Headers $Header –Method GET –ContentType "application/json"
 $mailbox
+
+$mailbox.value[0].from
+
+$mailbox.value[0].subject
 ```
 
 ![](../../resources/images/simulate_detect/collection/mailAccessDelegatedPermissions/2021-05-19_02_msgraph_message_api.png)
 
-We do not necessarily have to parse the messages in this step. The simple action to access the mailbox generates telemetry that we can aggregate and create detections with.
+We do not have to parse the messages in this step. The simple action to access the mailbox generates telemetry that we can aggregate and create detections with.
 
 ## Detect Mail Items being Accessed
 

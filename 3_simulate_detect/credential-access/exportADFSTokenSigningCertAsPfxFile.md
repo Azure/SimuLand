@@ -1,12 +1,12 @@
 # Export Active Directory Federation Services (AD FS) Token Signing Certificate as PFX File
 
-After decrypting the AD FS token signing certificate, you can export the cipher text to a .pfx file. Remember that this step is also performed outside of the organization. Therefore, there are not detection rules for it.
+After [decrypting the AD FS token signing certificate](decryptADFSTokenSigningCertificate.md), you can export the cipher text to a .pfx file. Remember that this step is also performed outside of the organization. Therefore, there are not detection rules for it.
 
 ## Preconditions
 * Endpoint: ADFS01 or WORKSTATION6
     * Even when this step would happen outside of the organization, we can use the same PowerShell session on one of the endpoints where we [decrypted the AD FS token signing certificate](decryptADFSTokenSigningCertificate.md) and exported the `cipher text` to a variable.
     * [AD FS token signing certificate (cipher text)](decryptADFSTokenSigningCertificate.md)
-        * Use the output cipher text saved in the variable `$tokenSigningPfx` in the PowerShell snippet below.
+        * Use the output cipher text saved in the variable `$tokenSigningPfx` in the PowerShell commands below.
 
 ## Export AD FS Token Signing Certificate
 

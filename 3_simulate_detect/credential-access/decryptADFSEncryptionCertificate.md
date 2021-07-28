@@ -1,14 +1,14 @@
 # Decrypt Active Directory Federation Services (AD FS) Encryption Certificate
 
-After [extracting the AD FS encryption certificate](extractADFSEncryptionCertificate.md) and [obtaining the AD FS DKM master key](exportADFSDKMMasterKeyFromDC.md), we can use the master key value to derive a symmetric key and decrypt AD FS certificates (Token signing and Encryption).
+After [extracting the AD FS encryption certificate](extractADFSEncryptionCertificate.md) and [obtaining the AD FS DKM master key](exportADFSDKMMasterKeyFromDC.md), we can use the master key value to derive a symmetric key and decrypt the AD FS certificate.
 
 ## Preconditions
 * Endpoint: ADFS01 or WORKSTATION6
     * Even when this step would happen outside of the organization, we can use the same PowerShell session on one of the endpoints where we exported AD FS certificates (token signing and encryption) and [obtained the AD FS DKM master key](exportADFSDKMMasterKeyFromDC.md) from to go through the simulation steps.
     * [AD FS DKM Master Key](exportADFSDKMMasterKeyFromDC.md)
-        * Use the output from this step and pass it to the PowerShell snippet below as the variable `$key`.
+        * Use the output from this step and pass it to the PowerShell commands below as the variable `$key`.
     * AD FS encryption certificate (Encrypted format)
-        * After [extracting the AD FS encryption certificate](extractADFSEncryptionCertificate.md), the output is saved to the variable `$encEncryptionPfx`. You can use it in the PowerShell snippets below.
+        * After [extracting the AD FS encryption certificate](extractADFSEncryptionCertificate.md), the output is saved to the variable `$encEncryptionPfx`. You can use it in the PowerShell commands below.
 
 ## Decrypt Encryption Certificate
 
