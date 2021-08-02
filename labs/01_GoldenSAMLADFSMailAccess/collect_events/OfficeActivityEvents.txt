@@ -1,0 +1,1 @@
+OfficeActivity| where OfficeWorkload=~ "Exchange" and Operation =~ "MailItemsAccessed" and ResultStatus =~ "Succeeded"

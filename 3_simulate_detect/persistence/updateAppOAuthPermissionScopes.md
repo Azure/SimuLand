@@ -159,8 +159,7 @@ if ($resourceAccess = ($Application.requiredResourceAccess | Where-Object -Filte
         $Application.requiredResourceAccess[$Application.requiredResourceAccess.resourceAppId.IndexOf($ResourceSvcPrincipal.appId)].resourceAccess += $item
       }
     }
-}
-else {
+} else {
     $RequiredResourceAccess = [PSCustomObject]@{
         "resourceAppId" = $ResourceSvcPrincipal.appId
         "resourceAccess" = $ResourceAccessItems
