@@ -1,0 +1,48 @@
+(union isfuzzy=true (AuditLogs
+| where Category =~ "ApplicationManagement"
+| where ActivityDisplayName has_any ("Update application")
+| where Result =~ "success"
+| where tostring(InitiatedBy.user.userPrincipalName) has "@" or tostring(InitiatedBy.app.displayName) has "@"
+| extend UserAgent = tostring(AdditionalDetails[0].value)
+| extend InitiatingUser = tostring(parse_json(tostring(InitiatedBy.user)).userPrincipalName)
+| extend InitiatingIpAddress = tostring(parse_json(tostring(InitiatedBy.user)).ipAddress)
+| extend ModifiedApplication = tostring(TargetResources[0].displayName)
+| extend ModifiedApplicationObjectId = tostring(TargetResources[0].id)
+| extend ModifiedProperties = parse_json(tostring(TargetResources[0].modifiedProperties))
+| extend ModifiedPropertyName = tostring(ModifiedProperties[0].displayName)
+| extend ResourceAppId = parse_json(tostring(ModifiedProperties[0].newValue))[0].ResourceAppId
+| where ModifiedPropertyName =~ "RequiredResourceAccess"
+| extend Type = tostring(TargetResources[0].type)
+| project-away ModifiedProperties
+),
+(AuditLogs
+| where Category =~ "ApplicationManagement"
+| where ActivityDisplayName has_any ("Add delegated permission grant","Add app role assignment to service principal")
+| where Result =~ "success"
+| where tostring(InitiatedBy.user.userPrincipalName) has "@" or tostring(InitiatedBy.app.displayName) has "@"
+| extend props = parse_json(tostring(TargetResources[0].modifiedProperties))
+| mv-expand props
+| extend UserAgent = tostring(AdditionalDetails[0].value)
+| extend InitiatingUser = tostring(parse_json(tostring(InitiatedBy.user)).userPrincipalName)
+| extend UserIPAddress = tostring(parse_json(tostring(InitiatedBy.user)).ipAddress)
+| extend DisplayName = tostring(props.displayName)
+| extend Permissions = tostring(parse_json(tostring(props.newValue)))
+| where Permissions has_any ("Mail.Read", "Mail.ReadWrite")
+| extend PermissionsAddedTo = tostring(TargetResources[0].displayName)
+| extend Type = tostring(TargetResources[0].type)
+| project-away props
+),
+(AuditLogs
+| where OperationName has_any ("Certificates and secrets management")
+| where Result =~ "success"
+| mv-expand target = TargetResources
+| where tostring(InitiatedBy.user.userPrincipalName) has "@" or tostring(InitiatedBy.app.displayName) has "@"
+| extend targetDisplayName = tostring(TargetResources[0].displayName)
+| extend targetId = tostring(TargetResources[0].id)
+| extend targetType = tostring(TargetResources[0].type)
+| extend keyEvents = TargetResources[0].modifiedProperties
+| mv-expand keyEvents
+| extend UserAgent = iff(AdditionalDetails[0].key == "User-Agent",tostring(AdditionalDetails[0].value),"")
+| extend InitiatingUserOrApp = iff(isnotempty(InitiatedBy.user.userPrincipalName),tostring(InitiatedBy.user.userPrincipalName), tostring(InitiatedBy.app.displayName))
+| extend InitiatingIpAddress = iff(isnotempty(InitiatedBy.user.ipAddress), tostring(InitiatedBy.user.ipAddress), tostring(InitiatedBy.app.ipAddress))
+))
