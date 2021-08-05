@@ -7,11 +7,33 @@
 | where Timestamp > ago(30m)
 | where ActionType contains "replication"
 ),
-(CloudAppEvents 
-| where Timestamp > ago(30m)
-| where ActionType == "MailItemsAccessed" 
-| where RawEventData has "00000003-0000-0000-c000-000000000000" 
+(CloudAppEvents
+| where ActionType == "Add delegated permission grant."
+| where Timestamp > ago(7d)
+| extend RawEventData = parse_json(RawEventData)
+| where RawEventData.ResultStatus =~ "success"
+| extend UserId = tostring(RawEventData.UserId)
+| extend UserAgent = parse_json(replace('-','',tostring(RawEventData.ExtendedPRoperties[0].Value))).UserAgent
+| extend properties = RawEventData.ModifiedProperties
+| mvexpand properties
+| extend Permissions = properties.NewValue
+| where Permissions has_any ("Mail.ReadWrite")
+| extend PermissionsAddedTo = tostring(RawEventData.Target[3].ID) // Get target of permissions
+| project-away properties, RawEventData
+),
+(CloudAppEvents
+ | where Application == "Office 365"
+ | where Timestamp > ago(7d)
+ | where ActionType == "Add service principal credentials." or ActionType == "Update application – Certificates and secrets management "
+ | where AccountDisplayName =~ 'Gustavo Pedro'
+),
+(CloudAppEvents
+| where ActionType == "MailItemsAccessed"
+| where Timestamp > ago(7d)
+| where RawEventData has "ClientAppId" 
+| where RawEventData has "00000003-0000-0000-c000-000000000000" // performance check 
 | extend rawData = parse_json(RawEventData) 
 | extend AppId = tostring(parse_json(rawData.AppId)) 
-| extend OAuthAppId = tostring(parse_json(rawData.ClientAppId))
+| extend OAuthAppId = tostring(parse_json(rawData.ClientAppId)) // extract OAuthAppId 
+| where AppId == "00000003-0000-0000-c000-000000000000"
 ))
