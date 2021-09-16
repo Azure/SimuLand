@@ -20,6 +20,9 @@
         "adfsPassword": {
             "value": "GEN-PASSWORD"
         },
+        "domainFQDN": {
+            "value": "Example: 'YOUR-DOMAIN.TLD'. DO NOT use '*.YOUR-DOMAIN.TLD' as the wildcard is added later on."
+        },
         "domainUsers": {
             "value": {
                 "array": [
