@@ -62,7 +62,7 @@ Get-AdminAuditLogConfig | FL UnifiedAuditLogIngestionEnabled
 
 ## 5. Test Office 365 Audit via the Microsoft 365 Compliance Center
 * Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/)
-* Go to More Resources > Office 365 Security & Compliance > Open
+* Go to More Resources > Microsoft 365 compliance center > Open
 
 ![](../resources/images/prepare/enableOffice365AuditLogSearch/2021-05-14_04_m365_security_center_one.png)
 
