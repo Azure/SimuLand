@@ -17,7 +17,8 @@ az login
 
 ```PowerShell
 $appName = "SimuLandApp"
-$results= az ad app create --display-name $appname --homepage "https://localhost/$appname" --reply-urls "https://localhost/$appname" --identifier-uris "https://localhost/$appname"
+$domainName = "DOMAIN.COM"
+$results= az ad app create --display-name $appname --homepage "https://$domainName/$appname" --reply-urls "https://$domainName/$appname" --identifier-uris "https://$domainName/$appname"
 $app = $results | ConvertFrom-Json
 $app
 ```
