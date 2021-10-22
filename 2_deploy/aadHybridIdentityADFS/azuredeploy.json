@@ -184,9 +184,8 @@
         "domainFQDN": {
             "type": "string",
             "metadata": {
-                "description": "The FQDN of the Active Directory Domain to be created"
-            },
-            "defaultValue": "simulandlabs.com"
+                "description": "The FQDN of the Active Directory Domain to be created."
+            }
         },
         "securityCollectionTier": {
             "type": "string",
@@ -222,18 +221,21 @@
         },
         "_mdePackageBlobSasUrl": {
             "type": "securestring",
+            "defaultValue": "",
             "metadata": {
                 "description": "Blog SAS Url for Microsoft Defender for Endpoint onboarding package. Zip File."
             }
         },
         "_mdiAccessKey": {
             "type": "securestring",
+            "defaultValue": "",
             "metadata": {
                 "description": "Microsoft Defender for Identity Access Key. This value is in your MDI portal under the sensors section."
             }
         },
         "_mdiPackageBlobSasUrl": {
             "type": "securestring",
+            "defaultValue": "",
             "metadata": {
                 "description": "Blog SAS Url for Microsoft Defender for Identity onboarding package. Zip File."
             }
@@ -513,9 +515,6 @@
                     "allowedIPAddresses": {
                         "value": "[parameters('allowedIPAddresses')]"
                     },
-                    "enableMonitoringAgent": {
-                        "value": true
-                    },
                     "enableSysmon": {
                         "value": true
                     },
@@ -544,13 +543,46 @@
             }
         },
         {
+            "name": "installAzureMonitorAgent",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "resourceGroup": "[parameters('resourceGroup')]",
+            "subscriptionId": "[parameters('subscriptionId')]",
+            "dependsOn": [
+                "deployAzureSentinel2Go",
+                "deployWinADFS"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(variables('artifactsBlacksmith'), 'templates/azure/Azure-Monitor-Agents/windows.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualMachines": {
+                        "value": "[reference('deployWinADFS').outputs.allWinVMsDeployed.value]"
+                    },
+                    "monitorAgent": {
+                        "value": "Log Analytics Agent"
+                    },
+                    "workspaceId": {
+                        "value": "[if(empty(parameters('workspaceId')), reference('deployAzureSentinel2Go').outputs.workspaceIdOutput.value, parameters('workspaceId'))]"
+                    },
+                    "workspaceKey": {
+                        "value": "[if(empty(parameters('workspaceKey')), reference('deployAzureSentinel2Go').outputs.workspaceKeyOutput.value, parameters('workspaceKey'))]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[and(not(empty(parameters('_mdiPackageBlobSasUrl'))), not(empty(parameters('_mdiAccessKey'))))]",
             "name": "onboardToMDI",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
             "resourceGroup": "[parameters('resourceGroup')]",
             "subscriptionId": "[parameters('subscriptionId')]",
             "dependsOn": [
-                "deployWinADFS"
+                "installAzureMonitorAgent"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -572,6 +604,7 @@
             }
         },
         {
+            "condition": "[not(empty(parameters('_mdePackageBlobSasUrl')))]",
             "name": "onboardToMDE",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
