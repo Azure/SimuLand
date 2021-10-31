@@ -521,12 +521,6 @@
                     "enableAADConnect": {
                         "value": true
                     },
-                    "workspaceId": {
-                        "value": "[if(empty(parameters('workspaceId')), reference('deployAzureSentinel2Go').outputs.workspaceIdOutput.value, parameters('workspaceId'))]"
-                    },
-                    "workspaceKey": {
-                        "value": "[if(empty(parameters('workspaceKey')), reference('deployAzureSentinel2Go').outputs.workspaceKeyOutput.value, parameters('workspaceKey'))]"
-                    },
                     "pfxCertName": {
                         "value": "[parameters('pfxCertName')]"
                     },
