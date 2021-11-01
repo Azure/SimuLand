@@ -374,6 +374,14 @@
                     {
                         "category": "ADFSSignInLogs",
                         "enabled":  true
+                    },
+                    {
+                        "category": "RiskyUsers",
+                        "enabled": true
+                    },
+                    {
+                        "category": "UserRiskEvents",
+                        "enabled": true
                     }
                 ],
                 "metrics": []
