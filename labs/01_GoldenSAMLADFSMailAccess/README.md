@@ -4,7 +4,7 @@
 
 Microsoft’s identity solutions span on-premises and cloud-based capabilities. These solutions create a common user identity for authentication and authorization to all resources, regardless of location. We call this hybrid identity and one of the authentication methods available is federation with Active Directory Services (AD FS).
 
-In this step-by-step guide, we simulate an adversary stealing the AD FS token signing certificate from an `on-prem` AD FS server to sign a new SAML token, impersonate a privileged user and eventually collect mail data via the Microsoft Graph API. This lab also focuses on showing the detection capabilities of Microsoft Defender security products and Azure Sentinel. Therefore, each simulation step is mapped to its respective alert and detection queries when possible.
+In this step-by-step guide, we simulate an adversary stealing the AD FS token signing certificate from an `on-prem` AD FS server to sign a new SAML token, impersonate a privileged user and eventually collect mail data via the Microsoft Graph API. This lab also focuses on showing the detection capabilities of Microsoft Defender security products and Microsoft Sentinel. Therefore, each simulation step is mapped to its respective alert and detection queries when possible.
 
 ## Deploy Environment
 
