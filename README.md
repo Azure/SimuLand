@@ -14,9 +14,9 @@
 
 ## About
 
-SimuLand is an open-source initiative by Microsoft to help security researchers around the world deploy lab environments that reproduce well-known techniques used in real attack scenarios, actively test and verify effectiveness of related Microsoft 365 Defender, Azure Defender and Azure Sentinel detections, and extend threat research using telemetry and forensic artifacts generated after each simulation exercise. 
+SimuLand is an open-source initiative by Microsoft to help security researchers around the world deploy lab environments that reproduce well-known techniques used in real attack scenarios, actively test and verify effectiveness of related Microsoft 365 Defender, Azure Defender and Microsoft Sentinel detections, and extend threat research using telemetry and forensic artifacts generated after each simulation exercise. 
 
-These lab environments will provide use cases from a variety of data sources including telemetry from  Microsoft 365 Defender security products, Azure Defender and other integrated data sources through [Azure Sentinel data connectors](https://docs.microsoft.com/en-us/azure/sentinel/connect-data-sources#data-connection-methods).
+These lab environments will provide use cases from a variety of data sources including telemetry from  Microsoft 365 Defender security products, Azure Defender and other integrated data sources through [Microsoft Sentinel data connectors](https://docs.microsoft.com/en-us/azure/sentinel/connect-data-sources#data-connection-methods).
 
 ## Purpose
 
@@ -37,7 +37,7 @@ The structure of the project is very simple and is broken down in a modular way 
 |---------|-------------|
 | [Prepare](1_prepare) | Documents to prepare before deploying a lab environment. Some environments contributed through this initiative require at least a Microsoft 365 E5 license (paid or trial) and an Azure tenant. Documents in this folder are referenced in the right order, depending on the deployment, in the [2_deploy](2_deploy) documents.  
 | [Deploy](2_deploy) | Azure Resource Manager (ARM) Templates and documents to deploy lab environments. Depending on the lab guide being worked on, the design of the network environments might change a little. While some labs would replicate a hybrid cross-domain environment (on-prem -> Cloud), others would focus only on resources in the cloud. Additionally, ARM templates are provided to expedite the deployment process and help document the infrastructure as code. |
-| [Simulate](3_simulate_detect) <br>[Detect](3_simulate_detect) | Documents to execute attacker actions mapped to the MITRE ATT&CK framework. The goal of the Simulate and Detect component is to also summarize the main steps used by a threat actor to accomplish a specific objective and allow security researchers to get familiarized with the attacker's behavior. Finally, from a defensive perspective, simulation steps will be mapped to detection queries and alerts from Microsoft 365 Defender, Azure Defender, and Azure Sentinel. We believe this would help guide some of the extended threat research generated from the simulation exercise. |
+| [Simulate](3_simulate_detect) <br>[Detect](3_simulate_detect) | Documents to execute attacker actions mapped to the MITRE ATT&CK framework. The goal of the Simulate and Detect component is to also summarize the main steps used by a threat actor to accomplish a specific objective and allow security researchers to get familiarized with the attacker's behavior. Finally, from a defensive perspective, simulation steps will be mapped to detection queries and alerts from Microsoft 365 Defender, Azure Defender, and Microsoft Sentinel. We believe this would help guide some of the extended threat research generated from the simulation exercise. |
 | [Labs](labs) | Step-by-step lab guides summarizing simulation scenarios and pointing to specific document, from the other folders, to deploy lab environments and execute attacker actions. |
 
 ## Labs

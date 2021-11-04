@@ -121,7 +121,7 @@ You can track your deployment by going to resource groups > `Resource Group NAME
 
 ![](../../resources/images/deploy/aadHybridIdentityADFS/2021-05-19_03_track_deployment.png)
 
-After 30-35 mins, most of the `on-prem` infrastructure and Azure Sentinel would be deployed.
+After 30-35 mins, most of the `on-prem` infrastructure and Microsoft Sentinel would be deployed.
 
 **Additional Notes**: While waiting for the installation of Microsoft Defender for Endpoint sensors, an endpoint extension might return an exception. However, if after checking the logs inside of the VM, and the error id is 35, it will continue checking for onboarding status and eventually finish the installation.
 
@@ -171,20 +171,20 @@ Get-AdfsProperties | Select-Object HostName
 
 ![](../../resources/images/deploy/aadHybridIdentityADFS/2021-05-19_07_adfs_validate_intranet.png)
 
-### Azure Sentinel Instance
+### Microsoft Sentinel Instance
 1.	Browse to [Azure portal](https://portal.azure.com/)
-2.	Search for “Azure Sentinel”
-3.	Select Azure Sentinel instance created after running the ARM template.
+2.	Search for “Microsoft Sentinel”
+3.	Select Microsoft Sentinel instance created after running the ARM template.
 
 ![](../../resources/images/deploy/aadHybridIdentityADFS/2021-05-19_08_azure_sentinel_deployed.png)
 
-### Azure Sentinel Data Connectors
-4.	Azure Sentinel Instance > Data Connectors
+### Microsoft Sentinel Data Connectors
+4.	Microsoft Sentinel Instance > Data Connectors
 
 ![](../../resources/images/deploy/aadHybridIdentityADFS/2021-05-19_09_azure_sentinel_dataconnectors.png)
 
-### Azure Sentinel Analytics – Active Scheduled Alerts
-5.	Azure Sentinel Instance > Analytics
+### Microsoft Sentinel Analytics – Active Scheduled Alerts
+5.	Microsoft Sentinel Instance > Analytics
 
 ![](../../resources/images/deploy/aadHybridIdentityADFS/2021-05-19_10_azure_sentinel_analytics.png)
 
