@@ -15,35 +15,29 @@ These resources can define a set of permissions that can be used to divide the f
 
 A delegated permission grant is represented by an [oAuth2PermissionGrant object](https://docs.microsoft.com/en-us/graph/api/resources/oauth2permissiongrant?view=graph-rest-1.0). If delegated permissions need to be granted to an application that already has been granted permissions of the same resource type, one needs to update the OAuth permission grant of the same resource and not create a new one.
 
-## Simulate & Detect
+## Table of Contents
 
-In this document, we simulate an adversary updating the `OAuth permission grant` of an existing OAuth application.
-
-1.	[List Existing Applications](#list-existing-applications)
-2.	[Get the Application Service Principal](#get-the-application-service-principal)
-3.  [Get the Application Permission Grant Metadata](#get-the-application-permission-grant-metadata)
-4.	[Update the Application Permission Grant](#update-the-application-permission-grant)
-    * [Detect Permission Grants to Applications](#detect-permission-grants-to-applications)
+* [Preconditions](#preconditions)
+* [Simulation Steps](#simulation-steps)
+* [Detection](#detection)
+* [Output](#output)
 
 ## Preconditions
-
-* Endpoint: AD FS Server (ADFS01)
-  * Even when this step would happen outside of the organization, we can use the same PowerShell session where we [got a Microsoft Graph oauth access token](../persistence/getOAuthTokenWithSAMLAssertion.md).
-* Microsoft Graph OAuth access token
-  * Use the output from the [previous step](../persistence/getOAuthTokenWithSAMLAssertion.md) as the variable `$OAuthAccessToken`. Make sure you request the access token with the public `Azure Active Directory PowerShell Application`. That application has the right permissions to execute all the simulation steps in this document.
-
-## List Existing Applications
-
-**Preconditions**
 * Authorization:
-    * Service: Azure Microsoft Graph
-    * Permission Type: Delegated
-    * Permissions (One of the following):
-        * Application.Read.All
+    * Resource: Azure Microsoft Graph
+      * Permission Type: Delegated
+      * Permissions:
         * Application.ReadWrite.All
-        * Directory.Read.All
+        * Directory.ReadWrite.All
+        * DelegatedPermissionGrant.ReadWrite.All
+* Input:
+  * Microsoft Graph OAuth access token
 
-Open PowerShell as administrator and use the Microsoft Graph oauth access token to list the current Azure AD applications in a tenant.
+## Simulation Steps
+
+### List Existing Applications
+
+1. Open PowerShell and use the Microsoft Graph oauth access token to list the current Azure AD applications in a tenant.
 
 ```PowerShell
 $headers = @{"Authorization" = "Bearer $OAuthAccessToken"}
@@ -59,7 +53,7 @@ $AzADApps.value
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_02_aad_application.png)
 
-Next, filter the results and select the Azure AD application you want to grant permissions to. If you followed the instructions to [register one Azure AD application](../../2_deploy/_helper_docs/registerAADAppAndSP.md) after deploying the lab environment, your app should be named `SimuLandApp`. If you used a different name, make sure you look for it with the right name in the following PowerShell command:
+2. Next, filter the results and select the Azure AD application you want to grant permissions to. If you followed the instructions to [register one Azure AD application](../../2_deploy/_helper_docs/registerAADAppAndSP.md) after deploying the lab environment, your app should be named `SimuLandApp`. If you used a different name, make sure you look for it with the right name in the following PowerShell command:
 
 ```PowerShell
 $Application = $AzADApps.value | Where-Object {$_.displayName -eq "SimuLandApp"}
@@ -67,19 +61,9 @@ $Application = $AzADApps.value | Where-Object {$_.displayName -eq "SimuLandApp"}
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_02_aad_application_specific.png)
 
-## Get the Application Service Principal
+### Get the Application Service Principal
 
-**Preconditions**
-* Authorization:
-    * Service: Azure Microsoft Graph
-    * Permission Type: Delegated
-    * Permissions (One of the following):
-        * Application.Read.All
-        * Application.ReadWrite.All
-        * Directory.Read.All
-        * Directory.ReadWrite.All
-
-Next, in order to grant permissions to the application, we need to do it at the service principal level. We can take the application Id value from our previous steps and get its service principal.
+3. In order to grant permissions to the application, we need to do it at the service principal level. We can take the application Id value from our previous steps and get its service principal.
 
 ```PowerShell
 $headers = @{"Authorization" = "Bearer $OAuthAccessToken"}
@@ -96,19 +80,9 @@ $AzADAppSp.value | Format-List
 
 Now that we have the service principal of the application, we can look for the permission grant of the application with the service principal Id.
 
-## Get the Application Permission Grant Metadata
+### Get the Application Permission Grant Metadata
 
-**Preconditions**
-* Authorization:
-    * Service: Azure Microsoft Graph
-    * Permission Type: Delegated
-    * Permissions (One of the following):
-        * Directory.Read.All
-        * DelegatedPermissionGrant.ReadWrite.All
-        * Directory.ReadWrite.All
-        * Directory.AccessAsUser.All
-
-Get all available permission grants and filter on the one where the `clientId` is the same as the application's service principal Id.
+4. Get all available permission grants and filter on the one where the `clientId` is the same as the application's service principal Id.
 
 ```PowerShell
 $headers = @{
@@ -134,15 +108,13 @@ $permissionGrantScope
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_08_permission_grant_id.png)
 
-## Update the Application Permission Grant
-
 ### Create HTTP Request Body
 
-In the request body, supply the values for relevant fields that should be updated. Existing properties that are not included in the request body will maintain their previous values or be recalculated based on changes to other property values. For best performance you shouldn't include existing values that haven't changed.
+5. In the request body, supply the values for relevant fields that should be updated. Existing properties that are not included in the request body will maintain their previous values or be recalculated based on changes to other property values. For best performance you shouldn't include existing values that haven't changed.
 
-Set the `scope` in the HTTP request body to update the delegated permissions. The `scope` is a space-separated list of the claim values for delegated permissions which should be included in access tokens for the resource application (the API).
+6. Set the `scope` in the HTTP request body to update the delegated permissions. The `scope` is a space-separated list of the claim values for delegated permissions which should be included in access tokens for the resource application (the API).
 
-Set the new delegated permissions with the variable `$newpermission`. If you have multiple permissions you want to update, make sure they are space-separated. For this example, we are adding the Microsoft Graph `Mail.ReadWrite` delegated permission.
+7. Set the new delegated permissions with the variable `$newpermission`. If you have multiple permissions you want to update, make sure they are space-separated. For this example, we are adding the Microsoft Graph `Mail.ReadWrite` delegated permission.
 
 ```powerShell
 $newPermissions = "Mail.ReadWrite"
@@ -158,16 +130,7 @@ $body
 
 ### Update Permission Grant
 
-**Preconditions**
-* Authorization:
-    * Service: Azure Microsoft Graph
-    * Permission Type: Delegated
-    * Permissions (One of the following):
-        * DelegatedPermissionGrant.ReadWrite.All
-        * Directory.ReadWrite.All
-        * Directory.AccessAsUser.All
-
-Update the permissions grant with the [Microsoft Graph oauth2PermissionGrants API](https://docs.microsoft.com/en-us/graph/api/oauth2permissiongrant-update?view=graph-rest-1.0&tabs=http). Make sure you use the permission grant Id obtained in the previous step as the variable `$permissionGrantId`.
+8. Update the permissions grant with the [Microsoft Graph oauth2PermissionGrants API](https://docs.microsoft.com/en-us/graph/api/oauth2permissiongrant-update?view=graph-rest-1.0&tabs=http). Make sure you use the permission grant Id obtained in the previous step as the variable `$permissionGrantId`.
 
 ```PowerShell
 $headers = @{
@@ -195,27 +158,29 @@ If successful, this method returns `204 No Content` response code. It does not r
 
 ### Verify Permission Grant Update
 
-Browse to [Azure portal](https://portal.azure.com/) > Azure Active Directory > App Registrations > `SimuLandApp` > API permissions
+9. Browse to [Azure portal](https://portal.azure.com/) > Azure Active Directory > App Registrations > `SimuLandApp` > API permissions
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_08_verify_permission_grant_update.png)
 
-## Detect Permission Grants to Applications
+## Detection
 
-### Azure Sentinel Detection Rules
+### Detect Permission Grants to Applications
+
+#### Azure Sentinel Detection Rules
 
 * [Mail.Read Permissions Granted to Application (AuditLogs)](https://github.com/Azure/Azure-Sentinel/blob/master/Detections/AuditLogs/MailPermissionsAddedToApplication.yaml)
 
-### Microsoft 365 Hunting Queries
+#### Microsoft 365 Hunting Queries
 
 * [Mail.Read or Mail.ReadWrite permissions added to OAuth application CloudAppEvents](https://github.com/microsoft/Microsoft-365-Defender-Hunting-Queries/blob/master/Defense%20evasion/MailPermissionsAddedToApplication%5BNobelium%5D.md)
 
-### Azure AD Workbook: Sensitive Operations Report
+#### Azure AD Workbook: Sensitive Operations Report
 1.	Browse to [Azure portal](https://portal.azure.com/)
 2.	Azure AD > Workbooks > Sensitive Operations Report
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_10_workbook.png)
 
-### Microsoft Cloud App Security
+#### Microsoft Cloud App Security
 1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/)
 2.	Go to `More Resources` and click on `Microsoft Cloud App Security`
 3.	Connected Apps > Office 365 > Activity Logs
@@ -223,3 +188,5 @@ Browse to [Azure portal](https://portal.azure.com/) > Azure Active Directory > A
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_11_mcas_alert.png)
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_12_mcas_alert.png)
+
+## Output

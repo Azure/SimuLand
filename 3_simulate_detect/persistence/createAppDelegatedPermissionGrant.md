@@ -15,34 +15,27 @@ These resources can define a set of permissions that can be used to divide the f
 
  A delegated permission grant is represented by an [oAuth2PermissionGrant object](https://docs.microsoft.com/en-us/graph/api/resources/oauth2permissiongrant?view=graph-rest-1.0). Therefore, an OAuth permission grant needs to be created in order to grant delegated permissions to an application.
 
-## Simulate & Detect
+## Table of Contents
 
-In this document, we simulate an adversary granting delegated permissions to an existing OAuth application.
-
-1.	[List Existing Applications](#list-existing-applications)
-2.	[Get the Application Service Principal](#get-the-application-service-principal)
-3.	[Grant Delegated Permissions to Application](#grant-delegated-permissions-to-application)
-    * [Detect Permissions Granted to Applications](#detect-permissions-granted-to-applications)
+* [Preconditions](#preconditions)
+* [Simulation Steps](#simulation-steps)
+* [Detection](#detection)
+* [Output](#output)
 
 ## Preconditions
-
-* Endpoint: AD FS Server (ADFS01)
-  * Even when this step would happen outside of the organization, we can use the same PowerShell session where we [got a Microsoft Graph oauth access token](../persistence/getOAuthTokenWithSAMLAssertion.md).
-* Microsoft Graph OAuth access token
-  * Use the output from the [previous step](../persistence/getOAuthTokenWithSAMLAssertion.md) as the variable `$OAuthAccessToken`. Make sure you request the access token with the public `Azure Active Directory PowerShell Application`. That application has the right permissions to execute all the simulation steps in this document.
+* Authorization:
+    * Resource: Azure Microsoft Graph
+      * Permission Type: Delegated
+      * Permissions:
+        * Application.ReadWrite.All
+        * Directory.ReadWrite.All
+        * DelegatedPermissionGrant.ReadWrite.All
+* Input:
+  * Microsoft Graph OAuth access token
 
 ## List Existing Applications
 
-**Preconditions**
-* Authorization:
-    * Service: Azure Microsoft Graph
-    * Permission Type: Delegated
-    * Permissions (One of the following):
-        * Application.Read.All
-        * Application.ReadWrite.All
-        * Directory.Read.All
-
-Open PowerShell as administrator and use the Microsoft Graph oauth access token to list the current Azure AD applications in a tenant.
+1. Open PowerShell and use the Microsoft Graph oauth access token to list the current Azure AD applications in a tenant.
 
 ```PowerShell
 $headers = @{"Authorization" = "Bearer $OAuthAccessToken"}
@@ -58,7 +51,7 @@ $AzADApps.value
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_02_aad_application.png)
 
-Next, filter the results and select the Azure AD application you want to grant permissions to. If you followed the instructions to [register one Azure AD application](../../2_deploy/_helper_docs/registerAADAppAndSP.md) after deploying the lab environment, your app should be named `SimuLandApp`. If you used a different name, make sure you look for it with the right name in the following PowerShell command:
+2. Next, filter the results and select the Azure AD application you want to grant permissions to. If you followed the instructions to [register one Azure AD application](../../2_deploy/_helper_docs/registerAADAppAndSP.md) after deploying the lab environment, your app should be named `SimuLandApp`. If you used a different name, make sure you look for it with the right name in the following PowerShell command:
 
 ```PowerShell
 $Application = $AzADApps.value | Where-Object {$_.displayName -eq "SimuLandApp"}
@@ -67,19 +60,9 @@ $Application
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_02_aad_application_specific.png)
 
-## Get the Application Service Principal
+### Get the Application Service Principal
 
-**Preconditions**
-* Authorization:
-    * Service: Azure Microsoft Graph
-    * Permission Type: Delegated
-    * Permissions (One of the following):
-        * Application.Read.All
-        * Application.ReadWrite.All
-        * Directory.Read.All
-        * Directory.ReadWrite.All
-
-Next, in order to grant permissions to the application, we need to do it at the service principal level. We can take the application Id value from our previous steps and get its service principal.
+3. In order to grant permissions to the application, we need to do it at the service principal level. We can take the application Id value from our previous steps and get its service principal.
 
 ```PowerShell
 $headers = @{"Authorization" = "Bearer $OAuthAccessToken"}
@@ -96,23 +79,11 @@ $AzADAppSp.value | Format-List
 
 Now that we have the service principal of the OAuth application, we can grant permissions to it.
 
-## Grant Delegated Permissions to Application
-
 ### Get Microsoft Graph Service Principal Id
 
-**Preconditions**
-* Authorization:
-    * Service: Azure Microsoft Graph
-    * Permission Type: Delegated
-    * Permissions (One of the following):
-        * Application.Read.All
-        * Application.ReadWrite.All
-        * Directory.Read.All
-        * Directory.ReadWrite.All
+4. Identify the id of the resource service principal to which access is authorized. This identifies the API which the client is authorized to attempt to call on behalf of a signed-in user.
 
-Identify the id of the resource service principal to which access is authorized. This identifies the API which the client is authorized to attempt to call on behalf of a signed-in user.
-
-In this exercise, we are going to grant permissions from the [Microsoft Graph API](https://docs.microsoft.com/en-us/graph/overview?view=graph-rest-1.0). Therefore, we need to get the Id of the Microsoft Graph API service principal.
+In this step, we are going to grant permissions from the [Microsoft Graph API](https://docs.microsoft.com/en-us/graph/overview?view=graph-rest-1.0). Therefore, we need to get the Id of the Microsoft Graph API service principal.
 
 ```PowerShell
 $resourceSpDisplayName = 'Microsoft Graph'
@@ -134,22 +105,13 @@ $ResourceSvcPrincipal.value | Format-List
 
 ### Create OAuth permission grant
 
-**Preconditions**
-* Authorization:
-    * Service: Azure Microsoft Graph
-    * Permission Type: Delegated
-    * Permissions (One of the following):
-        * DelegatedPermissionGrant.ReadWrite.All
-        * Directory.ReadWrite.All
-        * Directory.AccessAsUser.All
-
-Define what permissions you want grant as an array as shown below. For this example, we are granting `Mail.ReadWrite` permissions to the OAuth application. Feel free to add other delegated permissions depending on your use case.
+5. Define what permissions you want grant as an array as shown below. For this example, we are granting `Mail.ReadWrite` permissions to the OAuth application. Feel free to add other delegated permissions depending on your use case.
 
 ```PowerShell
 $permissions = @('Mail.ReadWrite')
 ```
 
-Create an oauth permission grant via the [Microsoft Graph oauth2PermissionGrants API](https://docs.microsoft.com/en-us/graph/api/oauth2permissiongrant-post?view=graph-rest-1.0&tabs=http). 
+6. Create an oauth permission grant via the [Microsoft Graph oauth2PermissionGrants API](https://docs.microsoft.com/en-us/graph/api/oauth2permissiongrant-post?view=graph-rest-1.0&tabs=http). 
 
 ```PowerShell
 $ServicePrincipalId = $AzADAppSp.value.id
@@ -178,23 +140,25 @@ $params = @{
 Invoke-RestMethod @params
 ```
 
-## Detect Permissions Granted to Applications
+## Detection
 
-### Azure Sentinel Detection Rules
+### Detect Permissions Granted to Applications
+
+#### Azure Sentinel Detection Rules
 
 * [Mail.Read Permissions Granted to Application (AuditLogs)](https://github.com/Azure/Azure-Sentinel/blob/master/Detections/AuditLogs/MailPermissionsAddedToApplication.yaml)
 
-### Microsoft 365 Hunting Queries
+#### Microsoft 365 Hunting Queries
 
 * [Mail.Read or Mail.ReadWrite permissions added to OAuth application CloudAppEvents](https://github.com/microsoft/Microsoft-365-Defender-Hunting-Queries/blob/master/Defense%20evasion/MailPermissionsAddedToApplication%5BNobelium%5D.md)
 
-### Azure AD Workbook: Sensitive Operations Report
+#### Azure AD Workbook: Sensitive Operations Report
 1.	Browse to [Azure portal](https://portal.azure.com/)
 2.	Azure AD > Workbooks > Sensitive Operations Report
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_10_workbook.png)
 
-### Microsoft Cloud App Security
+#### Microsoft Cloud App Security
 1.	Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/)
 2.	Go to `More Resources` and click on `Microsoft Cloud App Security`
 3.	Connected Apps > Office 365 > Activity Logs
@@ -202,3 +166,5 @@ Invoke-RestMethod @params
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_11_mcas_alert.png)
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_12_mcas_alert.png)
+
+## Output
