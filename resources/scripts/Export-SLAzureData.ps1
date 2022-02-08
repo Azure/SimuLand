@@ -1,17 +1,17 @@
-function Export-Data {
+function Export-SLAzureData {
     <#
     .SYNOPSIS
 
     Exports security events to the console or as JSON files from a Microsoft 365 Advanced Hunting platform or a Log Analytics Workspace backing up an Azure Sentinel instance.
 
-    Author: Robert Rodriguez (@Cyb3rWard0g)
+    Author: Roberto Rodriguez (@Cyb3rWard0g)
     License: MIT
     Required Dependencies: None
     Optional Dependencies: None
 
     .DESCRIPTION
 
-    Export-Data is a simple PowerShell wrapper for the M365 Advanced hunting and Log Analytics API to export security events
+    Export-SLAzureData is a simple PowerShell wrapper for the M365 Advanced hunting and Log Analytics API to export security events
     and alerts as JSON files to share the telemetry generated after simulating adversary techniques.
 
     .PARAMETER ClientId
