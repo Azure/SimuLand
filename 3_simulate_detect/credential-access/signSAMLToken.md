@@ -2,24 +2,35 @@
 
 If a threat actor gets to [export the AD FS token signing certificate](exportADFSTokenSigningCertificate.md) from an AD FS server, it is just a matter of time until it is used to sign new SAML tokens and impersonate users in a federated environment. 
 
-## Sumulate & Detect
-1.	[Enumerate privileged accounts](#enumerate-privileged-accounts).
-2.	[Forge SAML token](#forge-saml-token).
+## Table of Contents
 
-## Enumerate Privileged Accounts
+* [Preconditions](#preconditions)
+* [Simulation Steps](#simulation-steps)
+* [Output](#output)
+* [Variations](#variations)
 
-Let's start by identifying privileged accounts that we could impersonate and that could also have privileged access to resources in the cloud. In this lab guide, the default domain admin account named `pgustavo` was also the account that was assigned the Azure AD built-in  Global Administrator   role. Therefore, we can start by enumerating the members of the `Domain Admins` group.
+## Preconditions
 
-### Enumerate Members of the Domain Admins Group via Lightweight Directory Access Protocol (LDAP)
+## Preconditions
+* Integrity level: medium
+* Authorization:
+    * Resource: Domain Controller 
+    * Identity:
+        * Domain Users
+* Domain Controller
+    * Services:
+      * Active directory domain services
+    * Network:
+      * Port: 389
+* Input:
+  * AD FS Token Signing Certificate
 
-**Preconditions**
-* Endpoint: AD FS Server (ADFS01)
-    * Authorization: AD FS service account or domain user
-* Endpoint: DC01
-    * Service running: Active directory domain services
-    * Port open: 389
+## Simulation Steps
+### Enumerate Privileged Accounts via Lightweight Directory Access Protocol (LDAP)
 
-1.  Connect to the AD FS server (ADFS01) via the [Azure Bastion service](../../2_deploy/_helper_docs/connectAzVmAzBastion.md) as the AD FS service account.
+Start by identifying privileged accounts that could also have privileged access to resources in the cloud. Usually, environments add their domain admin accounts to the Azure AD built-in  Global Administrator role. Therefore, you can start by enumerating the members of the `Domain Admins` group.
+
+1.  Connect to a domain joined endpoint via the [Azure Bastion service](../../2_deploy/_helper_docs/connectAzVmAzBastion.md).
 2.  Open PowerShell and run the following commands:
 
 ```PowerShell
@@ -51,19 +62,11 @@ $Results | Format-Table Samaccountname,ObjectGuid
 
 ![](../../resources/images/simulate_detect/credential-access/signSAMLToken/2021-05-19_01_get_domain_admins.png)
 
-## Forge SAML Token
+### Forge SAML Token
 
 A threat actor would most likely do this outside of the organization. Therefore, there are no detections for this step.
 
-**Preconditions**
-* Endpoint: AD FS Server (ADFS01)
-  * Even when this step would happen outside of the organization, we can use the same PowerShell session we used in the previous section.
-  * Authorization: Local Administrator
-  * Libraries Installed: [AADInternals](https://github.com/Gerenios/AADInternals)
-  * AD FS token signing certificate:
-    * In a previous step, we [exported the AD FS token signing certificate as a PFX file](exportADFSTokenSigningCertAsPfxFile.md) to the `C:\ProgramData` directory with the name `ADFSTokenSigningCertificate.pfx` (default).
-
-### Convert User AD Object GUID to its Azure AD Immutable ID representation
+#### Convert User AD Object GUID to its Azure AD Immutable ID representation
 
 1.  Once we identify the privileged user we want to impersonate, we need to obtain the `immutable ID` of the account AD object GUID. The `ImmutableId` is the base64-encoded representation of a domain user GUID in Azure AD.
 
@@ -77,29 +80,24 @@ $ImmutableId
 
 ![](../../resources/images/simulate_detect/credential-access/signSAMLToken/2021-05-19_02_get_immutable_id.png)
 
-### Install AADInternals
+#### Install AADInternals
 
-2.  Start a new PowerShell session as administrator and run the following commands to install [AADInternals](https://github.com/Gerenios/AADInternals) if it is not installed yet: 
+2.  On the same PowerShell session, run the following commands to install [AADInternals](https://github.com/Gerenios/AADInternals) if it is not installed yet: 
 
 ```PowerShell
-Install-Module –Name AADInternals –RequiredVersion 0.4.8 -Force
+Install-Module –Name AADInternals -Force 
+Import-Module –Name AADInternals
 ```
 
-3. Go back to the PowerShell session where you calculated the `ImmutableId` and import AADInternals
+#### Sign a New SAML Token
 
-```PowerSHell
-Import-Module AADInternals
-```
-
-### Sign a New SAML Token
-
-4. Use the `New-AADIntSAMLToken` function to sign a new SAML token with the following information:
+3. Use the [New-AADIntSAMLToken](https://github.com/Gerenios/AADInternals/blob/master/FederatedIdentityTools.ps1#L6) function with the following information to sign a new SAML token:
   * The `ImmutableID` we got in the first section.
   * The path to the token signing certificate file.
   * The AD FS token issuer url.
 
 ```PowerShell 
-$Cert = 'C:\ProgramData\ADFSTokenSigningCertificate.pfx'
+$Cert = 'C:\ProgramData\ADFSSigningCertificate.pfx'
 $Issuer = 'http://simulandlabs.com/adfs/services/trust/'
 $SamlToken = New-AADIntSAMLToken -ImmutableID $ImmutableId -PfxFileName $Cert -PfxPassword "" -Issuer $Issuer
 $SamlToken
@@ -109,7 +107,7 @@ $SamlToken
 
 ## Output
 
-Use the variable `$SamlToken` in the next step to [get an OAuth access token via the SAML bearer assertion flow](../persistence/getOAuthTokenWithSAMLAssertion.md) for OAuth protected resources such as the Microsoft Graph API.
+* SAML Token
 
 ## References
 * [Exporting ADFS certificates revisited: Tactics, Techniques and Procedures (o365blog.com)](https://o365blog.com/post/adfs/)

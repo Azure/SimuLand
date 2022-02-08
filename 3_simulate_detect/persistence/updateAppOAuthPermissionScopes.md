@@ -11,40 +11,35 @@ These resources can define a set of permissions that can be used to divide the f
 * **Delegated permissions** are used by apps that have a signed-in user present. These permissions are of type `Scope` and delegate privileges of the signed-in user, allowing the app to act as the user. For example, if an application contains the “Mail.Read” delegated permissions and a user requests it; the app would only be able to access the signed-in user mailbox.
 * **Application permissions** are used by apps that run without a signed-in user present. These permissions are of type `Role` and grant the app the full set of privileges offered by the scope. For example, if an application contains the `Mail.Read` role permissions, the application would have access to every user’s mailbox.
 
-
 **Required Resource Access Collection**
 
 Before granting permissions to an application, one needs to specify the resources the application requires access to and the set of OAuth permission scopes and application roles that it needs under each of those resources. This pre-configuration of required resource access drives the consent experience.
 
 The specified OAuth 2.0 permission `scopes` and `app roles` may be requested by client applications (through the `requiredResourceAccess` collection) when calling a resource application. The requiredResourceAccess property of the application entity is a collection of `RequiredResourceAccess`.
 
-## Simulate & Detect
+## Table of Contents
 
-In this document, we simulate an adversary updating the `OAuth permission scopes` of an existing OAuth application via its `requiredResourceAccess` property.
-
-1.	[List Existing Applications](#list-existing-applications)
-2.	[Update Application Delegated Permissions](#update-application-delegated-permissions)
-    * [Detect OAuth Permission Scopes Update](#detect-oauth-permission-scopes-update)
+* [Preconditions](#preconditions)
+* [Simulation Steps](#simulation-steps)
+* [Detection](#detection)
+* [Output](#output)
 
 ## Preconditions
-
-* Endpoint: AD FS Server (ADFS01)
-  * Even when this step would happen outside of the organization, we can use the same PowerShell session where we [got a Microsoft Graph oauth access token](../persistence/getOAuthTokenWithSAMLAssertion.md).
-* Microsoft Graph OAuth access token
-  * Use the output from the [previous step](../persistence/getOAuthTokenWithSAMLAssertion.md) as the variable `$OAuthAccessToken`. Make sure you request the access token with the public `Azure Active Directory PowerShell Application`. That application has the right permissions to execute all the simulation steps in this document.
-
-## List Existing Applications
-
-**Preconditions**
 * Authorization:
-    * Service: Azure Microsoft Graph
-    * Permission Type: Delegated
-    * Permissions (One of the following):
+    * Resource: Azure Microsoft Graph
+      * Permission Type: Delegated
+      * Permissions (One of the following):
         * Application.Read.All
         * Application.ReadWrite.All
         * Directory.Read.All
+        * Directory.ReadWrite.All
+* Input:
+  * Microsoft Graph OAuth access token
 
-Open PowerShell as administrator and use the Microsoft Graph oauth access token to list the current Azure AD applications in a tenant.
+## Simulation Steps
+### List Existing Applications
+
+1. Open PowerShell as administrator and use the Microsoft Graph oauth access token to list the current Azure AD applications in a tenant.
 
 ```PowerShell
 $headers = @{"Authorization" = "Bearer $OAuthAccessToken"}
@@ -60,7 +55,7 @@ $AzADApps.value
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_02_aad_application.png)
 
-Next, filter the results and select the Azure AD application you want to update the permission scopes. If you followed the instructions to [register one Azure AD application](../../2_deploy/_helper_docs/registerAADAppAndSP.md) after deploying the lab environment, your app should be named `SimuLandApp`. If you used a different name, make sure you look for it with the right name in the following PowerShell command:
+2. Next, filter the results and select the Azure AD application you want to update the permission scopes. If you followed the instructions to [register one Azure AD application](../../2_deploy/_helper_docs/registerAADAppAndSP.md) after deploying the lab environment, your app should be named `SimuLandApp`. If you used a different name, make sure you look for it with the right name in the following PowerShell command:
 
 ```PowerShell
 $Application = $AzADApps.value | Where-Object {$_.displayName -eq "SimuLandApp"}
@@ -68,23 +63,9 @@ $Application = $AzADApps.value | Where-Object {$_.displayName -eq "SimuLandApp"}
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_02_aad_application_specific.png)
 
-## Update Application Delegated Permissions
-
 ### Get Microsoft Graph Service Principal
 
-**Preconditions**
-* Authorization:
-    * Service: Azure Microsoft Graph
-    * Permission Type: Delegated
-    * Permissions (One of the following):
-        * Application.Read.All
-        * Application.ReadWrite.All
-        * Directory.Read.All
-        * Directory.ReadWrite.All
-
-Identify the id of the resource service principal to which access is authorized. This identifies the API which the client is authorized to attempt to call on behalf of a signed-in user.
-
-In this exercise, we are going to add permission scopes from the [Microsoft Graph API](https://docs.microsoft.com/en-us/graph/overview?view=graph-rest-1.0). Therefore, we need to get the Id of the Microsoft Graph API service principal.
+1. Identify the id of the resource service principal to which access is authorized. This identifies the API which the client is authorized to attempt to call on behalf of a signed-in user. In this step, we are going to add permission scopes from the [Microsoft Graph API](https://docs.microsoft.com/en-us/graph/overview?view=graph-rest-1.0). Therefore, we need to get the Id of the Microsoft Graph API service principal.
 
 ```PowerShell
 $resourceSpDisplayName = 'Microsoft Graph'
@@ -109,13 +90,13 @@ $ResourceSvcPrincipal
 
 ### Create Resource Access Items
 
-Define the delegated permissions as an array. For this example, we are going to use the Microsoft Graph `Mail.ReadWrite` permission scope. Feel free to change it for other use cases.
+2. Define the delegated permissions as an array. For this example, we are going to use the Microsoft Graph `Mail.ReadWrite` permission scope. Feel free to change it for other use cases.
 
 ```PowerShell
 $permissions = @('Mail.ReadWrite')
 ```
 
-Next, we need to get the ID of the permission scopes. We can get that information from the Microsoft Graph API servcie principal object we got in the previous step. Since we are adding `delegated` permissions to an application, we use the **PropertyType** `oauth2PermissionScopes` and **ResourceAccessType** `Scope` to filter permissions from the Microsoft Graph service principal object.
+3. Next, we need to get the ID of the permission scopes. We can get that information from the Microsoft Graph API servcie principal object we got in the previous step. Since we are adding `delegated` permissions to an application, we use the **PropertyType** `oauth2PermissionScopes` and **ResourceAccessType** `Scope` to filter permissions from the Microsoft Graph service principal object.
 
 ```PowerShell
 $PropertyType = 'oauth2PermissionScopes'
@@ -148,7 +129,7 @@ This required resource access object is represented by the following properties:
 | resourceAccess | [resourceAcces collection](https://docs.microsoft.com/en-us/graph/api/resources/resourceaccess?view=graph-rest-1.0) | The list of OAuth2.0 permission scopes and app roles that the application requires from the specified resource. |
 | resourceAppId | String | The unique identifier for the resource that the application requires access to. This should be equal to the appId declared on the target resource application. |
 
-For this example, we use the `resource access items` from the previous step and the Id of the Microsoft Graph API service principal. Also, ff there are permission scopes from the same resource already present in the application, you need to make sure they are added to the `required resource access` collection. The PowerShell commands below take care of all that for you.
+4. For this step, we use the `resource access items` from the previous step and the Id of the Microsoft Graph API service principal. Also, if there are permission scopes from the same resource already present in the application, you need to make sure they are added to the `required resource access` collection. The PowerShell commands below take care of all that for you.
 
 Reference: [https://github.com/TheCloudScout/devops-auto-key-rotation/blob/main/scripts/Set-addApplicationOwner.ps1](https://github.com/TheCloudScout/devops-auto-key-rotation/blob/main/scripts/Set-addApplicationOwner.ps1)
 
@@ -176,7 +157,7 @@ As you can see in the image below, we used the `requiredResourceAccess` property
 
 ### Update Application Required Resource Access collection
 
-Use the [Microsoft Graph update application API](https://docs.microsoft.com/en-us/graph/api/application-update?view=graph-rest-1.0&tabs=http) and the `$Application.requiredResourceAccess` new value to patch the OAuth application's `requiredResourceAccess` property in Azure AD.
+5. Use the [Microsoft Graph update application API](https://docs.microsoft.com/en-us/graph/api/application-update?view=graph-rest-1.0&tabs=http) and the `$Application.requiredResourceAccess` new value to patch the OAuth application's `requiredResourceAccess` property in Azure AD.
 
 ```powerShell
 $AppBody = $Application | Select-Object -Property "id", "appId", "displayName", "identifierUris", "requiredResourceAccess"
@@ -200,7 +181,7 @@ if ($updatedApplication.StatusCode -eq 204) {
 
 ### Verify permission scopes were updated
 
-Once the permission scopes are updated via the OAuth application's `requiredResourceAccess` property, we can run the following commands to get the new resource access values directly from Azure AD.
+6. Once the permission scopes are updated via the OAuth application's `requiredResourceAccess` property, we can run the following commands to get the new resource access values directly from Azure AD.
 
 ```PowerShell
 $headers = @{"Authorization" = "Bearer $OAuthAccessToken"}
@@ -218,9 +199,11 @@ $Application.requiredResourceAccess.resourceAccess
 
 ![](../../resources/images/simulate_detect/persistence/grantDelegatedPermissionsToApplication/2021-05-19_07_verify_app_updated.png)
 
-## Detect OAuth Permission Scopes Update
+## Detection
 
-### Azure Sentinel Hunting Queries
+### Detect OAuth Permission Scopes Update
+
+#### Azure Sentinel Hunting Queries
 
 * [OAuth Application Required Resource Access Update)](https://github.com/Azure/Azure-Sentinel/blob/master/Hunting%20Queries/AuditLogs/AppRequiredResourceAccessUpdate.yaml)
 
