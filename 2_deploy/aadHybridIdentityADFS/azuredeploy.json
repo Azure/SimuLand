@@ -187,18 +187,51 @@
                 "description": "The FQDN of the Active Directory Domain to be created."
             }
         },
-        "securityCollectionTier": {
-            "type": "string",
+        "winSecurityEventsXPathQueries": {
+            "type": "array",
             "metadata": {
-                "description": "Tier for gathering Windows Security Events."
+                "description": "XPath queries used to search for patterns in events from the Microsoft-Windows-Security-Auditing provider."
             },
-            "allowedValues": [
-                "All",
-                "Recommended",
-                "Minimal",
-                "None"
-            ],
-            "defaultValue": "All"
+            "defaultValue": [
+                "Security!*[System[(EventID=5136 or EventID=5139)]]",
+                "Security!*[System[(EventID=5137)]]",
+                "Security!*[System[(EventID=5141)]]",
+                "Security!*[System[(EventID=4662 or EventID=4661)]]",
+                "Security!*[System[(EventID=4768 or EventID=4769)]]",
+                "Security!*[System[(EventID=4688)]]",
+                "Security!*[System[(EventID=4660)]]",
+                "Security!(*[System[EventID=4656]] and ((*[EventData[Data[@Name='ObjectType']='File']]))) or (*[System[EventID=4663]] and ((*[EventData[Data[@Name='ObjectType']='File']]))) or (*[System[EventID=4661]] and ((*[EventData[Data[@Name='ObjectType']='SAM']])))",
+                "Security!*[System[(EventID=4670)]]",
+                "Security!*[System[(EventID=4624 or EventID=4778 or EventID=4964)]]",
+                "Security!*[System[(EventID=5140 or EventID=5145)]]",
+                "Security!*[System[(EventID=5154 or EventID=5159 or EventID=5155 or EventID=5158 or EventID=5156 or EventID=5157 or EventID=5031)]]",
+                "Security!(*[System[EventID=4656]] and ((*[EventData[Data[@Name='ObjectType']='Process']]))) or (*[System[EventID=4663]] and ((*[EventData[Data[@Name='ObjectType']='Process']])))",
+                "Security!*[System[(EventID=4689)]]",
+                "Security!*[System[(EventID=4698)]]",
+                "Security!*[System[(EventID=4701 or EventID=4700 or EventID=4702)]]",
+                "Security!*[System[(EventID=4697)]]",
+                "Security!*[System[(EventID=4725 or EventID=4722 or EventID=4717 or EventID=4740 or EventID=4738 or EventID=4781 or EventID=4767 or EventID=4718)]]",
+                "Security!*[System[(EventID=4624 or EventID=4625 or EventID=4648)]]",
+                "Security!*[System[(EventID=4726)]]",
+                "Security!*[System[(EventID=4720)]]",
+                "Security!*[System[(EventID=4670 or EventID=4657)]]",
+                "Security!(*[System[EventID=4656]] and ((*[EventData[Data[@Name='ObjectType']='Key']]))) or (*[System[EventID=4663]] and ((*[EventData[Data[@Name='ObjectType']='Key']])))"
+            ]
+        },
+        "otherWinEventsXPathQueries": {
+            "type": "array",
+            "metadata": {
+                "description": "XPath queries used to search for patterns in events from other Windows event providers besides the Microsoft-Windows-Security-Auditing provider."
+            },
+            "defaultValue": [
+                "System!*",
+                "Application!*",
+                "Microsoft-Windows-Sysmon/Operational!*",
+                "Directory Service!*",
+                "Windows PowerShell!*",
+                "Microsoft-Windows-PowerShell/Operational!*",
+                "AD FS/Admin!*"
+            ]
         },
         "pfxCertName": {
             "type": "string",
@@ -254,7 +287,6 @@
         "artifactsSimuLand": "https://raw.githubusercontent.com/Azure/SimuLand/main/",
         "aadDiagnosticSettingName": "[concat('AADConnector-',uniqueString(parameters('subscriptionId'),parameters('resourceGroup'),parameters('utcValue')))]",
         "dataConnectors": [
-            "SecurityEvents",
             "MicrosoftThreatProtection",
             "AzureActiveDirectory",
             "Office365"
@@ -266,17 +298,11 @@
             "First access credential added to Application or Service Principal where no credential was present",
             "Mail.Read Permissions Granted to Application"
         ],
-        "windowsEventLogs": [
-            "System",
-            "Application",
-            "Microsoft-Windows-Sysmon/Operational",
-            "Directory Service",
-            "Windows PowerShell",
-            "Microsoft-Windows-PowerShell/Operational",
-            "AD FS/Admin"
-        ],
+        "winSecurityEventsDCRName": "WinSecurityEventsDCR",
+        "otherWinEventsDCRName": "OtherWinEventsDCR",
         "logAnalyticsFunctions": [
-            "Sysmon"
+            "WindowsEvents",
+            "SysmonWindows"
         ]
     },
     "resources": [
@@ -284,7 +310,7 @@
             "condition": "[and(empty(parameters('workspaceId')),empty(parameters('workspaceKey')))]",
             "name": "deployMSSentinel2Go",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-10-01",
+            "apiVersion": "2021-04-01",
             "resourceGroup": "[parameters('resourceGroup')]",
             "subscriptionId": "[parameters('subscriptionId')]",
             "properties": {
@@ -313,9 +339,9 @@
             }
         },
         {
-            "name": "collectWinDataSources",
+            "name": "deployWindowsASIMParsers",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-10-01",
+            "apiVersion": "2021-04-01",
             "resourceGroup": "[parameters('resourceGroup')]",
             "subscriptionId": "[parameters('subscriptionId')]",
             "dependsOn": [
@@ -324,15 +350,138 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(variables('artifactsMSSentinel2Go'),'microsoft-sentinel/linkedtemplates/log-analytics/winDataSources.json')]",
+                    "uri": "[uri(variables('artifactsMSSentinel2Go'),'microsoft-sentinel/linkedtemplates/log-analytics/functions.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
                     "workspaceName": {
                         "value": "[if(empty(parameters('workspaceId')), reference('deployMSSentinel2Go').outputs.workspaceName.value, parameters('workspaceName'))]"
                     },
-                    "winEventProviders": {
-                        "value": "[variables('windowsEventLogs')]"
+                    "enableLAFunctions": {
+                        "value": "[variables('logAnalyticsFunctions')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "deployWinSecurityEventsDCR",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "resourceGroup": "[parameters('resourceGroup')]",
+            "subscriptionId": "[parameters('subscriptionId')]",
+            "dependsOn": [
+                "deployMSSentinel2Go"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(variables('artifactsBlacksmith'), 'templates/azure/Data-Collection-Rules/azuredeploy.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ruleName": {
+                        "value": "[variables('winSecurityEventsDCRName')]"
+                    },
+                    "tagsArray": {
+                        "value": {
+                            "createdBy": "Sentinel"
+                        }
+                    },
+                    "dataSources": {
+                        "value": {
+                            "windowsEventLogs": [
+                                {
+                                    "name": "eventLogsDataSource",
+                                    "scheduledTransferPeriod": "PT5M",
+                                    "streams": [
+                                        "Microsoft-SecurityEvent"
+                                    ],
+                                    "xPathQueries": "[parameters('winSecurityEventsXPathQueries')]"
+                                }
+                            ]
+                        }
+                    },
+                    "destinations": {
+                        "value": {
+                            "logAnalytics": [
+                                {
+                                    "name": "WindowsEvents",
+                                    "workspaceId": "[if(empty(parameters('workspaceId')), reference('deployMSSentinel2Go').outputs.workspaceIdOutput.value, parameters('workspaceId'))]",
+                                    "workspaceResourceId": "[if(empty(parameters('workspaceId')), reference('deployMSSentinel2Go').outputs.workspaceResourceIdOutput.value, parameters('workspaceId'))]"
+                                }
+                            ]
+                        }
+                    },
+                    "dataFlows": {
+                        "value": [
+                            {
+                                "streams": [
+                                    "Microsoft-SecurityEvent"
+                                ],
+                                "destinations": [
+                                    "WindowsEvents"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "deployOtherWinEventsDCR",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "resourceGroup": "[parameters('resourceGroup')]",
+            "subscriptionId": "[parameters('subscriptionId')]",
+            "dependsOn": [
+                "deployMSSentinel2Go"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(variables('artifactsBlacksmith'), 'templates/azure/Data-Collection-Rules/azuredeploy.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ruleName": {
+                        "value": "[variables('otherWinEventsDCRName')]"
+                    },
+                    "dataSources": {
+                        "value": {
+                            "windowsEventLogs": [
+                                {
+                                    "name": "additionalWinDataSource",
+                                    "scheduledTransferPeriod": "PT5M",
+                                    "streams": [
+                                        "Microsoft-WindowsEvent"
+                                    ],
+                                    "xPathQueries": "[parameters('otherWinEventsXPathQueries')]"
+                                }
+                            ]
+                        }
+                    },
+                    "destinations": {
+                        "value": {
+                            "logAnalytics": [
+                                {
+                                    "name": "OtherWindowsEvents",
+                                    "workspaceId": "[if(empty(parameters('workspaceId')), reference('deployMSSentinel2Go').outputs.workspaceIdOutput.value, parameters('workspaceId'))]",
+                                    "workspaceResourceId": "[if(empty(parameters('workspaceId')), reference('deployMSSentinel2Go').outputs.workspaceResourceIdOutput.value, parameters('workspaceId'))]"
+                                }
+                            ]
+                        }
+                    },
+                    "dataFlows": {
+                        "value": [
+                            {
+                                "streams": [
+                                    "Microsoft-WindowsEvent"
+                                ],
+                                "destinations": [
+                                    "OtherWindowsEvents"
+                                ]
+                            }
+                        ]
                     }
                 }
             }
@@ -390,7 +539,7 @@
         {
             "name": "enableDataConnectors",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-10-01",
+            "apiVersion": "2021-04-01",
             "resourceGroup": "[parameters('resourceGroup')]",
             "subscriptionId": "[parameters('subscriptionId')]",
             "dependsOn": [
@@ -411,9 +560,6 @@
                     },
                     "dataConnectors": {
                         "value": "[variables('dataConnectors')]"
-                    },
-                    "securityCollectionTier": {
-                        "value": "[parameters('securityCollectionTier')]"
                     }
                 }
             }
@@ -421,7 +567,7 @@
         {
             "name": "enableScheduledAlerts",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-10-01",
+            "apiVersion": "2021-04-01",
             "resourceGroup": "[parameters('resourceGroup')]",
             "subscriptionId": "[parameters('subscriptionId')]",
             "dependsOn": [
@@ -447,9 +593,9 @@
             }
         },
         {
-            "name": "SentinelWorkbook",
+            "name": "ImportIdentityWorkbook",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-10-01",
+            "apiVersion": "2021-04-01",
             "resourceGroup": "[parameters('resourceGroup')]",
             "subscriptionId": "[parameters('subscriptionId')]",
             "dependsOn": [
@@ -471,7 +617,7 @@
         {
             "name": "deployWinADFS",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-10-01",
+            "apiVersion": "2021-04-01",
             "resourceGroup": "[parameters('resourceGroup')]",
             "subscriptionId": "[parameters('subscriptionId')]",
             "dependsOn": [
@@ -547,7 +693,7 @@
         {
             "name": "installAzureMonitorAgent",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-10-01",
+            "apiVersion": "2021-04-01",
             "resourceGroup": "[parameters('resourceGroup')]",
             "subscriptionId": "[parameters('subscriptionId')]",
             "dependsOn": [
@@ -565,13 +711,65 @@
                         "value": "[reference('deployWinADFS').outputs.allWinVMsDeployed.value]"
                     },
                     "monitorAgent": {
-                        "value": "Log Analytics Agent"
+                        "value": "Azure Monitor Agent"
+                    }
+                }
+            }
+        },
+        {
+            "name": "associateWinSecurityEventsDCR",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "resourceGroup": "[parameters('resourceGroup')]",
+            "subscriptionId": "[parameters('subscriptionId')]",
+            "dependsOn": [
+                "deployWinSecurityEventsDCR",
+                "installAzureMonitorAgent"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(variables('artifactsMSSentinel2Go'), 'microsoft-sentinel/linkedtemplates/data-collection-rules/association.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualMachines": {
+                        "value": "[reference('deployWinADFS').outputs.allWinVMsDeployed.value]"
                     },
-                    "workspaceId": {
-                        "value": "[if(empty(parameters('workspaceId')), reference('deployMSSentinel2Go').outputs.workspaceIdOutput.value, parameters('workspaceId'))]"
+                    "dataCollectionRuleId": {
+                        "value": "[reference('deployWinSecurityEventsDCR').outputs.dataCollectionRuleId.value]"
                     },
-                    "workspaceKey": {
-                        "value": "[if(empty(parameters('workspaceKey')), reference('deployMSSentinel2Go').outputs.workspaceKeyOutput.value, parameters('workspaceKey'))]"
+                    "dataCollectionRuleName": {
+                        "value": "[variables('winSecurityEventsDCRName')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "associateWinOtherEventsDCR",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "resourceGroup": "[parameters('resourceGroup')]",
+            "subscriptionId": "[parameters('subscriptionId')]",
+            "dependsOn": [
+                "deployOtherWinEventsDCR",
+                "installAzureMonitorAgent"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(variables('artifactsMSSentinel2Go'), 'microsoft-sentinel/linkedtemplates/data-collection-rules/association.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualMachines": {
+                        "value": "[reference('deployWinADFS').outputs.allWinVMsDeployed.value]"
+                    },
+                    "dataCollectionRuleId": {
+                        "value": "[reference('deployOtherWinEventsDCR').outputs.dataCollectionRuleId.value]"
+                    },
+                    "dataCollectionRuleName": {
+                        "value": "[variables('otherWinEventsDCRName')]"
                     }
                 }
             }
@@ -580,7 +778,7 @@
             "condition": "[and(not(empty(parameters('_mdiPackageBlobSasUrl'))), not(empty(parameters('_mdiAccessKey'))))]",
             "name": "onboardToMDI",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-10-01",
+            "apiVersion": "2021-04-01",
             "resourceGroup": "[parameters('resourceGroup')]",
             "subscriptionId": "[parameters('subscriptionId')]",
             "dependsOn": [
@@ -609,7 +807,7 @@
             "condition": "[not(empty(parameters('_mdePackageBlobSasUrl')))]",
             "name": "onboardToMDE",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-10-01",
+            "apiVersion": "2021-04-01",
             "resourceGroup": "[parameters('resourceGroup')]",
             "subscriptionId": "[parameters('subscriptionId')]",
             "dependsOn": [
