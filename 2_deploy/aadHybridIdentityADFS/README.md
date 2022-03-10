@@ -64,11 +64,11 @@ The ARM template for this environment is of [tenant scope](https://docs.microsof
 az login
 ```
 
-8.  Assign `Owner Role` for `Root Scope` to your own account.
+8.  Assign `Owner Role` for `Root Scope ("/")` to your own account.
 9.  Log out and log back in after running the following command:
 
 ```
-az role assignment create --assignee "<user-objectid>" --scope "/" --role "Owner"
+az role assignment create --scope '/' --role 'Owner' --assignee-object-id $(az ad signed-in-user show --query objectId) --assignee-principal-type User
 ```
 
 ### Create Resource Group
