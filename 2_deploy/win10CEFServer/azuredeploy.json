@@ -80,7 +80,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(variables('artifactsMSSentinel2Go'),'azure-sentinel/azuredeploy.json')]",
+                    "uri": "[uri(variables('artifactsMSSentinel2Go'),'microsoft-sentinel/azuredeploy.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -110,7 +110,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(variables('artifactsMSSentinel2Go'), 'azure-sentinel/linkedtemplates/data-connectors/allConnectors.json')]",
+                    "uri": "[uri(variables('artifactsMSSentinel2Go'), 'microsoft-sentinel/linkedtemplates/data-connectors/allConnectors.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
