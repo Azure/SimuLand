@@ -38,6 +38,7 @@
         },
         "adminPassword": {
             "type": "securestring",
+            "minLength": 12,
             "metadata": {
                 "description": "Password for the Windows 10 and CEF Server Virtual Machines. The password must be at least 12 characters in length and must contain at least one digit, one non-alphanumeric character, and one upper or lower case letter."
             }
@@ -86,7 +87,7 @@
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
                     },
-                    "adminPasswordOrKey": {
+                    "adminPassword": {
                         "value": "[parameters('adminPassword')]"
                     },
                     "cefFiles": {
