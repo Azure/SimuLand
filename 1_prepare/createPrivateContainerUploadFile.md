@@ -51,7 +51,7 @@ You can see the new resource group if you go to the [Azure portal](https://porta
 
 ![](../resources/images/prepare/createPrivateContainerUploadFile/2021-05-13_02_az_resource_group_created.png)
 
-4. Deploy template. Make sure you define your Resource Group, the Azure Storage Account Name and Azure Private Container Name.
+4. Deploy template. Make sure you set the values for your `Resource Group`, the `Azure Storage Account Name` and `Azure Private Container Name`.
 
 ```
 az deployment group create --resource-group <resourcegroup> --template-file azuredeploy.json --parameters storageAccountName=<name> containerName=<name>
@@ -63,20 +63,23 @@ That’s it! If you go to your [Azure Portal](https://portal.azure.com/) > Resou
 
 ## Upload File to Private Container
 
-### Azure CLI and a Shared Access Signature (SAS)
+There are two ways to upload a file to an Azure private container:
+* Azure CLI and a Shared Access Signature (SAS) Token
+* Azure Portal UI 
+### Azure CLI and a Shared Access Signature (SAS) Token
 
-You can upload files to the private container by using the container’s shared access signature. A shared access signature (SAS) is a URI that grants restricted access to an Azure Storage container. Use it when you want to grant access to storage account resources for a specific time range without sharing your storage account key. 
+You can upload files to the private container by using the container’s shared access signature token. A shared access signature (SAS) token grants restricted access to an Azure Storage container. Use it when you want to grant access to storage account resources for a specific time range without sharing your storage account key. 
 
 1. Go to [Azure Portal](https://portal.azure.com/) > Resource Groups > `GroupName` > Storage Account > Containers > `ContainerName`
 2. Click on Shared access signature > Generate SAS token and URL
-3. Copy the ` Blob SAS URL` value
+3. Copy the `Blob SAS Token` value
 
 ![](../resources/images/prepare/createPrivateContainerUploadFile/2021-05-13_04_az_storage_account_sas_url.png)
 
-Next, use the Azure CLI command `az storage blob upload` to upload a local file to the private container using the `Blob SAS URL` value.
+Next, use the Azure CLI command `az storage blob upload` to upload a local file to the private container using the `Blob SAS Token` value.
 
 ```
-az storage blob upload --container-name <container-name> --file <ADFS.pfx> --name <ADFS.pfx> --connection-string <connection-string-SAS-token>
+az storage blob upload --container-name <container-name> --file <ADFS.pfx> --name <ADFS.pfx> --sas-token <Blog-SAS-token>
 ```
 
 ![](../resources/images/prepare/createPrivateContainerUploadFile/2021-05-13_05_private_file_uploaded.png)

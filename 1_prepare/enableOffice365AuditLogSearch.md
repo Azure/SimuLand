@@ -13,7 +13,6 @@ Office 365 auditing needs to be enabled before configuring Microsoft Cloud App S
 * Verify if Audit Log Search is enabled in Office 365
 * Enable Audit Log search in Office 365
 * Test Office 365 Audit via the Microsoft 365 compliance center 
-* Test Office 365 Audit via Office 365 security and compliance
 
 ## 1. Install Exchange Online PowerShell v2 Module
 * In a Windows endpoint, open PowerShell as Administrator
@@ -62,7 +61,7 @@ Get-AdminAuditLogConfig | FL UnifiedAuditLogIngestionEnabled
 
 ## 5. Test Office 365 Audit via the Microsoft 365 Compliance Center
 * Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/)
-* Go to More Resources > Office 365 Security & Compliance > Open
+* Go to More Resources > Microsoft 365 compliance center > [Open](https://compliance.microsoft.com/homepage)
 
 ![](../resources/images/prepare/enableOffice365AuditLogSearch/2021-05-14_04_m365_security_center_one.png)
 
@@ -73,20 +72,6 @@ Get-AdminAuditLogConfig | FL UnifiedAuditLogIngestionEnabled
 Before enabling auditing in Office 365, you would see something like the image below:
 
 ![](../resources/images/prepare/enableOffice365AuditLogSearch/2021-05-14_06_audit_log_search_not_enabled_m365.png) 
-
-## 6. Test Office 365 Audit via Office 365 Security & Compliance
-* Navigate to [Microsoft 365 Security Center](https://security.microsoft.com/)
-* Go to More Resources > Office 365 Security & Compliance > Open
-
-![](../resources/images/prepare/enableOffice365AuditLogSearch/2021-05-14_07_m365_security_center_two.png)
-
-* Go to Search > Audit Log Search. You should now be allowed to use this feature.
-
-![](../resources/images/prepare/enableOffice365AuditLogSearch/2021-05-14_08_audit_log_search_enabled_o365.png)
-
-Before enabling auditing in Office 365, you would see something like the image below:
-
-![](../resources/images/prepare/enableOffice365AuditLogSearch/2021-05-14_09_audit_log_search_not_enabled_o365.png)
 
 Wait at least an hour for this setting to propagate across other services that depend on it. Services that depend on it are Microsoft Cloud App Security (MCAS) and Azure Sentinel Office 365 and MCAS data connectors.
 

@@ -20,6 +20,9 @@
         "adfsPassword": {
             "value": "GEN-PASSWORD"
         },
+        "domainFQDN": {
+            "value": "The FQDN of the Active Directory Domain to be created"
+        },
         "domainUsers": {
             "value": {
                 "array": [
