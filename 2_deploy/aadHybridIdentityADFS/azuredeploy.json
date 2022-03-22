@@ -300,9 +300,12 @@
         ],
         "winSecurityEventsDCRName": "WinSecurityEventsDCR",
         "otherWinEventsDCRName": "OtherWinEventsDCR",
-        "logAnalyticsFunctions": [
-            "WindowsEvents",
-            "SysmonWindows"
+        "asimParsers": [
+            "ASimAuthentication",
+            "ASimFileEvent",
+            "ASimNetworkSession",
+            "ASimProcessEvent",
+            "ASimRegistryEvent"
         ]
     },
     "resources": [
@@ -333,32 +336,7 @@
                         "value": "[parameters('immediatePurgeDataOn30Days')]"
                     },
                     "enableLAFunctions": {
-                        "value": "[variables('logAnalyticsFunctions')]"
-                    }
-                }
-            }
-        },
-        {
-            "name": "deployWindowsASIMParsers",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2021-04-01",
-            "resourceGroup": "[parameters('resourceGroup')]",
-            "subscriptionId": "[parameters('subscriptionId')]",
-            "dependsOn": [
-                "deployMSSentinel2Go"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(variables('artifactsMSSentinel2Go'),'microsoft-sentinel/linkedtemplates/log-analytics/functions.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "workspaceName": {
-                        "value": "[if(empty(parameters('workspaceId')), reference('deployMSSentinel2Go').outputs.workspaceName.value, parameters('workspaceName'))]"
-                    },
-                    "enableLAFunctions": {
-                        "value": "[variables('logAnalyticsFunctions')]"
+                        "value": "[variables('asimParsers')]"
                     }
                 }
             }
