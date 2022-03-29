@@ -303,7 +303,7 @@
         "asimParsers": [
             "ASimWindowsEvents",
             "ASimWindowsSysmon"
-        ],
+        ]
     },
     "resources": [
         {
@@ -595,9 +595,6 @@
             "apiVersion": "2021-04-01",
             "resourceGroup": "[parameters('resourceGroup')]",
             "subscriptionId": "[parameters('subscriptionId')]",
-            "dependsOn": [
-                "deployMSSentinel2Go"
-            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
