@@ -109,24 +109,6 @@
                 ]
             }
         },
-        "remoteAccessMode": {
-            "type": "string",
-            "defaultValue": "AzureBastionHost",
-            "allowedValues": [
-                "AllowPublicIP",
-                "AzureBastionHost"
-            ],
-            "metadata": {
-                "description": "Do you want to restrict access to your environment by a Public IP or set up an Azure Bastion Host. If the former, make sure you add your public IP address to the variable 'allowedIPAddresses'"
-            }
-        },
-        "allowedIPAddresses": {
-            "type": "string",
-            "metadata": {
-                "description": "The sourceAddressPrefixes allowed to connect to this deployment"
-            },
-            "defaultValue": "*"
-        },
         "numberOfWorkstations": {
             "type": "int",
             "defaultValue": 1,
@@ -186,6 +168,24 @@
             "metadata": {
                 "description": "The FQDN of the Active Directory Domain to be created."
             }
+        },
+        "remoteAccessMode": {
+            "type": "string",
+            "defaultValue": "AzureBastionHost",
+            "allowedValues": [
+                "AllowPublicIP",
+                "AzureBastionHost"
+            ],
+            "metadata": {
+                "description": "Do you want to restrict access to your environment by a Public IP or set up an Azure Bastion Host. If the former, make sure you add your public IP address to the variable 'allowedIPAddresses'"
+            }
+        },
+        "allowedIPAddresses": {
+            "type": "string",
+            "metadata": {
+                "description": "The sourceAddressPrefixes allowed to connect to this deployment"
+            },
+            "defaultValue": "*"
         },
         "winSecurityEventsXPathQueries": {
             "type": "array",
@@ -301,12 +301,9 @@
         "winSecurityEventsDCRName": "WinSecurityEventsDCR",
         "otherWinEventsDCRName": "OtherWinEventsDCR",
         "asimParsers": [
-            "ASimAuthentication",
-            "ASimFileEvent",
-            "ASimNetworkSession",
-            "ASimProcessEvent",
-            "ASimRegistryEvent"
-        ]
+            "ASimWindowsEvents",
+            "ASimWindowsSysmon"
+        ],
     },
     "resources": [
         {
