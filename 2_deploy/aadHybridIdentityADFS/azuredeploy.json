@@ -350,7 +350,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(variables('artifactsBlacksmith'), 'templates/azure/Data-Collection-Rules/azuredeploy.json')]",
+                    "uri": "[uri(variables('artifactsBlacksmith'), 'templates/azure/Azure-Monitor-Data-Collection-Rules/azuredeploy.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -414,7 +414,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(variables('artifactsBlacksmith'), 'templates/azure/Data-Collection-Rules/azuredeploy.json')]",
+                    "uri": "[uri(variables('artifactsBlacksmith'), 'templates/azure/Azure-Monitor-Data-Collection-Rules/azuredeploy.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
