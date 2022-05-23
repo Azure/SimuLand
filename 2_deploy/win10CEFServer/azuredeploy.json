@@ -202,13 +202,16 @@
                     "vmSize": {
                         "value": "Standard_B2s"
                     },
-                    "newVirtualNetwork": {
-                        "value": false
+                    "newOrExistingVnet": {
+                        "value": "existing"
                     },
                     "virtualNetworkName": {
                         "value": "[reference('deployCEFVM').outputs.virtualNetworkName.value]"
                     },
-                    "existingSubnetId": {
+                    "newOrExistingSubnet": {
+                        "value": "existing"
+                    },
+                    "subnetName": {
                         "value": "[reference('deployCEFVM').outputs.subnetId.value]"
                     },
                     "remoteAccessMode": {
