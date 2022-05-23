@@ -109,24 +109,6 @@
                 ]
             }
         },
-        "remoteAccessMode": {
-            "type": "string",
-            "defaultValue": "AzureBastionHost",
-            "allowedValues": [
-                "AllowPublicIP",
-                "AzureBastionHost"
-            ],
-            "metadata": {
-                "description": "Do you want to restrict access to your environment by a Public IP or set up an Azure Bastion Host. If the former, make sure you add your public IP address to the variable 'allowedIPAddresses'"
-            }
-        },
-        "allowedIPAddresses": {
-            "type": "string",
-            "metadata": {
-                "description": "The sourceAddressPrefixes allowed to connect to this deployment"
-            },
-            "defaultValue": "*"
-        },
         "numberOfWorkstations": {
             "type": "int",
             "defaultValue": 1,
@@ -186,6 +168,24 @@
             "metadata": {
                 "description": "The FQDN of the Active Directory Domain to be created."
             }
+        },
+        "remoteAccessMode": {
+            "type": "string",
+            "defaultValue": "AzureBastionHost",
+            "allowedValues": [
+                "AllowPublicIP",
+                "AzureBastionHost"
+            ],
+            "metadata": {
+                "description": "Do you want to restrict access to your environment by a Public IP or set up an Azure Bastion Host. If the former, make sure you add your public IP address to the variable 'allowedIPAddresses'"
+            }
+        },
+        "allowedIPAddresses": {
+            "type": "string",
+            "metadata": {
+                "description": "The sourceAddressPrefixes allowed to connect to this deployment"
+            },
+            "defaultValue": "*"
         },
         "winSecurityEventsXPathQueries": {
             "type": "array",
@@ -300,9 +300,9 @@
         ],
         "winSecurityEventsDCRName": "WinSecurityEventsDCR",
         "otherWinEventsDCRName": "OtherWinEventsDCR",
-        "logAnalyticsFunctions": [
-            "WindowsEvents",
-            "SysmonWindows"
+        "asimParsers": [
+            "ASimWindowsEvents",
+            "ASimWindowsSysmon"
         ]
     },
     "resources": [
@@ -333,32 +333,7 @@
                         "value": "[parameters('immediatePurgeDataOn30Days')]"
                     },
                     "enableLAFunctions": {
-                        "value": "[variables('logAnalyticsFunctions')]"
-                    }
-                }
-            }
-        },
-        {
-            "name": "deployWindowsASIMParsers",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2021-04-01",
-            "resourceGroup": "[parameters('resourceGroup')]",
-            "subscriptionId": "[parameters('subscriptionId')]",
-            "dependsOn": [
-                "deployMSSentinel2Go"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(variables('artifactsMSSentinel2Go'),'microsoft-sentinel/linkedtemplates/log-analytics/functions.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "workspaceName": {
-                        "value": "[if(empty(parameters('workspaceId')), reference('deployMSSentinel2Go').outputs.workspaceName.value, parameters('workspaceName'))]"
-                    },
-                    "enableLAFunctions": {
-                        "value": "[variables('logAnalyticsFunctions')]"
+                        "value": "[variables('asimParsers')]"
                     }
                 }
             }
@@ -375,7 +350,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(variables('artifactsBlacksmith'), 'templates/azure/Data-Collection-Rules/azuredeploy.json')]",
+                    "uri": "[uri(variables('artifactsBlacksmith'), 'templates/azure/Azure-Monitor-Data-Collection-Rules/azuredeploy.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -439,7 +414,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(variables('artifactsBlacksmith'), 'templates/azure/Data-Collection-Rules/azuredeploy.json')]",
+                    "uri": "[uri(variables('artifactsBlacksmith'), 'templates/azure/Azure-Monitor-Data-Collection-Rules/azuredeploy.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -620,9 +595,6 @@
             "apiVersion": "2021-04-01",
             "resourceGroup": "[parameters('resourceGroup')]",
             "subscriptionId": "[parameters('subscriptionId')]",
-            "dependsOn": [
-                "deployMSSentinel2Go"
-            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
