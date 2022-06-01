@@ -600,7 +600,7 @@ Depending on the WID version, one could use the following named pipes to connect
 <h3>Get Database Connection String via WMI Class<a class="headerlink" href="#get-database-connection-string-via-wmi-class" title="Permalink to this headline">¶</a></h3>
 <p>The named pipe information can be obtained directly from the <code class="docutils literal notranslate"><span class="pre">ConfigurationDatabaseConnectionString</span></code> property of the <code class="docutils literal notranslate"><span class="pre">SecurityTokenService</span></code> class from the WMI <code class="docutils literal notranslate"><span class="pre">ADFS</span> <span class="pre">namespace</span></code>.</p>
 <ol class="simple">
-<li><p>Connect to the AD FS server via the <span class="xref myst">Azure Bastion service</span> as the AD FS service account.</p></li>
+<li><p>Connect to the AD FS server via the <a class="reference internal" href="../../../../environments/_helper-docs/connectAzVmAzBastion.html"><span class="doc std std-doc">Azure Bastion service</span></a> as the AD FS service account.</p></li>
 <li><p>Open PowerShell and run the following commands:</p></li>
 </ol>
 <div class="highlight-PowerShell notranslate"><div class="highlight"><pre><span></span><span class="nv">$ADFS</span> <span class="p">=</span> <span class="nb">Get-WmiObject</span> <span class="n">-Namespace</span> <span class="n">root</span><span class="p">/</span><span class="n">ADFS</span> <span class="n">-Class</span> <span class="n">SecurityTokenService</span>
