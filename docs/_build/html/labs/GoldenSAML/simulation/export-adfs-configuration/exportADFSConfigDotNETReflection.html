@@ -425,6 +425,30 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal nav-link" href="#detection">
    Detection
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#powershell-amsi-data">
+     PowerShell AMSI Data
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#start-amsi-collection">
+       Start AMSI Collection
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#stop-amsi-collection">
+       Stop AMSI Collection
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#parse-etl-file">
+       Parse ETL File
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#output">
@@ -497,6 +521,30 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal nav-link" href="#detection">
    Detection
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#powershell-amsi-data">
+     PowerShell AMSI Data
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#start-amsi-collection">
+       Start AMSI Collection
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#stop-amsi-collection">
+       Stop AMSI Collection
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#parse-etl-file">
+       Parse ETL File
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#output">
@@ -595,10 +643,43 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="nv">$ServiceSettingsDataPropertyValue</span>
 </pre></div>
 </div>
+<p>From here, you can access encrypted token signing certificates:</p>
+<div class="highlight-PowerShell notranslate"><div class="highlight"><pre><span></span><span class="nv">$ServiceSettingsDataPropertyValue</span><span class="p">.</span><span class="n">SecurityTokenService</span><span class="p">.</span><span class="n">AdditionalSigningTokens</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="detection">
 <h2>Detection<a class="headerlink" href="#detection" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="powershell-amsi-data">
+<h3>PowerShell AMSI Data<a class="headerlink" href="#powershell-amsi-data" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="start-amsi-collection">
+<h4>Start AMSI Collection<a class="headerlink" href="#start-amsi-collection" title="Permalink to this headline">¶</a></h4>
+<p>Run the following command before executing the reflection commands above</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">logman</span> <span class="n">start</span> <span class="n">AMSITrace</span> <span class="o">-</span><span class="n">p</span> <span class="n">Microsoft</span><span class="o">-</span><span class="n">Antimalware</span><span class="o">-</span><span class="n">Scan</span><span class="o">-</span><span class="n">Interface</span> <span class="n">Event1</span> <span class="o">-</span><span class="n">o</span> <span class="n">AMSITraceADFSReflection</span><span class="o">.</span><span class="n">etl</span> <span class="o">-</span><span class="n">ets</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="stop-amsi-collection">
+<h4>Stop AMSI Collection<a class="headerlink" href="#stop-amsi-collection" title="Permalink to this headline">¶</a></h4>
+<p>Once you are done running the commands, you can stop the data collection</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">logman</span> <span class="n">stop</span> <span class="n">AMSITrace</span> <span class="o">-</span><span class="n">ets</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="parse-etl-file">
+<h4>Parse ETL File<a class="headerlink" href="#parse-etl-file" title="Permalink to this headline">¶</a></h4>
+<p>We can use the following module from <a class="reference external" href="https://twitter.com/mattifestation">Matt Graeber - Red Canary</a>
+<strong>Disclaimer</strong>: “Get-AMSIEvent and Send-AmsiContent are helper functions used to validate AMSI ETW events. Note: because this script contains the word AMSI, it will flag most AV engines. Add an exception on a test system accordingly in order to get this to work.”.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">IEX</span> <span class="p">(</span><span class="n">New</span><span class="o">-</span><span class="n">Object</span> <span class="n">Net</span><span class="o">.</span><span class="n">WebClient</span><span class="p">)</span><span class="o">.</span><span class="n">DownloadString</span><span class="p">(</span><span class="s1">&#39;https://gist.githubusercontent.com/mgraeber-rc/1eb42d3ec9c2f677e70bb14c3b7b5c9c/raw/64c2a96ece65e61f150daaf435dfc77aa88c8784/AMSITools.psm1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Parse your .etl file</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Get</span><span class="o">-</span><span class="n">AmsiEvent</span> <span class="o">-</span><span class="n">Path</span> <span class="n">C</span><span class="p">:</span>\<span class="n">Test</span>\<span class="n">AMSITraceADFSReflection</span><span class="o">.</span><span class="n">etl</span>
+</pre></div>
+</div>
+</div>
+</div>
 </div>
 <div class="section" id="output">
 <h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
