@@ -34,7 +34,7 @@ Depending on the WID version, one could use the following named pipes to connect
 
 The named pipe information can be obtained directly from the `ConfigurationDatabaseConnectionString` property of the `SecurityTokenService` class from the WMI `ADFS namespace`.
 
-1.  Connect to the AD FS server via the [Azure Bastion service](../../2_deploy/_helper_docs/connectAzVmAzBastion.md) as the AD FS service account.
+1.  Connect to the AD FS server via the [Azure Bastion service](../../../../environments/_helper-docs/connectAzVmAzBastion.md) as the AD FS service account.
 2.  Open PowerShell and run the following commands:
 
 ```PowerShell
