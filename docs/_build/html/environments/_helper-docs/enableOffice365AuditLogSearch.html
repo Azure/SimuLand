@@ -1,0 +1,644 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enable Office 365 Audit Log Search &#8212; SimuLand</title>
+    
+  <link href="../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script >let toggleHintShow = 'Click to show';</script>
+    <script >let toggleHintHide = 'Click to hide';</script>
+    <script >let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script >const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Create a Certificate Signing Request and Get a Trusted CA Signed SSL Certificate" href="getTrustedCASignedSSLCertificate.html" />
+    <link rel="prev" title="Enable Multi-Factor Authentication" href="enableMultiFactorAuthentication.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">SimuLand</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p class="caption">
+ <span class="caption-text">
+  Lab Environments
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="README.html">
+   Helper Docs
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="addDomainToM365.html">
+     Add Domain to Microsoft 365 Tenant
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="addM365LicenseToUser.html">
+     Add Microsoft 365 E5 License to User
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="assignAADRole.html">
+     Assign Azure AD Role to User
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="configureAADConnectADFS.html">
+     Configure Azure AD Connect: ADFS
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="configureM365Defender.html">
+     Initialize Microsoft 365 Defenders Security Products Configurations
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="connectAzVmAzBastion.html">
+     Connect to Azure VM via Azure Bastion
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="createPrivateContainerUploadFile.html">
+     Create an Azure Storage Account and Host a Private File in a Private Container
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="disableAzureADFederation.html">
+     Disable Azure Active Directory (AD) Federation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="enableMultiFactorAuthentication.html">
+     Enable Multi-Factor Authentication
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Enable Office 365 Audit Log Search
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="getTrustedCASignedSSLCertificate.html">
+     Create a Certificate Signing Request and Get a Trusted CA Signed SSL Certificate
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="m365TenantGetAzSubscription.html">
+     Microsoft 365 Tenant: Get an Azure Subscription
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="registerAADAppAndSP.html">
+     Register Azure AD Application and Create App Service Principal
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="startM365E5Trial.html">
+     Start Microsoft 365 E5 Trial
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../README.html">
+   Lab Environments
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../aadHybridIdentityADFS/README.html">
+     AAD Hybrid Identity: AD FS Environment
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Lab Guides
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../labs/GoldenSAML/README.html">
+   Golden SAML
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../labs/GoldenSAML/simulation/export-adfs-configuration/README.html">
+     Export AD FS Configuration
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+    <label for="toctree-checkbox-4">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../labs/GoldenSAML/simulation/export-adfs-configuration/exportADFSConfigLocalNamedPipe.html">
+       Export AD FS Configuration via a Local Named Pipe
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../labs/GoldenSAML/simulation/export-adfs-configuration/exportADFSConfigWCFPolicyStore.html">
+       Export AD FS Configuration via Policy Store Transfer Service
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../labs/GoldenSAML/simulation/export-adfs-configuration/exportADFSConfigDotNETReflection.html">
+       Export AD FS Configuration via .NET Reflection
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../labs/GoldenSAML/simulation/export-adfs-dkm-key/README.html">
+     Export AD FS DKM Master Key
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+    <label for="toctree-checkbox-5">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../labs/GoldenSAML/simulation/export-adfs-dkm-key/exportADFSDKMKeyLDAP.html">
+       Export AD FS DKM Master Key via LDAP Queries
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../labs/GoldenSAML/simulation/export-adfs-dkm-key/exportADFSDKMKeyDRS.html">
+       Export AD FS DKM Master Key via Directory Replication Services
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../labs/GoldenSAML/simulation/export-adfs-certificates/README.html">
+     Export AD FS Certificates
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+    <label for="toctree-checkbox-6">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../labs/GoldenSAML/simulation/export-adfs-certificates/exportADFSCertsDKMKey.html">
+       Export AD FS Certificates via DKM Master Key
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../labs/GoldenSAML/simulation/export-adfs-certificates/exportADFSCertsDotNETReflection.html">
+       Export AD FS Certificates via .NET Reflection
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../labs/GoldenSAML/simulation/sign-new-samltoken/README.html">
+     Forge SAML Tokens
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../labs/GoldenSAML/simulation/get-oauth-accesstoken/README.html">
+     Get OAuth Access Token with SAML Assertion
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../labs/GoldenSAML/simulation/read-mail-messages/README.html">
+     Read Mail Messages via MS Graph APIs
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../../_sources/environments/_helper-docs/enableOffice365AuditLogSearch.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/Azure/SimuLand"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/Azure/SimuLand/issues/new?title=Issue%20on%20page%20%2Fenvironments/_helper-docs/enableOffice365AuditLogSearch.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pre-requirements">
+   Pre-requirements
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#main-steps">
+   Main Steps
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#install-exchange-online-powershell-v2-module">
+   1. Install Exchange Online PowerShell v2 Module
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#connect-to-exchange-online">
+   2. Connect to “Exchange Online”
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#verify-if-audit-log-search-is-enabled-in-office-365">
+   3. Verify if Audit Log Search is Enabled in Office 365
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#enable-audit-log-search-in-office-365">
+   4. Enable Audit Log Search in Office 365
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#test-office-365-audit-via-the-microsoft-365-compliance-center">
+   5. Test Office 365 Audit via the Microsoft 365 Compliance Center
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Enable Office 365 Audit Log Search</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pre-requirements">
+   Pre-requirements
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#main-steps">
+   Main Steps
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#install-exchange-online-powershell-v2-module">
+   1. Install Exchange Online PowerShell v2 Module
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#connect-to-exchange-online">
+   2. Connect to “Exchange Online”
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#verify-if-audit-log-search-is-enabled-in-office-365">
+   3. Verify if Audit Log Search is Enabled in Office 365
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#enable-audit-log-search-in-office-365">
+   4. Enable Audit Log Search in Office 365
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#test-office-365-audit-via-the-microsoft-365-compliance-center">
+   5. Test Office 365 Audit via the Microsoft 365 Compliance Center
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="enable-office-365-audit-log-search">
+<h1>Enable Office 365 Audit Log Search<a class="headerlink" href="#enable-office-365-audit-log-search" title="Permalink to this headline">¶</a></h1>
+<p>Office 365 auditing needs to be enabled before configuring Microsoft Cloud App Security (MCAS) or connecting other solutions such as Azure Sentinel data connectors to it. Remember that the <code class="docutils literal notranslate"><span class="pre">Audit</span> <span class="pre">log</span> <span class="pre">search</span></code> is turned on by default for Microsoft 365 and Office 365 enterprise organizations. This includes organizations with E3/G3 or E5/G5 subscriptions. You can follow steps 1-3 to verify if it is enabled in your lab environment.</p>
+<div class="section" id="pre-requirements">
+<h2>Pre-requirements<a class="headerlink" href="#pre-requirements" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Office 365 E5 subscription</p></li>
+<li><p>Microsoft 365 E5 subscription</p></li>
+<li><p>You must be assigned the <code class="docutils literal notranslate"><span class="pre">Audit</span> <span class="pre">Logs</span> <span class="pre">role</span></code> in Exchange Online to turn audit log search on or off in your Microsoft 365 organization. By default, this role is assigned to the Compliance Management and Organization Management role groups on the Permissions page in the Exchange admin center. Global admins in Microsoft 365 are members of the Organization Management role group in Exchange Online.</p></li>
+</ul>
+</div>
+<div class="section" id="main-steps">
+<h2>Main Steps<a class="headerlink" href="#main-steps" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Install Exchange online PowerShell v2 module</p></li>
+<li><p>Connect to Exchange Online</p></li>
+<li><p>Verify if Audit Log Search is enabled in Office 365</p></li>
+<li><p>Enable Audit Log search in Office 365</p></li>
+<li><p>Test Office 365 Audit via the Microsoft 365 compliance center</p></li>
+</ul>
+</div>
+<div class="section" id="install-exchange-online-powershell-v2-module">
+<h2>1. Install Exchange Online PowerShell v2 Module<a class="headerlink" href="#install-exchange-online-powershell-v2-module" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>In a Windows endpoint, open PowerShell as Administrator</p></li>
+<li><p>Install and import the <a class="reference external" href="https://docs.microsoft.com/en-us/powershell/exchange/exchange-online-powershell-v2?view=exchange-ps#install-and-maintain-the-exo-v2-module">Exchange Online PowerShell V2 module</a></p></li>
+</ul>
+<div class="highlight-PowerShell notranslate"><div class="highlight"><pre><span></span>Install-Module –Name ExchangeOnlineManagement
+Import-Module ExchangeOnlineManagement
+Get-Module ExchangeOnlineManagement
+</pre></div>
+</div>
+<p><img alt="" src="../../_images/2021-05-14_01_install_exchange_online_powershell.png" /></p>
+</div>
+<div class="section" id="connect-to-exchange-online">
+<h2>2. Connect to “Exchange Online”<a class="headerlink" href="#connect-to-exchange-online" title="Permalink to this headline">¶</a></h2>
+<p>In the same PowerShell session, run the following command with an account with the <code class="docutils literal notranslate"><span class="pre">Audit</span> <span class="pre">Logs</span></code> role assigned.</p>
+<div class="highlight-PowerShell notranslate"><div class="highlight"><pre><span></span>Connect-ExchangeOnline –UserPrincipalName &lt;account&gt;@&lt;domain&gt; -ShowProgress $true
+</pre></div>
+</div>
+<p><img alt="" src="../../_images/2021-05-14_02_connect_exchange_online_powershell.png" /></p>
+</div>
+<div class="section" id="verify-if-audit-log-search-is-enabled-in-office-365">
+<h2>3. Verify if Audit Log Search is Enabled in Office 365<a class="headerlink" href="#verify-if-audit-log-search-is-enabled-in-office-365" title="Permalink to this headline">¶</a></h2>
+<p>Check the current status of Office 365 auditing by running the following command:</p>
+<div class="highlight-PowerShell notranslate"><div class="highlight"><pre><span></span><span class="nb">Get-AdminAuditLogConfig</span> <span class="p">|</span> <span class="nb">FL </span><span class="n">UnifiedAuditLogIngestionEnabled</span>
+</pre></div>
+</div>
+<p><img alt="" src="../../_images/2021-05-14_03_verify_audit_log_search.png" /></p>
+</div>
+<div class="section" id="enable-audit-log-search-in-office-365">
+<h2>4. Enable Audit Log Search in Office 365<a class="headerlink" href="#enable-audit-log-search-in-office-365" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Run the following command to turn on <code class="docutils literal notranslate"><span class="pre">audit</span> <span class="pre">log</span> <span class="pre">search</span></code> in Office 365</p></li>
+</ul>
+<div class="highlight-PowerShell notranslate"><div class="highlight"><pre><span></span><span class="nb">Set-AdminAuditLogConfig</span> <span class="n">-UnifiedAuditLogIngestionEnabled</span> <span class="nv">$true</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Verify if <code class="docutils literal notranslate"><span class="pre">audit</span> <span class="pre">log</span> <span class="pre">search</span></code> in Office 365 is enabled with the following command:</p></li>
+</ul>
+<div class="highlight-PowerShell notranslate"><div class="highlight"><pre><span></span><span class="nb">Get-AdminAuditLogConfig</span> <span class="p">|</span> <span class="nb">FL </span><span class="n">UnifiedAuditLogIngestionEnabled</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="test-office-365-audit-via-the-microsoft-365-compliance-center">
+<h2>5. Test Office 365 Audit via the Microsoft 365 Compliance Center<a class="headerlink" href="#test-office-365-audit-via-the-microsoft-365-compliance-center" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Navigate to <a class="reference external" href="https://security.microsoft.com/">Microsoft 365 Security Center</a></p></li>
+<li><p>Go to More Resources &gt; Microsoft 365 compliance center &gt; <a class="reference external" href="https://compliance.microsoft.com/homepage">Open</a></p></li>
+</ul>
+<p><img alt="" src="../../_images/2021-05-14_04_m365_security_center_one.png" /></p>
+<ul class="simple">
+<li><p>Under the <code class="docutils literal notranslate"><span class="pre">Solutions</span></code> section, click on <code class="docutils literal notranslate"><span class="pre">Audit</span></code>. You should now be allowed to use this feature.</p></li>
+</ul>
+<p><img alt="" src="../../_images/2021-05-14_05_audit_log_search_enabled_m365.png" /></p>
+<p>Before enabling auditing in Office 365, you would see something like the image below:</p>
+<p><img alt="" src="../../_images/2021-05-14_06_audit_log_search_not_enabled_m365.png" /></p>
+<p>Wait at least an hour for this setting to propagate across other services that depend on it. Services that depend on it are Microsoft Cloud App Security (MCAS) and Azure Sentinel Office 365 and MCAS data connectors.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/cloud-app-security/connect-office-365-to-microsoft-cloud-app-security#how-to-connect-office-365-to-cloud-app-security">Connect Office 365 to Cloud App Security</a></p></li>
+<li><p><a class="reference external" href="https://docs.microsoft.com/en-us/microsoft-365/compliance/turn-audit-log-search-on-or-off?view=o365-worldwide">Turn audit log search on or off - Microsoft 365 Compliance</a></p></li>
+</ul>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./environments\_helper-docs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="enableMultiFactorAuthentication.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Enable Multi-Factor Authentication</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="getTrustedCASignedSSLCertificate.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Create a Certificate Signing Request and Get a Trusted CA Signed SSL Certificate</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By Microsoft Corporation<br/>
+    
+        &copy; Copyright 2021.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

