@@ -63,6 +63,19 @@ $settings
 
 ![](../../../../images/labs/goldemsaml/exportADFSTokenSigningCertificate/2021-05-19_03_get_database_configuration.png)
 
+You can also parse it as an XML object
+
+```PowerShell
+[xml]$settingsXML = $settings
+$settingsXML
+```
+
+From here, you can get to the encrypted token signing certificate
+
+```PowerShell
+$settingsXMl.ServiceSettingsData.SecurityTokenService.AdditionalSigningTokens.CertificateReference
+```
+
 ## Detection
 
 ### Detect Named Pipe Connection

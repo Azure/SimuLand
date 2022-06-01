@@ -71,7 +71,46 @@ $ServiceSettingsDataPropertyValue = $ServiceSettingsDataProperty.GetValue($Servi
 $ServiceSettingsDataPropertyValue
 ```
 
+From here, you can access encrypted token signing certificates:
+
+```PowerShell
+$ServiceSettingsDataPropertyValue.SecurityTokenService.AdditionalSigningTokens
+```
+
 ## Detection
+
+### PowerShell AMSI Data
+
+#### Start AMSI Collection
+
+Run the following command before executing the reflection commands above
+
+```
+logman start AMSITrace -p Microsoft-Antimalware-Scan-Interface Event1 -o AMSITraceADFSReflection.etl -ets
+```
+
+#### Stop AMSI Collection
+
+Once you are done running the commands, you can stop the data collection
+
+```
+logman stop AMSITrace -ets
+```
+
+#### Parse ETL File
+
+We can use the following module from [Matt Graeber - Red Canary](https://twitter.com/mattifestation)
+**Disclaimer**: "Get-AMSIEvent and Send-AmsiContent are helper functions used to validate AMSI ETW events. Note: because this script contains the word AMSI, it will flag most AV engines. Add an exception on a test system accordingly in order to get this to work.".
+
+```
+IEX (New-Object Net.WebClient).DownloadString('https://gist.githubusercontent.com/mgraeber-rc/1eb42d3ec9c2f677e70bb14c3b7b5c9c/raw/64c2a96ece65e61f150daaf435dfc77aa88c8784/AMSITools.psm1')
+```
+
+Parse your .etl file
+
+```
+Get-AmsiEvent -Path C:\Test\AMSITraceADFSReflection.etl
+```
 
 ## Output
 
