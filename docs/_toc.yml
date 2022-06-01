@@ -1,0 +1,44 @@
+format: jb-book
+root: README
+parts:
+- caption: Lab Environments
+  chapters:
+  - file: environments/_helper-docs/README.md
+    sections:
+      - file: environments/_helper-docs/addDomainToM365
+      - file: environments/_helper-docs/addM365LicenseToUser
+      - file: environments/_helper-docs/assignAADRole
+      - file: environments/_helper-docs/configureAADConnectADFS
+      - file: environments/_helper-docs/configureM365Defender
+      - file: environments/_helper-docs/connectAzVmAzBastion
+      - file: environments/_helper-docs/createPrivateContainerUploadFile
+      - file: environments/_helper-docs/disableAzureADFederation
+      - file: environments/_helper-docs/enableMultiFactorAuthentication
+      - file: environments/_helper-docs/enableOffice365AuditLogSearch
+      - file: environments/_helper-docs/getTrustedCASignedSSLCertificate
+      - file: environments/_helper-docs/m365TenantGetAzSubscription
+      - file: environments/_helper-docs/registerAADAppAndSP
+      - file: environments/_helper-docs/startM365E5Trial
+  - file: environments/README
+    sections:
+      - file: environments/aadHybridIdentityADFS/README
+- caption: Lab Guides
+  chapters:
+  - file: labs/README
+  - file: labs/GoldenSAML/README
+    sections:
+    - file: labs/GoldenSAML/simulation/export-adfs-configuration/README
+      sections:
+      - file: labs/GoldenSAML/simulation/export-adfs-configuration/exportADFSConfigLocalNamedPipe
+      - file: labs/GoldenSAML/simulation/export-adfs-configuration/exportADFSConfigWCFPolicyStore
+      - file: labs/GoldenSAML/simulation/export-adfs-configuration/exportADFSConfigDotNETReflection
+    - file: labs/GoldenSAML/simulation/export-adfs-dkm-key/README
+      sections:
+      - file: labs/GoldenSAML/simulation/export-adfs-dkm-key/exportADFSDKMKeyLDAP
+      - file: labs/GoldenSAML/simulation/export-adfs-dkm-key/exportADFSDKMKeyDRS
+    - file: labs/GoldenSAML/simulation/export-adfs-certificates/README
+      sections:
+      - file: labs/GoldenSAML/simulation/export-adfs-certificates/exportADFSCertsDKMKey
+    - file: labs/GoldenSAML/simulation/sign-new-samltoken/README.md
+    - file: labs/GoldenSAML/simulation/get-oauth-accesstoken/README.md
+    - file: labs/GoldenSAML/simulation/read-mail-messages/README.md
