@@ -26,7 +26,7 @@ $encPfxBytes=[System.Convert]::FromBase64String($encTokenSigningPfx)
 $encPfxBytes | Format-Hex
 ```
 
-![](../../../../images/labs/GoldemSAML/exportADFSTokenSigningCertificate/2021-05-19_12_adfs_get_encrypted_token_signing_cert.png)
+![](../../../../images/labs/GoldenSAML/exportADFSTokenSigningCertificate/2021-05-19_12_adfs_get_encrypted_token_signing_cert.png)
 
 ### Extract AD FS Encryption Certificate
 
@@ -37,7 +37,7 @@ $encPfxBytes=[System.Convert]::FromBase64String($encEncryptionPfx)
 $encPfxBytes | Format-Hex
 ```
 
-![](../../../../images/labs/GoldemSAML/exportADFSTokenSigningCertificate/2021-05-19_12_adfs_get_encrypted_encryption_cert.png)
+![](../../../../images/labs/GoldenSAML/exportADFSTokenSigningCertificate/2021-05-19_12_adfs_get_encrypted_encryption_cert.png)
 
 
 ### Decrypt Certificates

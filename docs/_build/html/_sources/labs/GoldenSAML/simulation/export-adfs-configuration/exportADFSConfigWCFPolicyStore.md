@@ -8,6 +8,8 @@ Legitimate secondary federation servers store a `read-only` copy of the AD FS co
 http://<AD FS Server Name>:80/adfs/services/policystoretransfer
 ```
 
+![](../../../../images/labs/GoldenSAML/exportADFSConfiguration/2021-06-01_export_adfs_configuration_adfssync.jpg)
+
 ## Table of Contents
 
 * [Preconditions](#preconditions)

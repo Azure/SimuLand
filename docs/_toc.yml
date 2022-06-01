@@ -24,6 +24,7 @@ parts:
       - file: environments/aadHybridIdentityADFS/README
 - caption: Lab Guides
   chapters:
+  - file: labs/README
   - file: labs/GoldenSAML/README
     sections:
     - file: labs/GoldenSAML/simulation/export-adfs-configuration/README

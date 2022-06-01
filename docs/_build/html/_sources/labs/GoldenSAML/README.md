@@ -16,7 +16,7 @@ Use the following document to prepare and deploy the infrastructure and services
 
 This scenario starts with a compromised AD FS Server where a threat actor managed to obtain the credentials of the AD FS service account.
 
-![](../../images/labs/GoldemSAML/GoldenSAMLWorkflow.jpg)
+![](../../images/labs/GoldenSAML/GoldenSAMLWorkflow.jpg)
 
 
 | Step | Tactic | Technique | Actions | Description |

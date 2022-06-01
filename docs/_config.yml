@@ -31,6 +31,7 @@ html:
   home_page_in_navbar: false
   use_issues_button: true
   use_repository_button: true
+  baseurl: https://simulandlabs.com/
 
 # Disable building files that aren’t in the Table of Contents
 only_build_toc_files: true

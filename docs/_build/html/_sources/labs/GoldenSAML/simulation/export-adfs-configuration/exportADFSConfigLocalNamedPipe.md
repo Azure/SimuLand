@@ -6,6 +6,8 @@ Depending on the WID version, one could use the following named pipes to connect
 * **WID 2008**: `\\.\pipe\MSSQL$MICROSOFT##SSEE\sql\query`
 * **WID 2012+**: `\\.\pipe\MICROSOFT##WID\tsql\query`
 
+![](../../../../images/labs/GoldenSAML/exportADFSConfiguration/2021-06-01_export_adfs_configuration_named_pipe.jpg)
+
 ## Table of Contents
 
 * [Preconditions](#preconditions)

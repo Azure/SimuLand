@@ -38,7 +38,7 @@ In this document, we are going to access the mailbox of a user via an applicatio
 ## Simulation Steps
 
 ### Verify Microsoft Graph Access Token
-We need to make sure our access token has permissions to read mail. You can get that information while getting the OAuth access token with a SAML assertion in the [previous step](getOAuthTokenWithSAMLAssertion.md)
+We need to make sure our access token has permissions to read mail. You can get that information while getting the OAuth access token with a SAML assertion in the [previous step](../get-oauth-accesstoken/README.md)
  
 ![](../../../../images/labs/goldemsaml/mailAccessDelegatedPermissions/2021-05-19_01_msgraph_access_token.png)
 

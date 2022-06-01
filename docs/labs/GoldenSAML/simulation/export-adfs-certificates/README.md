@@ -13,4 +13,3 @@ A threat actor could decrypt and export AD FS certificates in the following ways
 | Variation | Description |
 | --- | --- |
 | [AD FS DKM Master Key](exportADFSCertsDKMKey.md) | A threat actor could use the `AD FS DKM master key` retrieved from the domain controller to derive a key that can be used to decrypt AD FS certificate. |
-| [Non-Public Members via .NET Reflection](exportADFSCertsDotNETReflection.md) | A threat actor could acess and use non-public members such as properties, fields and methods via .NET reflection to decrypt AD FS certificates. |

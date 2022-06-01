@@ -6,6 +6,8 @@ The [Get-AdfsProperties](https://docs.microsoft.com/en-us/powershell/module/adfs
 
 A threat actor could use .NET reflection to access non-public metadata of the [ServiceProperties](https://docs.microsoft.com/en-us/dotnet/api/microsoft.identityserver.management.resources.serviceproperties?view=adfs-2019) .NET class to get to sensitive information such as the AD FS configuration.
 
+![](../../../../images/labs/GoldenSAML/exportADFSConfiguration/2021-06-01_export_adfs_configuration_reflection.jpg)
+
 ## Table of Contents
 
 * [Preconditions](#preconditions)

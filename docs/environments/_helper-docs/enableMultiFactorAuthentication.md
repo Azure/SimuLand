@@ -1,7 +1,7 @@
 # Enable Multi-Factor Authentication
 
 ## Pre-Requirements
-* [Microsoft 365 E5 License](../../1_prepare/startM365E5Trial.md)
+* [Microsoft 365 E5 License](startM365E5Trial.md)
 * Azure AD active users
 
 ## Enable Multi-Factor Authentication
