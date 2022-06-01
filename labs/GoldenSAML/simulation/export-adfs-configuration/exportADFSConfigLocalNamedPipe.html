@@ -627,6 +627,15 @@ Depending on the WID version, one could use the following named pipes to connect
 </pre></div>
 </div>
 <p><img alt="" src="../../../../_images/2021-05-19_03_get_database_configuration.png" /></p>
+<p>You can also parse it as an XML object</p>
+<div class="highlight-PowerShell notranslate"><div class="highlight"><pre><span></span><span class="no">[xml]</span><span class="nv">$settingsXML</span> <span class="p">=</span> <span class="nv">$settings</span>
+<span class="nv">$settingsXML</span>
+</pre></div>
+</div>
+<p>From here, you can get to the encrypted token signing certificate</p>
+<div class="highlight-PowerShell notranslate"><div class="highlight"><pre><span></span><span class="nv">$settingsXMl</span><span class="p">.</span><span class="n">ServiceSettingsData</span><span class="p">.</span><span class="n">SecurityTokenService</span><span class="p">.</span><span class="n">AdditionalSigningTokens</span><span class="p">.</span><span class="n">CertificateReference</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="detection">
