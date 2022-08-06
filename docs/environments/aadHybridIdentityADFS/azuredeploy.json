@@ -579,7 +579,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(variables('artifactsSimuLand'),'2_deploy/aadHybridIdentityADFS/linkedtemplates/IdentityWorkbookARM.json')]",
+                    "uri": "[uri(variables('artifactsSimuLand'),'docs/environments/aadHybridIdentityADFS/linkedtemplates/IdentityWorkbookARM.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
