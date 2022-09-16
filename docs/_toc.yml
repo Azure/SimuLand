@@ -9,6 +9,7 @@ parts:
       - file: environments/_helper-docs/addM365LicenseToUser
       - file: environments/_helper-docs/assignAADRole
       - file: environments/_helper-docs/configureAADConnectADFS
+      - file: environments/_helper-docs/configureAADConnectPTA
       - file: environments/_helper-docs/configureM365Defender
       - file: environments/_helper-docs/connectAzVmAzBastion
       - file: environments/_helper-docs/createPrivateContainerUploadFile
