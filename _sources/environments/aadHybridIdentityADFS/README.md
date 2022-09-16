@@ -205,17 +205,16 @@ Get-AdfsProperties | Select-Object HostName
 
 ### Microsoft Defender for Endpoint
 1.	Browse to [Microsoft 365 Security portal](https://security.microsoft.com/)
-2.	Click on “More Resources”
-3.	Click on “Open” under the Microsoft Defender Security Center
-4.	Device Inventory
+2.	Click on “Endpoints” dropdown
+3.	Click on “Device inventory” blade
 
 ![](../../images/deploy/aadHybridIdentityADFS/2021-05-19_13_m365_defender_endpoint.png)
 
 ### Microsoft Defender for Identity
 1.	Browse to [Microsoft 365 Security portal](https://security.microsoft.com/)  
-2.	Click on “More Resources”
-3.	Click on “Open” under Azure Advanced Threat Protection (Microsoft Defender for Identity)
-4.	Go to Configuration > Sensors.
+2.	scroll towards bottom left hand menu - Click on “Settings" blade
+3.	Click on "Identities"
+
 If you have a sensor that does not start properly or it is constantly stopping and restarting itself, check if the `Domain Controllers` value is set. I have seen AD FS servers not picking up the domain controller name. Simply click on the sensor name and add the FQDN of the domain controller to the `Domain Controllers` property of the sensor.
 
 ![](../../images/deploy/aadHybridIdentityADFS/2021-05-19_15_m365_defender_identity.png)

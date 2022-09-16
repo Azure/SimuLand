@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AAD Hybrid Identity: AD FS Environment &#8212; SimuLand</title>
     
-  <link href="../../_static/css/theme.css" rel="stylesheet">
-  <link href="../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -18,34 +19,31 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    
-      
-
-    
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
-  <link rel="preload" as="script" href="../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
-    <script >let toggleHintShow = 'Click to show';</script>
-    <script >let toggleHintHide = 'Click to hide';</script>
-    <script >let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../_static/togglebutton.js"></script>
-    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
-    <script >const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
@@ -63,7 +61,21 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
     
     <div class="container-fluid" id="banner"></div>
 
@@ -72,9 +84,10 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="../../index.html">
       
       
@@ -87,7 +100,7 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <p class="caption">
+        <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Lab Environments
  </span>
@@ -121,6 +134,11 @@ const thebe_selector_output = ".output, .cell_output"
    <li class="toctree-l2">
     <a class="reference internal" href="../_helper-docs/configureAADConnectADFS.html">
      Configure Azure AD Connect: ADFS
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../_helper-docs/configureAADConnectPTA.html">
+     Configure Azure AD Connect: Pass-through Authentication
     </a>
    </li>
    <li class="toctree-l2">
@@ -193,7 +211,7 @@ const thebe_selector_output = ".output, .cell_output"
   </ul>
  </li>
 </ul>
-<p class="caption">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Lab Guides
  </span>
@@ -300,90 +318,180 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
             
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../../_sources/environments/aadHybridIdentityADFS/README.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/Azure/SimuLand"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/Azure/SimuLand/issues/new?title=Issue%20on%20page%20%2Fenvironments/aadHybridIdentityADFS/README.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        
-    </div>
-</div>
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/Azure/SimuLand"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/Azure/SimuLand/issues/new?title=Issue%20on%20page%20%2Fenvironments/aadHybridIdentityADFS/README.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../_sources/environments/aadHybridIdentityADFS/README.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#network-design">
    Network Design
@@ -497,12 +605,11 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
 </ul>
 
-            </nav>
-        </div>
-    </div>
+    </nav>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
                 <h1>AAD Hybrid Identity: AD FS Environment</h1>
@@ -632,19 +739,20 @@ const thebe_selector_output = ".output, .cell_output"
                     </div>
                 </div>
             </div>
-            
+            <main id="main-content" role="main">
+                
               <div>
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="aad-hybrid-identity-ad-fs-environment">
-<h1>AAD Hybrid Identity: AD FS Environment<a class="headerlink" href="#aad-hybrid-identity-ad-fs-environment" title="Permalink to this headline">¶</a></h1>
+<h1>AAD Hybrid Identity: AD FS Environment<a class="headerlink" href="#aad-hybrid-identity-ad-fs-environment" title="Permalink to this headline">#</a></h1>
 <p><a class="reference external" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FSimuLand%2Fmain%2Fdocs%2Fenvironments%2FaadHybridIdentityADFS%2Fazuredeploy.json"><img alt="Deploy to Azure" src="https://aka.ms/deploytoazurebutton" /></a>
 <a class="reference external" href="https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FSimuLand%2Fmain%2Fdocs%2Fenvironments%2FaadHybridIdentityADFS%2Fazuredeploy.json"><img alt="Deploy to Azure Gov" src="https://aka.ms/deploytoazuregovbutton" /></a></p>
 <p>This environment was designed to replicate an on-prem Active Directory (AD) network synced with Azure AD to authenticate to the cloud with the same identity used on-prem. The authentication method used in this environment is federation with Active Directory Services (AD FS).</p>
 <div class="section" id="network-design">
-<h2>Network Design<a class="headerlink" href="#network-design" title="Permalink to this headline">¶</a></h2>
+<h2>Network Design<a class="headerlink" href="#network-design" title="Permalink to this headline">#</a></h2>
 <p><img alt="" src="../../_images/2021-05-19_01_network_design.png" /></p>
 <div class="section" id="domain-users-information">
-<h3>Domain Users Information<a class="headerlink" href="#domain-users-information" title="Permalink to this headline">¶</a></h3>
+<h3>Domain Users Information<a class="headerlink" href="#domain-users-information" title="Permalink to this headline">#</a></h3>
 <p>You can change the default domain users through the <code class="docutils literal notranslate"><span class="pre">domainUsers</span></code> parameter in the main ARM template.</p>
 <table class="colwidths-auto table">
 <thead>
@@ -726,7 +834,7 @@ const thebe_selector_output = ".output, .cell_output"
 </table>
 </div>
 <div class="section" id="domain-endpoints-information">
-<h3>Domain Endpoints Information<a class="headerlink" href="#domain-endpoints-information" title="Permalink to this headline">¶</a></h3>
+<h3>Domain Endpoints Information<a class="headerlink" href="#domain-endpoints-information" title="Permalink to this headline">#</a></h3>
 <table class="colwidths-auto table">
 <thead>
 <tr class="row-odd"><th class="text-align:left head"><p>Device Name</p></th>
@@ -756,7 +864,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 <div class="section" id="prepare">
-<h2>Prepare<a class="headerlink" href="#prepare" title="Permalink to this headline">¶</a></h2>
+<h2>Prepare<a class="headerlink" href="#prepare" title="Permalink to this headline">#</a></h2>
 <ol class="simple">
 <li><p><a class="reference internal" href="../_helper-docs/startM365E5Trial.html"><span class="doc std std-doc">Get a Microsoft 365 E5 license.</span></a></p></li>
 <li><p><a class="reference internal" href="../_helper-docs/m365TenantGetAzSubscription.html"><span class="doc std std-doc">Get an Azure subscription.</span></a></p></li>
@@ -775,10 +883,10 @@ const thebe_selector_output = ".output, .cell_output"
 </ol>
 </div>
 <div class="section" id="deploy-lab-infrastructure">
-<h2>Deploy Lab Infrastructure<a class="headerlink" href="#deploy-lab-infrastructure" title="Permalink to this headline">¶</a></h2>
+<h2>Deploy Lab Infrastructure<a class="headerlink" href="#deploy-lab-infrastructure" title="Permalink to this headline">#</a></h2>
 <p>Once you finish all the steps from the <code class="docutils literal notranslate"><span class="pre">Prepare</span></code> section, you should be ready to deploy the lab infrastructure..</p>
 <div class="section" id="elevate-account-access">
-<h3>Elevate account access<a class="headerlink" href="#elevate-account-access" title="Permalink to this headline">¶</a></h3>
+<h3>Elevate account access<a class="headerlink" href="#elevate-account-access" title="Permalink to this headline">#</a></h3>
 <p>The ARM template for this environment is of <a class="reference external" href="https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-to-tenant?tabs=azure-cli">tenant scope</a>. Therefore, <a class="reference external" href="https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-to-tenant?tabs=azure-cli#required-access">you will need to elevate access to manage all Azure resources and assign “owner” or “contributor” roles to the account running the ARM template</a>.</p>
 <ol class="simple">
 <li><p>Browse to <a class="reference external" href="https://portal.azure.com/">Azure portal</a>.</p></li>
@@ -804,14 +912,14 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 <div class="section" id="create-resource-group">
-<h3>Create Resource Group<a class="headerlink" href="#create-resource-group" title="Permalink to this headline">¶</a></h3>
+<h3>Create Resource Group<a class="headerlink" href="#create-resource-group" title="Permalink to this headline">#</a></h3>
 <p>You can use an existing <code class="docutils literal notranslate"><span class="pre">Resource</span> <span class="pre">Group</span></code>. However, I recommend creating a new one to avoid any issues with existing resources in the resource group.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">az</span> <span class="n">group</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">azhybrid</span> <span class="o">-</span><span class="n">l</span> <span class="n">eastus</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="deploy-arm-template">
-<h3>Deploy ARM Template<a class="headerlink" href="#deploy-arm-template" title="Permalink to this headline">¶</a></h3>
+<h3>Deploy ARM Template<a class="headerlink" href="#deploy-arm-template" title="Permalink to this headline">#</a></h3>
 <ol class="simple">
 <li><p>Copy the multi-line command below to your favorite <code class="docutils literal notranslate"><span class="pre">text</span> <span class="pre">editor</span></code> and update the default values (If you are not using PowerShell to run the commands below, make sure you update the format and the <code class="docutils literal notranslate"><span class="pre">backquote</span> <span class="pre">character</span></code> at the end of each line to whatever you use to run multi-line commands in your terminal).</p></li>
 <li><p>Make sure you run the updated commands in the same PowerShell session you used to elevate your account access.</p></li>
@@ -858,10 +966,10 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 <div class="section" id="validate-deployment">
-<h2>Validate Deployment<a class="headerlink" href="#validate-deployment" title="Permalink to this headline">¶</a></h2>
+<h2>Validate Deployment<a class="headerlink" href="#validate-deployment" title="Permalink to this headline">#</a></h2>
 <p>Once everything is deployed, I highly recommend you check the status of a few services and resources that were deployed by the ARM template provided with this setup.</p>
 <div class="section" id="on-prem-virtual-network-deployed">
-<h3>“On-Prem” Virtual Network Deployed<a class="headerlink" href="#on-prem-virtual-network-deployed" title="Permalink to this headline">¶</a></h3>
+<h3>“On-Prem” Virtual Network Deployed<a class="headerlink" href="#on-prem-virtual-network-deployed" title="Permalink to this headline">#</a></h3>
 <ol class="simple">
 <li><p>Browse to <a class="reference external" href="https://portal.azure.com/">Azure portal</a></p></li>
 <li><p>Go to Resource Groups &gt; <code class="docutils literal notranslate"><span class="pre">Resource</span> <span class="pre">Group</span> <span class="pre">Name</span></code>.</p></li>
@@ -870,7 +978,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p><img alt="" src="../../_images/2021-05-19_04_vnet_network_diagram.png" /></p>
 </div>
 <div class="section" id="validate-ad-fs-service-is-running">
-<h3>Validate AD FS Service is Running<a class="headerlink" href="#validate-ad-fs-service-is-running" title="Permalink to this headline">¶</a></h3>
+<h3>Validate AD FS Service is Running<a class="headerlink" href="#validate-ad-fs-service-is-running" title="Permalink to this headline">#</a></h3>
 <ol class="simple">
 <li><p>Browse to <a class="reference external" href="https://portal.azure.com/">Azure portal</a></p></li>
 <li><p>Go to Resource Groups &gt; <code class="docutils literal notranslate"><span class="pre">Resource</span> <span class="pre">Group</span> <span class="pre">Name</span></code></p></li>
@@ -893,7 +1001,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 <div class="section" id="validate-ad-fs-service-via-the-intranet">
-<h3>Validate AD FS Service via the Intranet<a class="headerlink" href="#validate-ad-fs-service-via-the-intranet" title="Permalink to this headline">¶</a></h3>
+<h3>Validate AD FS Service via the Intranet<a class="headerlink" href="#validate-ad-fs-service-via-the-intranet" title="Permalink to this headline">#</a></h3>
 <ol class="simple">
 <li><p>Browse to <a class="reference external" href="https://portal.azure.com/">Azure portal</a></p></li>
 <li><p>Go to Resource Groups &gt; <code class="docutils literal notranslate"><span class="pre">Resource</span> <span class="pre">Group</span> <span class="pre">Name</span></code></p></li>
@@ -912,7 +1020,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p><img alt="" src="../../_images/2021-05-19_07_adfs_validate_intranet.png" /></p>
 </div>
 <div class="section" id="microsoft-sentinel-instance">
-<h3>Microsoft Sentinel Instance<a class="headerlink" href="#microsoft-sentinel-instance" title="Permalink to this headline">¶</a></h3>
+<h3>Microsoft Sentinel Instance<a class="headerlink" href="#microsoft-sentinel-instance" title="Permalink to this headline">#</a></h3>
 <ol class="simple">
 <li><p>Browse to <a class="reference external" href="https://portal.azure.com/">Azure portal</a></p></li>
 <li><p>Search for “Microsoft Sentinel”</p></li>
@@ -921,21 +1029,21 @@ const thebe_selector_output = ".output, .cell_output"
 <p><img alt="" src="../../_images/2021-05-19_08_azure_sentinel_deployed.png" /></p>
 </div>
 <div class="section" id="microsoft-sentinel-data-connectors">
-<h3>Microsoft Sentinel Data Connectors<a class="headerlink" href="#microsoft-sentinel-data-connectors" title="Permalink to this headline">¶</a></h3>
+<h3>Microsoft Sentinel Data Connectors<a class="headerlink" href="#microsoft-sentinel-data-connectors" title="Permalink to this headline">#</a></h3>
 <ol class="simple">
 <li><p>Microsoft Sentinel Instance &gt; Data Connectors</p></li>
 </ol>
 <p><img alt="" src="../../_images/2021-05-19_09_azure_sentinel_dataconnectors.png" /></p>
 </div>
 <div class="section" id="microsoft-sentinel-analytics-active-scheduled-alerts">
-<h3>Microsoft Sentinel Analytics – Active Scheduled Alerts<a class="headerlink" href="#microsoft-sentinel-analytics-active-scheduled-alerts" title="Permalink to this headline">¶</a></h3>
+<h3>Microsoft Sentinel Analytics – Active Scheduled Alerts<a class="headerlink" href="#microsoft-sentinel-analytics-active-scheduled-alerts" title="Permalink to this headline">#</a></h3>
 <ol class="simple">
 <li><p>Microsoft Sentinel Instance &gt; Analytics</p></li>
 </ol>
 <p><img alt="" src="../../_images/2021-05-19_10_azure_sentinel_analytics.png" /></p>
 </div>
 <div class="section" id="azure-ad-active-directory-diagnostic-settings">
-<h3>Azure AD Active Directory - Diagnostic Settings<a class="headerlink" href="#azure-ad-active-directory-diagnostic-settings" title="Permalink to this headline">¶</a></h3>
+<h3>Azure AD Active Directory - Diagnostic Settings<a class="headerlink" href="#azure-ad-active-directory-diagnostic-settings" title="Permalink to this headline">#</a></h3>
 <ol class="simple">
 <li><p>Browse to <a class="reference external" href="https://portal.azure.com/">Azure portal</a></p></li>
 <li><p>Search for <code class="docutils literal notranslate"><span class="pre">Azure</span> <span class="pre">Active</span> <span class="pre">Directory</span></code></p></li>
@@ -944,7 +1052,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p><img alt="" src="../../_images/2021-05-19_11_aad_diagnostic_settings.png" /></p>
 </div>
 <div class="section" id="log-analytics-workspace-windows-event-logs">
-<h3>Log Analytics Workspace – Windows Event Logs<a class="headerlink" href="#log-analytics-workspace-windows-event-logs" title="Permalink to this headline">¶</a></h3>
+<h3>Log Analytics Workspace – Windows Event Logs<a class="headerlink" href="#log-analytics-workspace-windows-event-logs" title="Permalink to this headline">#</a></h3>
 <ol class="simple">
 <li><p>Browse to <a class="reference external" href="https://portal.azure.com/">Azure portal</a></p></li>
 <li><p>Go to Resource Groups &gt; <code class="docutils literal notranslate"><span class="pre">Resource</span> <span class="pre">Group</span> <span class="pre">Name</span></code>.</p></li>
@@ -954,29 +1062,27 @@ const thebe_selector_output = ".output, .cell_output"
 <p><img alt="" src="../../_images/2021-05-19_12_la_workspace_windows_event_logs.png" /></p>
 </div>
 <div class="section" id="microsoft-defender-for-endpoint">
-<h3>Microsoft Defender for Endpoint<a class="headerlink" href="#microsoft-defender-for-endpoint" title="Permalink to this headline">¶</a></h3>
+<h3>Microsoft Defender for Endpoint<a class="headerlink" href="#microsoft-defender-for-endpoint" title="Permalink to this headline">#</a></h3>
 <ol class="simple">
 <li><p>Browse to <a class="reference external" href="https://security.microsoft.com/">Microsoft 365 Security portal</a></p></li>
-<li><p>Click on “More Resources”</p></li>
-<li><p>Click on “Open” under the Microsoft Defender Security Center</p></li>
-<li><p>Device Inventory</p></li>
+<li><p>Click on “Endpoints” dropdown</p></li>
+<li><p>Click on “Device inventory” blade</p></li>
 </ol>
 <p><img alt="" src="../../_images/2021-05-19_13_m365_defender_endpoint.png" /></p>
 </div>
 <div class="section" id="microsoft-defender-for-identity">
-<h3>Microsoft Defender for Identity<a class="headerlink" href="#microsoft-defender-for-identity" title="Permalink to this headline">¶</a></h3>
+<h3>Microsoft Defender for Identity<a class="headerlink" href="#microsoft-defender-for-identity" title="Permalink to this headline">#</a></h3>
 <ol class="simple">
 <li><p>Browse to <a class="reference external" href="https://security.microsoft.com/">Microsoft 365 Security portal</a></p></li>
-<li><p>Click on “More Resources”</p></li>
-<li><p>Click on “Open” under Azure Advanced Threat Protection (Microsoft Defender for Identity)</p></li>
-<li><p>Go to Configuration &gt; Sensors.
-If you have a sensor that does not start properly or it is constantly stopping and restarting itself, check if the <code class="docutils literal notranslate"><span class="pre">Domain</span> <span class="pre">Controllers</span></code> value is set. I have seen AD FS servers not picking up the domain controller name. Simply click on the sensor name and add the FQDN of the domain controller to the <code class="docutils literal notranslate"><span class="pre">Domain</span> <span class="pre">Controllers</span></code> property of the sensor.</p></li>
+<li><p>scroll towards bottom left hand menu - Click on “Settings” blade</p></li>
+<li><p>Click on “Identities”</p></li>
 </ol>
+<p>If you have a sensor that does not start properly or it is constantly stopping and restarting itself, check if the <code class="docutils literal notranslate"><span class="pre">Domain</span> <span class="pre">Controllers</span></code> value is set. I have seen AD FS servers not picking up the domain controller name. Simply click on the sensor name and add the FQDN of the domain controller to the <code class="docutils literal notranslate"><span class="pre">Domain</span> <span class="pre">Controllers</span></code> property of the sensor.</p>
 <p><img alt="" src="../../_images/2021-05-19_15_m365_defender_identity.png" /></p>
 </div>
 </div>
 <div class="section" id="post-deployment-tasks">
-<h2>Post-Deployment Tasks<a class="headerlink" href="#post-deployment-tasks" title="Permalink to this headline">¶</a></h2>
+<h2>Post-Deployment Tasks<a class="headerlink" href="#post-deployment-tasks" title="Permalink to this headline">#</a></h2>
 <p>Not everything can be automated yet. Therefore, there are a few additional tasks to complete:</p>
 <ol class="simple">
 <li><p><a class="reference internal" href="../_helper-docs/configureAADConnectADFS.html"><span class="doc std std-doc">Finish Azure AD Connect setup on the “on-prem” AD domain controller</span></a>.</p></li>
@@ -987,7 +1093,7 @@ If you have a sensor that does not start properly or it is constantly stopping a
 </ol>
 </div>
 <div class="section" id="cleanup">
-<h2>Cleanup<a class="headerlink" href="#cleanup" title="Permalink to this headline">¶</a></h2>
+<h2>Cleanup<a class="headerlink" href="#cleanup" title="Permalink to this headline">#</a></h2>
 <p>If you want to remove some of the configurations, take a look at some of the documents below:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="../_helper-docs/disableAzureADFederation.html"><span class="doc std std-doc">Disable Azure AD Federation</span></a></p></li>
@@ -1017,9 +1123,11 @@ If you have a sensor that does not start properly or it is constantly stopping a
 
               </div>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
     <a class='left-prev' id="prev-link" href="../README.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
@@ -1035,24 +1143,28 @@ If you have a sensor that does not start properly or it is constantly stopping a
     <i class="fas fa-angle-right"></i>
     </a>
 </div>
-            
+            </footer>
         </div>
     </div>
-    <footer class="footer">
-  <p>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Microsoft Corporation<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
     
-      By Microsoft Corporation<br/>
-    
-        &copy; Copyright 2021.<br/>
-  </p>
-</footer>
-</main>
+</div>
 
 
       </div>
     </div>
   
-  <script src="../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
 
   </body>
 </html>

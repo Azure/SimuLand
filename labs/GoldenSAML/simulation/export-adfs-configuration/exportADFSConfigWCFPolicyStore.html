@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Export AD FS Configuration via Policy Store Transfer Service &#8212; SimuLand</title>
     
-  <link href="../../../../_static/css/theme.css" rel="stylesheet">
-  <link href="../../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
 
     
   <link rel="stylesheet"
@@ -18,34 +19,31 @@
   <link rel="preload" as="font" type="font/woff2" crossorigin
     href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-    
-      
-
-    
-    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../../_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
-  <link rel="preload" as="script" href="../../../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
 
-    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
     <script src="../../../../_static/jquery.js"></script>
     <script src="../../../../_static/underscore.js"></script>
     <script src="../../../../_static/doctools.js"></script>
     <script src="../../../../_static/clipboard.min.js"></script>
     <script src="../../../../_static/copybutton.js"></script>
-    <script >let toggleHintShow = 'Click to show';</script>
-    <script >let toggleHintHide = 'Click to hide';</script>
-    <script >let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../../../_static/togglebutton.js"></script>
-    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../../../../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
-    <script >const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
@@ -63,7 +61,21 @@ const thebe_selector_output = ".output, .cell_output"
     <!-- Google Analytics -->
     
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
     
     <div class="container-fluid" id="banner"></div>
 
@@ -72,9 +84,10 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="container-xl">
       <div class="row">
           
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="../../../../index.html">
       
       
@@ -87,7 +100,7 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        <p class="caption">
+        <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Lab Environments
  </span>
@@ -121,6 +134,11 @@ const thebe_selector_output = ".output, .cell_output"
    <li class="toctree-l2">
     <a class="reference internal" href="../../../../environments/_helper-docs/configureAADConnectADFS.html">
      Configure Azure AD Connect: ADFS
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../environments/_helper-docs/configureAADConnectPTA.html">
+     Configure Azure AD Connect: Pass-through Authentication
     </a>
    </li>
    <li class="toctree-l2">
@@ -193,7 +211,7 @@ const thebe_selector_output = ".output, .cell_output"
   </ul>
  </li>
 </ul>
-<p class="caption">
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Lab Guides
  </span>
@@ -300,90 +318,180 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
             
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../../../../_sources/labs/GoldenSAML/simulation/export-adfs-configuration/exportADFSConfigWCFPolicyStore.md"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/Azure/SimuLand"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/Azure/SimuLand/issues/new?title=Issue%20on%20page%20%2Flabs/GoldenSAML/simulation/export-adfs-configuration/exportADFSConfigWCFPolicyStore.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        
-    </div>
-</div>
-
-            <!-- Full screen (wrap in <a> to have style consistency -->
-
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
-
-            <!-- Launch buttons -->
-
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
-            
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/Azure/SimuLand"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/Azure/SimuLand/issues/new?title=Issue%20on%20page%20%2Flabs/GoldenSAML/simulation/export-adfs-configuration/exportADFSConfigWCFPolicyStore.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../../../_sources/labs/GoldenSAML/simulation/export-adfs-configuration/exportADFSConfigWCFPolicyStore.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#table-of-contents">
    Table of Contents
@@ -474,12 +582,11 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
 </ul>
 
-            </nav>
-        </div>
-    </div>
+    </nav>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
                 <h1>Export AD FS Configuration via Policy Store Transfer Service</h1>
@@ -586,11 +693,12 @@ const thebe_selector_output = ".output, .cell_output"
                     </div>
                 </div>
             </div>
-            
+            <main id="main-content" role="main">
+                
               <div>
                 
   <div class="tex2jax_ignore mathjax_ignore section" id="export-ad-fs-configuration-via-policy-store-transfer-service">
-<h1>Export AD FS Configuration via Policy Store Transfer Service<a class="headerlink" href="#export-ad-fs-configuration-via-policy-store-transfer-service" title="Permalink to this headline">¶</a></h1>
+<h1>Export AD FS Configuration via Policy Store Transfer Service<a class="headerlink" href="#export-ad-fs-configuration-via-policy-store-transfer-service" title="Permalink to this headline">#</a></h1>
 <p>Based on <a class="reference external" href="https://o365blog.com/post/adfs/">recent research</a> by <a class="reference external" href="https://twitter.com/DrAzureAD">Dr. Nestori Syynimaa</a>, a threat actor could use <a class="reference external" href="https://docs.microsoft.com/en-us/windows-server/identity/ad-fs/technical-reference/the-role-of-the-ad-fs-configuration-database#how-the-adfs-configuration-database-is-synchronized">AD FS synchronization (Replication services)</a> and pretend to be a secondary federation server to retrieve the AD FS configuration settings remotely from the primary federation server.</p>
 <p>Legitimate secondary federation servers store a <code class="docutils literal notranslate"><span class="pre">read-only</span></code> copy of the AD FS configuration database and connect to and synchronize the data with the primary federation server in the AD FS farm by polling it at regular intervals to check whether data has changed. A threat actor could use <code class="docutils literal notranslate"><span class="pre">SOAP</span> <span class="pre">messages</span></code> (XML documents) to request/sync AD FS configuration settings over a Windows Communication Foundation (WFC) service named <code class="docutils literal notranslate"><span class="pre">Policy</span> <span class="pre">Store</span> <span class="pre">transfer</span> <span class="pre">Service</span></code> on the federation primary server. This service can be accessed via the following URL over HTTP:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//&lt;</span><span class="n">AD</span> <span class="n">FS</span> <span class="n">Server</span> <span class="n">Name</span><span class="o">&gt;</span><span class="p">:</span><span class="mi">80</span><span class="o">/</span><span class="n">adfs</span><span class="o">/</span><span class="n">services</span><span class="o">/</span><span class="n">policystoretransfer</span>
@@ -598,7 +706,7 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 <p><img alt="" src="../../../../_images/2021-06-01_export_adfs_configuration_adfssync.jpg" /></p>
 <div class="section" id="table-of-contents">
-<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="#preconditions">Preconditions</a></p></li>
 <li><p><a class="reference external" href="#simulation-steps">Simulation Steps</a></p></li>
@@ -608,7 +716,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </div>
 <div class="section" id="preconditions">
-<h2>Preconditions<a class="headerlink" href="#preconditions" title="Permalink to this headline">¶</a></h2>
+<h2>Preconditions<a class="headerlink" href="#preconditions" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p>Integrity level: medium</p></li>
 <li><p>Authorization:</p>
@@ -640,7 +748,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </div>
 <div class="section" id="simulation-steps">
-<h2>Simulation Steps<a class="headerlink" href="#simulation-steps" title="Permalink to this headline">¶</a></h2>
+<h2>Simulation Steps<a class="headerlink" href="#simulation-steps" title="Permalink to this headline">#</a></h2>
 <p>For this remote variation, we can use use <a class="reference external" href="https://github.com/Gerenios/AADInternals">AADInternals</a> with the following information:</p>
 <ul class="simple">
 <li><p>IP Address or FQDN of the AD FS server</p></li>
@@ -648,13 +756,13 @@ const thebe_selector_output = ".output, .cell_output"
 <li><p>SID of the AD FS service account</p></li>
 </ul>
 <div class="section" id="log-onto-a-domain-joined-workstation">
-<h3>Log onto a domain joined workstation<a class="headerlink" href="#log-onto-a-domain-joined-workstation" title="Permalink to this headline">¶</a></h3>
+<h3>Log onto a domain joined workstation<a class="headerlink" href="#log-onto-a-domain-joined-workstation" title="Permalink to this headline">#</a></h3>
 <ol class="simple">
 <li><p>Connect to one of the domain joined workstations in the network via the <a class="reference internal" href="../../../../environments/_helper-docs/connectAzVmAzBastion.html"><span class="doc std std-doc">Azure Bastion service</span></a> as a <a class="reference external" href="https://github.com/Azure/SimuLand/tree/main/2_deploy/aadHybridIdentityADFS#domain-users-information">domain admin account</a> (e.g. pgustavo).</p></li>
 </ol>
 </div>
 <div class="section" id="get-object-guid-and-sid-of-the-ad-fs-service-account">
-<h3>Get Object GUID and SID of the AD FS Service Account<a class="headerlink" href="#get-object-guid-and-sid-of-the-ad-fs-service-account" title="Permalink to this headline">¶</a></h3>
+<h3>Get Object GUID and SID of the AD FS Service Account<a class="headerlink" href="#get-object-guid-and-sid-of-the-ad-fs-service-account" title="Permalink to this headline">#</a></h3>
 <ol class="simple">
 <li><p>Open PowerShell as Administrator</p></li>
 <li><p>Use the <a class="reference external" href="https://docs.microsoft.com/en-us/windows/win32/adsi/active-directory-service-interfaces-adsi">Active Directory Service Interfaces (ADSI)</a> to search for the AD FS service account object in the domain controller. Make sure you use the name of the <code class="docutils literal notranslate"><span class="pre">AD</span> <span class="pre">FS</span> <span class="pre">service</span> <span class="pre">account</span></code> you created for the lab environment (e.g. adfsadmin).</p></li>
@@ -672,7 +780,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p><img alt="" src="../../../../_images/2021-05-19_05_get_adfs_service_account.png" /></p>
 </div>
 <div class="section" id="install-aadinternals">
-<h3>Install AADInternals<a class="headerlink" href="#install-aadinternals" title="Permalink to this headline">¶</a></h3>
+<h3>Install AADInternals<a class="headerlink" href="#install-aadinternals" title="Permalink to this headline">#</a></h3>
 <ol class="simple">
 <li><p>On the same elevated PowerShell session, run the following commands to install <a class="reference external" href="https://github.com/Gerenios/AADInternals">AADInternals</a> if it is not installed yet:</p></li>
 </ol>
@@ -682,7 +790,7 @@ Import-Module –Name AADInternals
 </div>
 </div>
 <div class="section" id="get-nthash-of-ad-fs-service-account-via-directory-replication-services-dsr">
-<h3>Get NTHash of AD FS Service Account via Directory Replication Services (DSR)<a class="headerlink" href="#get-nthash-of-ad-fs-service-account-via-directory-replication-services-dsr" title="Permalink to this headline">¶</a></h3>
+<h3>Get NTHash of AD FS Service Account via Directory Replication Services (DSR)<a class="headerlink" href="#get-nthash-of-ad-fs-service-account-via-directory-replication-services-dsr" title="Permalink to this headline">#</a></h3>
 <ol class="simple">
 <li><p>Get the NTHash of the AD FS service account. AADInternals accomplishes this via <a class="reference external" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-drsr/06205d97-30da-4fdc-a276-3fd831b272e0#:~:text=The%20Directory%20Replication%20Service%20%28DRS%29%20Remote%20Protocol%20is,name%20of%20each%20dsaop%20method%20begins%20with%20%22IDL_DSA%22.">Active Directory Replication Services (DRS)</a> with the <a class="reference external" href="https://github.com/Gerenios/AADInternals/blob/master/DRS_Utils.ps1#L71">Get-AADIntADUserNTHash</a> function. Make sure you set the right name for the domain controller in your environment (<code class="docutils literal notranslate"><span class="pre">$Server</span></code>).</p></li>
 </ol>
@@ -696,7 +804,7 @@ $NTHash
 <p><img alt="" src="../../../../_images/2021-05-19_06_get_adfs_service_account_nthash.png" /></p>
 </div>
 <div class="section" id="get-ad-fs-configuration-settings-remotely">
-<h3>Get AD FS Configuration Settings Remotely<a class="headerlink" href="#get-ad-fs-configuration-settings-remotely" title="Permalink to this headline">¶</a></h3>
+<h3>Get AD FS Configuration Settings Remotely<a class="headerlink" href="#get-ad-fs-configuration-settings-remotely" title="Permalink to this headline">#</a></h3>
 <ol class="simple">
 <li><p>Finally, we can use all the previous information to export the AD FS configuration settings remotely. Make sure you set the right name for the AD FS server in your environment (<code class="docutils literal notranslate"><span class="pre">$ADFSServer</span></code>).</p></li>
 </ol>
@@ -709,15 +817,15 @@ $NTHash
 </div>
 </div>
 <div class="section" id="detection">
-<h2>Detection<a class="headerlink" href="#detection" title="Permalink to this headline">¶</a></h2>
+<h2>Detection<a class="headerlink" href="#detection" title="Permalink to this headline">#</a></h2>
 <div class="section" id="detect-ad-fs-remote-synchronization-network-connection">
-<h3>Detect AD FS Remote Synchronization Network Connection<a class="headerlink" href="#detect-ad-fs-remote-synchronization-network-connection" title="Permalink to this headline">¶</a></h3>
+<h3>Detect AD FS Remote Synchronization Network Connection<a class="headerlink" href="#detect-ad-fs-remote-synchronization-network-connection" title="Permalink to this headline">#</a></h3>
 <p>The replication channel used to connect to the AD FS server is over <code class="docutils literal notranslate"><span class="pre">port</span> <span class="pre">80</span></code>. Therefore, we can monitor for incoming network traffic to the AD FS server over HTTP with <code class="docutils literal notranslate"><span class="pre">Sysmon</span> <span class="pre">event</span> <span class="pre">id</span> <span class="pre">3</span> <span class="pre">(NetworkConnect)</span></code>. For an environment with only one server in the AD FS farm, it is rare to see incoming connections over standard HTTP port from workstations in the network.</p>
 <p><img alt="" src="../../../../_images/2021-05-19_08_adfs_remote_connection_sysmon.png" /></p>
 <p>Another behavior that we could monitor is the <code class="docutils literal notranslate"><span class="pre">authorization</span> <span class="pre">check</span></code> enforced by the AD FS replication service on the main federation server. We can use security events <code class="docutils literal notranslate"><span class="pre">412</span></code> and <code class="docutils literal notranslate"><span class="pre">501</span></code> from the <code class="docutils literal notranslate"><span class="pre">AD</span> <span class="pre">FS</span> <span class="pre">auditing</span></code> event provider to capture this behavior. These two events can be joined on the <code class="docutils literal notranslate"><span class="pre">Instance</span> <span class="pre">ID</span></code> value for additional context and to filter out other authentication events.</p>
 <p><img alt="" src="../../../../_images/2021-05-19_09_adfs_remote_connection_adfsauditing.png" /></p>
 <div class="section" id="azure-sentinel-detection-rules">
-<h4>Azure Sentinel Detection Rules<a class="headerlink" href="#azure-sentinel-detection-rules" title="Permalink to this headline">¶</a></h4>
+<h4>Azure Sentinel Detection Rules<a class="headerlink" href="#azure-sentinel-detection-rules" title="Permalink to this headline">#</a></h4>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/Azure/Azure-Sentinel/blob/master/Detections/SecurityEvent/ADFSRemoteHTTPNetworkConnection.yaml">AD FS Remote HTTP Network Connection</a></p></li>
 <li><p><a class="reference external" href="https://github.com/Azure/Azure-Sentinel/blob/master/Detections/SecurityEvent/ADFSRemoteAuthSyncConnection.yaml">AD FS Remote Auth Sync Connection</a></p></li>
@@ -725,10 +833,10 @@ $NTHash
 </div>
 </div>
 <div class="section" id="detect-active-directory-replication-services">
-<h3>Detect Active Directory Replication Services<a class="headerlink" href="#detect-active-directory-replication-services" title="Permalink to this headline">¶</a></h3>
+<h3>Detect Active Directory Replication Services<a class="headerlink" href="#detect-active-directory-replication-services" title="Permalink to this headline">#</a></h3>
 <p>Even though the use of directory replication services (DRS) is not part of the core behavior to extract the AD FS configuration settings remotely, it is an additional step taken by tools such as <a class="reference external" href="https://github.com/Gerenios/AADInternals">AADInternals</a> to get the NTHash of the AD FS user account to access the AD FS database remotely.</p>
 <div class="section" id="microsoft-defender-for-identity-alerts">
-<h4>Microsoft Defender for Identity Alerts<a class="headerlink" href="#microsoft-defender-for-identity-alerts" title="Permalink to this headline">¶</a></h4>
+<h4>Microsoft Defender for Identity Alerts<a class="headerlink" href="#microsoft-defender-for-identity-alerts" title="Permalink to this headline">#</a></h4>
 <p><strong>Suspected DCSync attack (replication of directory services)</strong></p>
 <p>The Microsoft Defender for Identity (MDI) sensor, installed on the domain controller, triggers an alert when this occurs. MDI detects non-domain controllers using Directory Replication Services (DRS) to sync information from the domain controller.</p>
 <ol class="simple">
@@ -738,7 +846,7 @@ $NTHash
 <p><img alt="" src="../../../../_images/2021-05-19_10_m365_mdi_alert_dcsync.png" /></p>
 </div>
 <div class="section" id="microsoft-cloud-application-security-alerts">
-<h4>Microsoft Cloud Application Security Alerts<a class="headerlink" href="#microsoft-cloud-application-security-alerts" title="Permalink to this headline">¶</a></h4>
+<h4>Microsoft Cloud Application Security Alerts<a class="headerlink" href="#microsoft-cloud-application-security-alerts" title="Permalink to this headline">#</a></h4>
 <p><strong>Suspected DCSync attack (replication of directory services)</strong></p>
 <p>You can also see the same alert in the Microsoft Cloud Application Security (MCAS) portal. The MCAS portal is considered the new investigation experience for MDI.</p>
 <ol class="simple">
@@ -750,13 +858,13 @@ $NTHash
 </div>
 </div>
 <div class="section" id="output">
-<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p>AD FS Configuration Settings</p></li>
 </ul>
 </div>
 <div class="section" id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://o365blog.com/post/adfs/">Exporting ADFS certificates revisited: Tactics, Techniques and Procedures (o365blog.com)</a></p></li>
 <li><p><a class="reference external" href="https://docs.microsoft.com/en-us/windows-server/identity/ad-fs/technical-reference/the-role-of-the-ad-fs-configuration-database">The Role of the AD FS Configuration Database | Microsoft Docs</a></p></li>
@@ -788,9 +896,11 @@ $NTHash
 
               </div>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
     <a class='left-prev' id="prev-link" href="exportADFSConfigLocalNamedPipe.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
@@ -806,24 +916,28 @@ $NTHash
     <i class="fas fa-angle-right"></i>
     </a>
 </div>
-            
+            </footer>
         </div>
     </div>
-    <footer class="footer">
-  <p>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Microsoft Corporation<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
     
-      By Microsoft Corporation<br/>
-    
-        &copy; Copyright 2021.<br/>
-  </p>
-</footer>
-</main>
+</div>
 
 
       </div>
     </div>
   
-  <script src="../../../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
 
   </body>
 </html>

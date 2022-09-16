@@ -30,8 +30,6 @@
 7.	Enter Azure AD Global Admin creds
  
 ![](../../images/deploy/helper_docs/configureAADConnectADFS/2021-05-19_06_connect_to_aad.png)
- 
-![](../../images/deploy/helper_docs/configureAADConnectADFS/2021-05-19_07_connect_to_aad.png)
 
 8.	Connect `on-prem` forest. Verify the Forest name and click on `Add Directory`.
 
