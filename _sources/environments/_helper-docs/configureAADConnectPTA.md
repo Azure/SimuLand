@@ -57,9 +57,12 @@
 
 ![](../../images/deploy/helper_docs/configureAADConnectPTA/2022-09-15_11_aad_connect_ready_to_configure.png)
 
+![](../../images/deploy/helper_docs/configureAADConnectPTA/2022-09-15_12_aad_connect_create_service_account.png)
+
+
 16.	Done.
 
-![](../../images/deploy/helper_docs/configureAADConnectPTA/2022-09-15_12_aad_connect_done.png)
+![](../../images/deploy/helper_docs/configureAADConnectPTA/2022-09-15_13_aad_connect_done.png)
 
 17.	That’s it! Click “Exit”
 
@@ -67,6 +70,6 @@
 
 ### Azure AD Connect
 1.	Browse to [Azure portal](https://portal.azure.com/)
-2.	Azure AD > Azure AD Connect
+2.	Azure AD > Manage > Azure AD Connect
 
-![](../../images/deploy/helper_docs/configureAADConnectPTA/2022-09-15_13_aad_connect_enabled.png)
+![](../../images/deploy/helper_docs/configureAADConnectPTA/2022-09-15_14_aad_connect_enabled.png)
