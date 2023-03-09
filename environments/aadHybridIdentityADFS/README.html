@@ -907,7 +907,11 @@ title="Print to PDF"
 <li><p>Assign <code class="docutils literal notranslate"><span class="pre">Owner</span> <span class="pre">Role</span></code> for <code class="docutils literal notranslate"><span class="pre">Root</span> <span class="pre">Scope</span> <span class="pre">(&quot;/&quot;)</span></code> to your own account.</p></li>
 <li><p>Log out and log back in after running the following command:</p></li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>az role assignment create --scope &#39;/&#39; --role &#39;Owner&#39; --assignee-object-id $(az ad signed-in-user show --query objectId) --assignee-principal-type User
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># Azure CLI 2.24
+az role assignment create --scope &#39;/&#39; --role &#39;Owner&#39; --assignee-object-id $(az ad signed-in-user show --query objectId) --assignee-principal-type User
+
+# Azure CLI 2.46
+az role assignment create --scope &#39;/&#39; --role &#39;Owner&#39; --assignee-object-id $(az ad signed-in-user show | ConvertFrom-Json | Select -ExpandProperty Id) --assignee-principal-type User
 </pre></div>
 </div>
 </div>

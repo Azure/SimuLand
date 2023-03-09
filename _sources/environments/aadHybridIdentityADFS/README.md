@@ -68,7 +68,11 @@ az login
 9.  Log out and log back in after running the following command:
 
 ```
+# Azure CLI 2.24
 az role assignment create --scope '/' --role 'Owner' --assignee-object-id $(az ad signed-in-user show --query objectId) --assignee-principal-type User
+
+# Azure CLI 2.46
+az role assignment create --scope '/' --role 'Owner' --assignee-object-id $(az ad signed-in-user show | ConvertFrom-Json | Select -ExpandProperty Id) --assignee-principal-type User
 ```
 
 ### Create Resource Group
